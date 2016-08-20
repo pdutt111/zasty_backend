@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>merchant-panel</title>
+<link href="css/merchant-panel-style.css" type="text/css" rel="stylesheet">
+<link href="css/layout.css" type="text/css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/functions.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="header row">
+        <a href="#" class="col-md-3"><img src="images/logo.png" alt="mobikwik-logo"></a>
+        <p class="col-md-9 tR"><a href="#" class="login btn">login</a></p>
+        <p class="col-md-9 tR noshow"><span class="user-icon">welcome <em><strong>abc1234567@xyz.com</strong></em></span><a href="#" class="btn logout">logout</a></p>
+    </div>
+    <div class="row">
+        <div class="lft-side col-md-2">
+            <ul>
+                <li><a href="#">application</a></li>
+                <li><a href="#txn-history" class="active1">transaction history</a></li>
+                <li><a href="#">payment info</a></li>
+                <li><a href="#">bulk refund</a></li>
+                <li><a href="javascript:void(0)" class="load-mny">load money</a>
+                	<ul class="noshow load-mny-menu">
+                    	<li><a href="#">reminders</a></li>
+                        <li><a href="#">transactions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">technical configuration</a></li>
+                <li><a href="#">balance history</a></li>
+                <li><a href="#">wallet reporting</a></li>
+                <li><a href="#">merchant transactions</a></li>
+                <li><a href="#">mark KYC</a></li>
+                <li><a href="#">order status</a></li>
+            </ul>            
+        </div>  
+        <div class="rght-side col-md-10">
+        	<div class="rght-side-content" id="txn-history">
+            	<div class="details">
+                    <h3>transaction history</h3>
+                    <p>current balance <strong>₹<span>234556778</span></strong></p>
+                    <p>search using below things</p>
+                </div>
+                <div class="detail-form row col-md-12">
+                	<form>
+                    	<div class="row date-entry">
+                    		<p class="col-md-3"><label class="col-md-12">start date </label> <input class="col-md-12" type="datetime" placeholder="dd/mm/yy"></p>
+                        	<p class="col-md-3"><label class="col-md-12">end date </label> <input class="col-md-12" type="datetime" placeholder="dd/mm/yy"></p>
+                        </div>
+                        <div class="row entries">
+                        	<p class="col-md-6"><input class="col-md-12" type="tel" placeholder="Enter Order ID"></p>
+                        	<p class="col-md-6"><input class="col-md-12" type="email" placeholder="Enter your email id"></p>
+                            <p class="col-md-6 fullvew-nopadlft"><input class="col-md-12" type="tel" placeholder="Enter Phone Number"></p>
+                            <p class="col-md-6 fullvew-padlft"><input class="col-md-12" type="tel" placeholder="Enter Amount"></p>
+                            <p class="col-md-6 fullvew-nopadlft">
+                            	<select class="col-md-12">
+                                	<option>a</option>
+                                    <option>b</option>
+                                    <option>c</option>
+                                </select>
+                            </p>
+                        </div>
+                        <div class="row srch">
+                        	<p class="col-md-6"><input class="col-md-12" type="search" placeholder="Search"></p>
+                        </div>
+                    </form>
+                </div>
+                <div class="clear fn"></div>
+                <div class="status-wrpr">
+                	<div class="row">
+                        <div class="col-md-5 transactions">
+                            <p class="col-md-12"><font class="col-md-8">Total number of transactions</font> <strong class="col-md-4">: 548</strong></p>
+                            <p class="col-md-12"><font class="col-md-8">Total payout amount</font> <strong class="col-md-4">: ₹<span>2345678</span></strong></p>
+                        </div>
+                        <div class="col-md-4 mode-details">
+                        	<p class="col-md-6"><label class="col-md-12" for="payout"><input type="radio" id="payout" checked name="payout">payout details</label></p>
+                            <p class="col-md-6"><label class="col-md-12" for="refund"><input type="radio" id="refund" name="payout">refund details</label></p>
+                        </div>
+                        <div class="col-md-3 dwnld-csv">
+                        	<p class="col-md-12"><button class="col-md-12 dwnld-btn"><i></i>Download CSV</button></p>
+                        </div>  
+                    </div>                                      
+                </div>
+                <div class="status-tbl-wrpr col-md-12">
+                	<div class="row">
+                		<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12">
+                            <tr class="heading-row">                            	
+                                <td>Order ID</td>
+                                <td>Txn ID</td>
+                                <td>User Phone</td>
+                                <td>User Email</td>
+                                <td>Txn Date</td>
+                                <td>Txn Amount</td>
+                                <td>Fee</td>
+                                <td>Service Tax</td>
+                                <td>Status Message</td>
+                                <td>Date</td>
+                                <td class="show noshow">col 11</td>
+                                <td class="show noshow">col 12</td>
+                                <td class="show noshow">col 13</td>
+                                <td class="show noshow">col 14</td>                                        	                                       
+                			</tr>
+                            <tr>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                                                                                
+                            </tr>
+                            <tr>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>               
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>                                                                                 
+                            </tr>
+                            <tr>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            	<td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>               
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>
+                                <td class="show noshow">&nbsp;</td>                                                                                 
+                            </tr>                                                        
+                    </table>    
+                    </div>        	
+            	</div>
+            </div>  
+            <span class="pinion"></span>                   
+        </div>  
+    </div>    
+</div>
+</body>
+</html>

@@ -1,0 +1,186 @@
+.header{ padding: 10px 0;
+	border-bottom: 1px solid #dadada;
+	}
+.header p{ padding-top: 5px;}	
+.header p em{ margin-left:5px;}
+.user-icon{ background:url(../images/user-icon.png) no-repeat scroll left center;
+	padding: 6px 0 6px 30px;
+	}
+.btn{ padding:8px 20px; 
+	color: #00c3c1; 
+	border: 1px solid #00c3c1; 
+	border-radius:4px; 
+	text-transform: capitalize;
+	display: inline-block;
+	vertical-align:middle;
+	margin-left:10px;
+	}
+.btn:hover{ color: #ffffff;
+	background-color: #00c3c1;	
+	}	
+	
+/*left panel*/	
+.lft-side{ position:relative;
+-webkit-transition:all 0.3s ease-in-out;
+-moz-transition:all 0.3s ease-in-out;
+-o-transition:all 0.3s ease-in-out;
+transition:all 0.3s ease-in-out
+}
+.lft-side.closed{
+	width:0px;
+	overflow:hidden;
+	padding-left:0px;
+	}
+.lft-side.col-md-2{
+	background-color: #f7f7f7;
+	padding-top:50px;
+	padding-right: 0px;
+	}	
+.lft-side li a{
+	text-transform: capitalize;
+	font-size: 15px;
+	color: #777777;
+	padding:10px 0 10px 10px;
+	display: block;
+	}
+.lft-side ul{min-width:200px;}	
+.lft-side li a:hover{ background-color: #e1e1e1;}	
+.lft-side ul li ul li a{ padding-left:30px;}
+.pinion{
+	background:url(../images/pin.png) no-repeat scroll right center;
+	width: 11px;
+	height: 22px;
+	position:absolute;
+	left: -12px;	
+	top: 229px;
+	cursor: pointer
+	}	
+
+/*right panel*/
+.rght-side{ 
+	padding-top: 50px;
+	background:#fff;
+	border-left: 1px solid #dadada;
+	-webkit-transition:all 0.3s ease-in-out;
+-moz-transition:all 0.3s ease-in-out;
+-o-transition:all 0.3s ease-in-out;
+transition:all 0.3s ease-in-out
+	}
+.details > h3, .details > h3 + p{ color: #555;
+    text-transform: capitalize;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dadada;
+	}
+.details > h3 ~ p{
+	color: inherit;
+	text-transform: capitalize;
+	}	
+.details > h3 + p strong{ color:#666;
+	padding-left: 10px;
+	}	
+.detail-form{ padding-top: 20px;}	
+.detail-form p{margin-bottom:15px;}
+.detail-form p label{
+	text-transform:capitalize;
+	padding-bottom:5px;
+	padding-left:0px;
+	}
+.date-entry p:nth-child(2n), .entries p:nth-child(2n){
+	padding-left:0;}	
+.detail-form p input, .detail-form p select{ background-color: #fbfbfb; 
+	border: 1px solid #dadada;
+	padding: 15px 10px;
+	}
+.detail-form p input[type="search"]{
+	background-color: #e47023;
+	text-align:center;
+	}		
+.detail-form p input[type="search"]::-webkit-input-placeholder {color: #fff;}
+.detail-form p input[type="search"]:-moz-placeholder { /* Firefox 18- */color: #fff;}
+.detail-form p input[type="search"]::-moz-placeholder {  /* Firefox 19+ */color: #fff;}
+.detail-form p input[type="search"]:-ms-input-placeholder { color: #fff;}
+
+.status-wrpr{
+	padding:10px 0;
+	border-top: 1px solid #dadada;
+	border-bottom: 1px solid #dadada;
+	margin-bottom: 15px;
+	}	
+.status-wrpr .transactions p{
+	padding:5px 0;
+	font-size:15px;
+	}
+.status-wrpr .transactions p font{ padding-left:0;}	
+.status-wrpr .mode-details{
+	border-right:1px solid #dadada;
+	border-left: 1px solid #dadada;
+	line-height:22px;
+	}
+.status-wrpr .mode-details	p{padding:0;}
+.status-wrpr .mode-details	p:first-child{padding-right:7px;}	
+.status-wrpr .mode-details	p:last-child{padding-left:8px;}
+.status-wrpr .mode-details	p label{
+	padding:15px;
+	border: 1px solid #dadada;
+	display:block;	 
+	text-transform:capitalize;	   
+	}	
+.status-wrpr .mode-details	p label input{
+	display: inline-block;
+    vertical-align: middle;
+	margin-right:5px;
+	}	
+.dwnld-csv{
+	padding:0 !important;
+	text-align:center;
+    padding: 18px;
+	}
+.dwnld-btn{
+	background-color:rgb(0, 148, 72);
+	color:#fff;
+	border: 1px solid #fff;
+	padding:14px;
+	cursor: pointer;
+	}	
+.dwnld-btn i{
+	background:url(../images/Download-24x24-white.png) no-repeat scroll left center;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+	}	
+.status-tbl-wrpr{ margin-bottom:100px;}
+.status-tbl.col-md-12{
+	border: 1px solid #dadada;
+	border-right: 0;
+	border-bottom: 0;
+	padding: 0;
+	}	
+.heading-row{
+	background-color: #f7f7f7;	
+	}	
+.status-tbl td{
+	text-align: center;
+	padding: 15px 0;
+	border-bottom: 1px solid #dadada;
+	border-right: 1px solid #dadada;
+	}		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

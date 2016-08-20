@@ -1,0 +1,85 @@
+/*login/signup page*/
+
+.login-form-wrpr{ display: table; width: 100%; height: 100%; padding: 1.071rem;}
+.login-form-wrpr > div { display: table-cell; vertical-align: middle; width: 100%;}
+.login-form {margin: 2% auto 0; max-width: 500px; width: 100%; }
+.login-form > div {border: 1px solid #dcdcdc; padding: 30px; border-radius: 2px;}
+.login-form h1{ font-size: 32px;}
+
+/*main page*/
+.header{ padding: 10px 0; border-bottom: 1px solid #dadada; } 
+.header p{ padding-top: 5px;}
+.header p em{ margin-left:5px;}
+.user-icon {background: url(../images/user-icon.png) no-repeat scroll left center; padding: 6px 0 6px 30px; }
+
+/*left panel*/	
+.lft-side{ position:relative; -webkit-transition:all 0.3s ease-in-out; -moz-transition:all 0.3s ease-in-out; -o-transition:all 0.3s ease-in-out; transition:all 0.3s ease-in-out } 
+.lft-side.closed{width:0px; overflow:hidden; padding-left:0px; } 
+.lft-side.col-md-2{background-color: #f7f7f7; padding-top:30px; padding-right: 0px; } 
+.lft-side li a{text-transform: capitalize; font-size: 15px; color: #777777; padding:10px 0 10px 10px; display: block; } 
+.lft-side ul{min-width:200px;}
+.lft-side li a:hover{ background-color: #e1e1e1;}	
+.lft-side li.ui-state-active a{ background: #577882; color: #fff;}
+.lft-side ul li ul li a{ padding-left:30px;}
+.pinion{background:url(../images/pin.png) no-repeat scroll right center; width: 11px; height: 22px; position:absolute; left: -12px; top: 98px; cursor: pointer }
+
+/*right panel*/
+/*txn history starts*/
+.searchbox p input[type="text"]{ width: 80% !important;}
+.searchbox p input[type="button"]{ width: 20% !important;padding: 15px 0; outline: 0; border: 1px solid #577882 !important;}
+.rght-side{padding-top: 30px; background:#fff; border-left: 1px solid #dadada; -webkit-transition:all 0.3s ease-in-out; -moz-transition:all 0.3s ease-in-out; -o-transition:all 0.3s ease-in-out; transition:all 0.3s ease-in-out }
+.details > h3, .details > h3 + p{text-transform: capitalize; padding-bottom: 8px; border-bottom: 1px solid #dadada; }
+.details > h3 ~ p{color: inherit; text-transform: capitalize; }
+.details > h3 + p strong{ color:#666; padding-left: 10px; }
+.detail-form{ padding-top: 20px;}	
+.detail-form p{margin-bottom:15px;}
+.detail-form p label{text-transform:capitalize; padding-bottom:5px; padding-left:0px; }
+.detail-form p input, .detail-form p select{ background-color: #fbfbfb; border: 1px solid #dadada; padding: 15px 10px; }
+.detail-form p input[type="search"]{background-color: #e47023; text-align:center;}		
+.detail-form p input[type="search"]::-webkit-input-placeholder {color: #fff;}
+.detail-form p input[type="search"]:-moz-placeholder { color: #fff;}
+.detail-form p input[type="search"]::-moz-placeholder { color: #fff;}
+.detail-form p input[type="search"]:-ms-input-placeholder { color: #fff;}
+
+.status-wrpr{padding:10px 0; border-top: 1px solid #dadada; border-bottom: 1px solid #dadada; margin-bottom: 15px; } 
+.status-wrpr .transactions p{padding:5px 0; font-size:15px; } 
+.status-wrpr .transactions p font{ padding-left:0;} 
+.status-wrpr .mode-details{border-right:1px solid #dadada; border-left: 1px solid #dadada; line-height:22px; } 
+.status-wrpr .mode-details	p{padding:0;} 
+.status-wrpr .mode-details	p:first-child{padding-right:7px;} 
+.status-wrpr .mode-details	p:last-child{padding-left:8px;} 
+.status-wrpr .mode-details	p label{padding:15px; border: 1px solid #dadada; display:block; text-transform:capitalize; } 
+.status-wrpr .mode-details	p label input{display: inline-block; vertical-align: middle; margin-right:5px; } 
+
+.dwnld-csv{padding:0 !important; text-align:center; padding: 18px; }
+.dwnld-btn{background-color:rgb(0, 148, 72); color:#fff; border: 1px solid #fff; padding:14px; cursor: pointer; }
+.dwnld-btn i{background:url(../images/Download-24x24-white.png) no-repeat scroll left center; width: 24px; height: 24px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+.status-tbl-wrpr{ margin-bottom:50px; max-height: 700px; overflow: auto;}
+.status-tbl.col-md-12{border: 1px solid #dadada; border-right: 0; border-bottom: 0; padding: 0; }
+.heading-row{background-color: #f7f7f7; }
+.status-tbl td{text-align: left; padding: 10px; border-bottom: 1px solid #dadada; border-right: 1px solid #dadada; font-size: 12px;  color: #404040;}
+.status-tbl td:last-child{ text-align: center;}
+.tab-content {display: none;} 
+#tab-1 {display: block; }	
+
+/*txn history ends*/
+
+/*order status starts*/
+
+.ordr-dtls, .price > div{ background: #e1e1e1; padding: 5px;}
+
+/*order status ends*/
+.price .frm-field p input{ padding: 8px;}
+
+/*toggle*/
+.tggl-wrpr{ display:inline-block;}
+.tggl-wrpr input{display:none;}
+.tggl-wrpr b{display:inline-block; border-radius:50%; width:22px; height:22px; position:absolute; transition:all .3s ease-in-out;}
+.tggl-wrpr em{ width:50px; height:18px; display: inline-block; position:relative; border-radius:10px; vertical-align: middle;}
+.tggl-wrpr input[type="checkbox"]:checked + em{ background-color: #4CF41A;}
+.tggl-wrpr input[type="checkbox"] + em{ background-color: #ff0000;}
+.tggl-wrpr input[type="checkbox"]:checked + em b{ background: #246208; left:28px; top:-2px;}
+.tggl-wrpr input[type="checkbox"] + em b{ background-color: #920707; left:0px; top:-2px;}
+.tggl-wrpr input[type="checkbox"]:checked ~ .status:after{ content:'Open';}
+.tggl-wrpr input[type="checkbox"] ~ .status:after{ content:'Close';}
+.status{font-size: 18px; display: inline-block; vertical-align: middle; margin-left:10px;}
