@@ -3,10 +3,10 @@ var config = {
 };
 
 window.onload = function (e) {
-  initSignup();
+  initSignupNLogin();
 };
 
-function initSignup() {
+function initSignupNLogin() {
   $('.error').toggle(false);
   $('.js-signup-btn').prop('disabled', true);
   $('form').submit(function (e) {
@@ -15,6 +15,35 @@ function initSignup() {
   $(".js-tnc-chkbox").change(function () {
     if (this.checked) {
       $('.js-signup-btn').prop('disabled', false);
+    }
+  });
+}
+
+function doLogin() {
+  console.log('doLogin');
+  event.preventDefault();
+  var _user = {
+    email: $('.js-login-email').val(),
+    password: $('.js-login-password').val()
+  };
+  $.ajax({
+    url: config.server_url + '/api/v1/users/signin',
+    data: _user,
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if (json.token && json.expires) {
+        var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
+        Cookies.set('user', json, {expires: expire_in_days});
+        window.location.replace('/');
+      } else {
+        $('.error').toggle(true);
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      $('.error').toggle(true);
     }
   });
 }
