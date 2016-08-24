@@ -25,8 +25,7 @@ var users={
     userCreate:function(req,res){
             var def= q.defer();
             bcrypt.genSalt(10, function(err, salt) {
-                var passInterim=randomString(5,'aA#')
-                bcrypt.hash(passInterim, salt, function(err, hash) {
+                bcrypt.hash(req.body.password, salt, function(err, hash) {
                     // Store hash in your password DB.
                     req.body.password=hash;
                     req.body._id=new ObjectId();
@@ -54,9 +53,11 @@ var users={
         },
     signin:function(req,res){
         var def= q.defer();
-        userTable.findOne({email:req.body.email},"password name phonenumber is_verified is_operator is_admin").exec()
+        userTable.findOne({email:req.body.email},"password name phonenumber is_res_owner is_admin").exec()
             .then(function(user){
+                log.info(user);
                 bcrypt.compare(req.body.password,user.password,function(err,res){
+                    log.info(err,res);
                     if(err){
                         def.reject({status: 500, message: config.get('error.dberror')});
                         return;
@@ -109,7 +110,6 @@ var users={
     },
     updateUserProfile:function(req,res){
         var def= q.defer();
-        if(req.user.is_verified){
             for(var key in req.body){
                 if(key!="name"&&key!="email"&&key!="profession"&&key!="address"){
                     delete req.body[key];
@@ -129,9 +129,6 @@ var users={
                     log.warn(err);
                     def.reject({status: 500, message: config.get('error.dberror')});
                 })
-        }else{
-            def.reject({status: 401, message: config.get('error.unauthorized')});
-        }
         return def.promise;
     },
     insertDevice:function(req,res){

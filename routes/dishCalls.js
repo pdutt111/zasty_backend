@@ -36,8 +36,8 @@ router.get('/protected/restaurant/:name/dishes',
                 res.status(err.status).json(err.message);
             });
     });
-router.post('/protected/restaurant/:name/dishes/',
-    params({body:['res_id','dishes']},
+router.post('/protected/restaurant/:name/dishes/add',
+    params({body:['dishes']},
         {message : config.get('error.badrequest')}),
     function(req,res){
     restaurantLogic.addDishes(req)

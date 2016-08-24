@@ -81,27 +81,27 @@ router.post('/signin',params({body:['email','password']},{message : config.get('
                 res.status(err.status).json(err.message);
             }).done();
     })
-router.post('/protected/info/renew',params({body:['secret']},{message : config.get('error.badrequest')}),
-    function(req,res,next){
-        usersLogic.renewToken(req,res)
-            .then(function(){
-                req.secret=false;
-                next();
-            })
-            .catch(function(err){
-                    res.status(err.status).json(err.message);
-            }).done();
-    },
-    function(req,res,next){
-        usersLogic.sendToken(req,res)
-            .then(function(response){
-                res.json(response);
-            })
-            .catch(function(err){
-                log.error(err);
-                res.status(500).json(config.get('error.dberror'));
-            }).done();
-    });
+//router.post('/protected/info/renew',params({body:['secret']},{message : config.get('error.badrequest')}),
+//    function(req,res,next){
+//        usersLogic.renewToken(req,res)
+//            .then(function(){
+//                req.secret=false;
+//                next();
+//            })
+//            .catch(function(err){
+//                    res.status(err.status).json(err.message);
+//            }).done();
+//    },
+//    function(req,res,next){
+//        usersLogic.sendToken(req,res)
+//            .then(function(response){
+//                res.json(response);
+//            })
+//            .catch(function(err){
+//                log.error(err);
+//                res.status(500).json(config.get('error.dberror'));
+//            }).done();
+//    });
 router.post('/protected/device',params({body:['service','reg_id'],headers:['authorization']},{message : config.get('error.badrequest')}),function(req,res,next){
     usersLogic.insertDevice(req,res)
         .then(function(){

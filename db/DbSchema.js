@@ -67,7 +67,7 @@ var orderSchema=new Schema({
         identifier:String,
         price_recieved:Number,
         price_to_pay:Number}],
-    restaurant_assigned:{type:ObjectId, ref:'restaurants'},
+    restaurant_assigned:String,
     status:String,
     source:String,
     delivery_person_alloted:String,
@@ -84,7 +84,7 @@ var orderSchema=new Schema({
 var restaurantSchema=new Schema({
     name:{type:String,unique:true,dropDups:true},
     location:{type:[Number],index:"2dsphere"},
-    dishes:[{identifier:String,price:Number,availability:{type:Boolean,default:true}}],
+    dishes:[{_id:false,identifier:String,price:Number,price_to_consumer:Number,availability:{type:Boolean,default:true}}],
     open_status:{type:Boolean,default:false},
     contact_number:Number,
     contact_name:String,
@@ -92,6 +92,7 @@ var restaurantSchema=new Schema({
     nomnom_password:String,
     owner_id:{type:ObjectId, ref:'restaurants'},
     is_deleted:{type:Boolean,default:false},
+    is_verified:{type:Boolean,default:false},
     created_time:{type:Date,default:Date.now},
     modified_time:{type:Date,default:Date.now}
 });
@@ -100,7 +101,7 @@ var areaSchema=new Schema({
     locality:String,
     city:String,
     country:String,
-    serviced_by:{type:ObjectId, ref:'restaurants'},
+    serviced_by:String,
     created_time:{type:Date,default:Date.now},
     modified_time:{type:Date,default:Date.now}
 });

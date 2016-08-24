@@ -11,6 +11,7 @@ var log = require('tracer').colorConsole(config.get('log'));
 var users = require('./routes/usersCalls');
 var dishes = require('./routes/dishCalls');
 var restaurant = require('./routes/restaurantCalls');
+var order = require('./routes/orderingCalls');
 var views= require('./routes/viewCalls');
 var app = express();
 
@@ -82,8 +83,9 @@ app.use(
  * routes
  */
 app.use('/api/v1/dishes',dishes);
-app.use('/api/v1/restaurant',restaurant);
+app.use('/api/v1/res',restaurant);
 app.use('/api/v1/users', users);
+app.use('/api/v1/order', order);
 //app.use('/',views);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

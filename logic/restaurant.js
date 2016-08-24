@@ -17,10 +17,13 @@ var bcrypt = require('bcrypt');
 
 var restaurantTable=db.getrestaurantdef;
 var userTable=db.getuserdef;
+var orderTable=db.getorderdef;
+
 
 var listings={
     checkAdmin:function(req){
         var def= q.defer();
+        log.info(req.user);
         if(req.user.is_admin){
             def.resolve();
         }else{
@@ -30,7 +33,7 @@ var listings={
     },
     checkProperUser:function(req){
       var def= q.defer();
-        if(req.user.admin){
+        if(req.user.is_admin){
           def.resolve();
         }else{
             userTable.findOne({_id:req.user._id},"is_res_owner restaurant",function(err,user){
@@ -94,6 +97,7 @@ var listings={
         var def= q.defer();
         restaurantTable.find({is_deleted:false,is_verified:true},"name location contact_name contact_number dishes open_status is_deleted",
             function(err,restaurants){
+                log.info(restaurants);
                 if(!err){
                     def.resolve(restaurants);
                 }else{
@@ -104,7 +108,9 @@ var listings={
     },
     addDishes:function(req){
         var def= q.defer();
-        restaurantTable.update({name:req.params.name,is_deleted:false},{$addToSet:{$each:req.body.dishes}},function(err,info){
+        log.info(req.body.dishes);
+        restaurantTable.update({name:req.params.name,is_deleted:false},{$addToSet:{dishes:{$each:req.body.dishes}}},function(err,info){
+            log.info(err);
             if(!err){
                 def.resolve(config.get('ok'));
             }else{
@@ -118,7 +124,7 @@ var listings={
         restaurantTable.findOne({name:req.params.name,is_deleted:false},"dishes",
             function(err,restaurant){
                 if(!err){
-                    def.resolve(restaurant);
+                    def.resolve(restaurant.dishes);
                 }else{
                     def.reject({status:500,message:config.get('error.dberror')});
                 }
@@ -128,7 +134,8 @@ var listings={
     disableDish:function(req){
         var def= q.defer();
         restaurantTable.update({name:req.params.name,'dishes.$.identifier':req.body.dish_name},
-            {$set:{'dishes.$.availability':false}},function(err,info){
+            {$set:{'dishes.$.availability':false}},{multi:true},function(err,info){
+                log.info(err,info);
                 if(!err){
                     def.resolve(config.get('ok'));
                 }else{
@@ -207,6 +214,7 @@ var listings={
         return def.promise;
     },
     verifyRestaurant:function(req){
+        var def= q.defer();
         restaurantTable.update({name:req.params.name},{$set:{is_verified:true}},function(err,info){
             if(!err){
                 def.resolve(config.get('ok'));
@@ -214,6 +222,82 @@ var listings={
                 def.reject({status:500,message:config.get('error.dberror')});
             }
         });
+        return def.promise;
+    },
+    getOrders:function(req){
+        var def= q.defer();
+        orderTable.find({restaurant_assigned:req.params.name},
+            "address dishes_ordered city locality area rejection_reason status")
+            .skip(Number(req.query.offset)).limit(20)
+            .exec(function(err,rows){
+                log.info(err);
+                if(!err){
+                    def.resolve(rows);
+                }else{
+                    def.reject({status:500,message:config.get('error.dberror')});
+                }
+            })
+        return def.promise;
+    },
+    getOrder:function(req){
+        var def= q.defer();
+        orderTable.findOne({_id:new ObjectId(req.query.order_id)},
+            "address dishes_ordered city locality area rejection_reason status"
+            ,function(err,order){
+                if(!err){
+                    def.resolve(order);
+                }else {
+                    def.reject({status: 500, message: config.get('error.dberror')});
+                }
+            });
+        return def.promise;
+    },
+    confirmOrder:function(req){
+        var def= q.defer();
+        orderTable.update({_id:new ObjectId(req.body.order_id)},{$set:{status:"confirmed"}},function(err,info){
+            if(!err){
+                def.resolve(config.get('ok'));
+            }else{
+                def.reject({status:500,message:config.get('error.dberror')});
+            }
+        });
+        return def.promise;
+    },
+    rejectOrder:function(req){
+        var def= q.defer();
+        orderTable.update({_id:new ObjectId(req.body.order_id)},
+            {$set:{status:"rejected",rejection_reason:req.body.reason}},function(err,info){
+                if(!err){
+                    def.resolve(config.get("ok"));
+                }else{
+                    def.reject({status:500,message:config.get('error.dberror')});
+                }
+            });
+        orderTable.findOne({_id:new ObjectId(req.body.order_id)},
+            "address dishes_ordered city locality area rejection_reason status"
+            ,function(err,order){
+                if(!err){
+                    events.emitter.emit("rejected order",order);
+                }
+            });
+        return def.promise;
+    },
+
+    changeOrderStatus:function(req){
+        var def= q.defer();
+        if(req.status=="prepared"||req.status=="dispatched"||req.status=="delivered"||req.status=="new"){
+            orderTable.update({_id:new ObjectId(req.body.order_id)},
+                {$set:{status:req.body.status}},function(err,info){
+                    if(!err){
+                        def.resolve(config.get("ok"));
+                    }else{
+                        def.reject({status:500,message:config.get('error.dberror')});
+                    }
+                });
+        }else{
+            def.reject({status:400,message:config.get('error.badrequest')});
+        }
+        return def.promise;
     }
 };
 module.exports=listings;

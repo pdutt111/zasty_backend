@@ -15,6 +15,25 @@ var restaurantLogic=require('../logic/restaurant');
 
 
 
+router.get('/protected/restaurant/all',
+    function(req,res,next){
+        restaurantLogic.checkAdmin(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.getRestaurants(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
 router.put('/protected/restaurant/:name',
     params({body:['location','contact_number','contact_name','dishes']},
     {message : config.get('error.badrequest')}),
@@ -58,25 +77,6 @@ router.get('/protected/restaurant/:name',
     },
     function(req,res){
         restaurantLogic.getRestaurant(req)
-            .then(function(restaurant){
-                res.json(restaurant);
-            })
-            .catch(function(err){
-                res.status(err.status).json(err.message);
-            })
-    });
-router.get('/protected/restaurant/all',
-    function(req,res,next){
-        restaurantLogic.checkAdmin(req)
-            .then(function(){
-                next();
-            })
-            .catch(function(err){
-                res.status(err.status).json(err.message);
-            })
-    },
-    function(req,res){
-        restaurantLogic.getRestaurants(req)
             .then(function(restaurant){
                 res.json(restaurant);
             })
@@ -161,4 +161,107 @@ router.post('/protected/restaurant/:name/close',
             })
     });
 
+router.get('/protected/restaurant/:name/orders',
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.getOrders(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
+router.get('/protected/restaurant/:name/order',
+    params({query:['order_id']},
+        {message : config.get('error.badrequest')}),
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.getOrder(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
+router.post('/protected/restaurant/:name/order/confirm',
+    params({body:['order_id']},
+        {message : config.get('error.badrequest')}),
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.confirmOrder(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
+router.post('/protected/restaurant/:name/order/reject',
+    params({body:['order_id']},
+        {message : config.get('error.badrequest')}),
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.rejectOrder(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
+router.post('/protected/restaurant/:name/order/status',
+    params({body:['status']},
+        {message : config.get('error.badrequest')}),
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.changeOrderStatus(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
 module.exports = router;
