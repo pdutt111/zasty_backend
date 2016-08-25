@@ -1,7 +1,7 @@
 var config = {
   server_url: 'http://127.0.0.1:3000'
 };
-var user, restaurant;
+var user, restaurant, context = {};
 
 window.onload = function (e) {
   getUser();
@@ -100,6 +100,7 @@ function getRestaurant() {
       if ((json.name === user.restaurant_name)) {
         restaurant = json;
         $('#abc').prop('checked', restaurant.open_status);
+        renderDishTable(restaurant.dishes);
       } else {
         $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
       }
@@ -184,4 +185,20 @@ function doSignup(e) {
       $('.error').toggle(true);
     }
   });
+}
+
+function renderDishTable(dishes) {
+  var rows = dishes.map(function (dish, index) {
+    return '<tr> <td>' + dish.identifier + '</td> <td>' + dish.price + '</td> <td><a onclick="editDish(' + index + ')">edit</a></td></tr>';
+  });
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Details</td></tr>' + rows + '</table>';
+
+  $('.js-dish-table').html(table);
+}
+
+function editDish(i) {
+  console.log('editDish', i);
+  context.active_dish = i;
+  $('.js-curr-dish-name').html(restaurant.dishes[i].identifier);
+  $('.js-curr-dish-value').html(restaurant.dishes[i].price);
 }
