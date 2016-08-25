@@ -133,7 +133,7 @@ var listings={
     },
     disableDish:function(req){
         var def= q.defer();
-        restaurantTable.update({name:req.params.name,'dishes.$.identifier':req.body.dish_name},
+        restaurantTable.update({name:req.params.name,'dishes.identifier':req.body.dish_name},
             {$set:{'dishes.$.availability':false}},{multi:true},function(err,info){
                 log.info(err,info);
                 if(!err){
@@ -146,8 +146,8 @@ var listings={
     },
     enableDish:function(req){
         var def= q.defer();
-        restaurantTable.update({name:req.params.name,'dishes.$.identifier':req.body.dish_name},
-            {$set:{'dishes.$.availability':true}},function(err,info){
+        restaurantTable.update({name:req.params.name,'dishes.identifier':req.body.dish_name},
+            {$set:{'dishes.$.availability':true}},{multi:true},function(err,info){
                 if(!err){
                     def.resolve(config.get('ok'));
                 }else{
@@ -158,8 +158,9 @@ var listings={
     },
     deleteDish:function(req){
         var def= q.defer();
-        restaurantTable.update({name:req.params.name,'dishes.$.identifier':req.body.dish_name},
-            {$pull:{'dishes.$.identifier':req.body.dish_name}},function(err,info){
+        restaurantTable.update({name:req.params.name},
+            {$pull:{'dishes':{identifier:req.body.dish_name}}},function(err,info){
+                log.info(err,info);
                 if(!err){
                     def.resolve(config.get('ok'));
                 }else{
@@ -170,7 +171,7 @@ var listings={
     },
     updateDishPrice:function(req){
         var def= q.defer();
-        restaurantTable.update({name:req.params.name,'dishes.$.identifier':req.body.dish_name},
+        restaurantTable.update({name:req.params.name,'dishes.identifier':req.body.dish_name},
             {$set:{'dishes.$.price':req.body.price}},function(err,info){
                 if(!err){
                     def.resolve(config.get('ok'));

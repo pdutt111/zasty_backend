@@ -73,7 +73,7 @@ router.post('/protected/restaurant/:name/dishes/enable',
             })
     });
 router.post('/protected/restaurant/:name/dishes/update',
-    params({body:['dish_name']},
+    params({body:['dish_name','price']},
         {message : config.get('error.badrequest')}),
     function(req,res){
         restaurantLogic.updateDishPrice(req)
