@@ -9,14 +9,35 @@ window.onload = function (e) {
   initDash();
 };
 
-function toggleResturant(val) {
+function toggleRestaurant(val) {
   console.log('toggleResturant', val);
-  $('#abc').prop('checked', val);
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/'
+    + user.restaurant_name + '/' + (val ? 'open' : 'close'),
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if (json.result === 'ok') {
+        $('#abc').prop('checked', val);
+      } else {
+        $('#abc').prop('checked', !val);
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      $('#abc').prop('checked', !val);
+    }
+  });
 }
 
 function initDash() {
   $('#abc').click(function () {
-    toggleResturant(this.checked);
+    toggleRestaurant(this.checked);
   });
 }
 
