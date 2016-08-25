@@ -1,12 +1,24 @@
 var config = {
   server_url: 'http://127.0.0.1:3000'
 };
-var user;
+var user, restaurant;
 
 window.onload = function (e) {
-  initSignupNLogin();
   getUser();
+  initSignupNLogin();
+  initDash();
 };
+
+function toggleResturant(val) {
+  console.log('toggleResturant', val);
+  $('#abc').prop('checked', val);
+}
+
+function initDash() {
+  $('#abc').click(function () {
+    toggleResturant(this.checked);
+  });
+}
 
 function logOut() {
   console.log('logOut');
@@ -36,7 +48,9 @@ function getUser() {
         if (json.email) {
           user.email = json.email;
           user.phonenumber = json.phonenumber || '';
+          user.restaurant_name = json.restaurant_name || null;
           $('.js-user-email').html(user.email);
+          getRestaurant();
         } else {
           logOut();
         }
@@ -49,6 +63,32 @@ function getUser() {
   } else {
     window.location.href = '/login.html';
   }
+}
+
+function getRestaurant() {
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name,
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'GET',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if ((json.name === user.restaurant_name)) {
+        restaurant = json;
+        $('#abc').prop('checked', restaurant.open_status);
+      } else {
+        $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
+    }
+  });
+
 }
 
 function initSignupNLogin() {
