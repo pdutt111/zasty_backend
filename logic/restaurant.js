@@ -38,8 +38,8 @@ var listings={
         }else{
             userTable.findOne({_id:req.user._id},"is_res_owner restaurant",function(err,user){
                 if(!err){
-                    if(((req.params.name)&&(req.params.name==user.restaurant))||
-                        ((req.body.name)&&(req.body.name==user.restaurant))){
+                    if(((req.params.name)&&(req.params.name==user.restaurant_name))||
+                        ((req.body.name)&&(req.body.name==user.restaurant_name))){
                         def.resolve();
                     }else{
                         def.reject({status:401,message:config.get("error.unauthorized")});
