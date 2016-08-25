@@ -1,12 +1,58 @@
 var config = {
   server_url: 'http://127.0.0.1:3000'
 };
+var user;
 
 window.onload = function (e) {
   initSignupNLogin();
+  getUser();
 };
 
+function logOut() {
+  console.log('logOut');
+  Cookies.remove('user');
+  window.location.href = '/login.html';
+}
+
+function getUser() {
+  console.log('getUser');
+  user = Cookies.getJSON('user');
+
+  if (window.location.href.indexOf('login') != -1) {
+    return false;
+  }
+  console.log('getUser2');
+  if (user.token && (new Date(user.expires) > Date.now())) {
+    $.ajax({
+      url: config.server_url + '/api/v1/users/protected/info',
+      headers: {
+        'Authorization': user.token,
+        'Content-Type': 'application/json'
+      },
+      type: 'GET',
+      dataType: "json",
+      success: function (json) {
+        console.log(json);
+        if (json.email) {
+          user.email = json.email;
+          user.phonenumber = json.phonenumber || '';
+          $('.js-user-email').html(user.email);
+        } else {
+          logOut();
+        }
+      },
+      error: function (xhr, _status, errorThrown) {
+        console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        $('.js-login-error').toggle(true);
+      }
+    });
+  } else {
+    window.location.href = '/login.html';
+  }
+}
+
 function initSignupNLogin() {
+  console.log('initSignupNLogin');
   $('.error').toggle(false);
   $('.js-signup-btn').prop('disabled', true);
   $('form').submit(function (e) {
