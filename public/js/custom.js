@@ -51,11 +51,11 @@ function getUser() {
   console.log('getUser');
   user = Cookies.getJSON('user');
 
-  if (window.location.href.indexOf('login') != -1) {
+  if (/login|signup/.test(window.location.href)) {
     return false;
   }
-  console.log('getUser2');
-  if (user.token && (new Date(user.expires) > Date.now())) {
+
+  if (user && user.token && (new Date(user.expires) > Date.now())) {
     $.ajax({
       url: config.server_url + '/api/v1/users/protected/info',
       headers: {
@@ -187,11 +187,13 @@ function doSignup(e) {
   });
 }
 
-function renderDishTable(dishes) {
-  var rows = dishes.map(function (dish, index) {
-    return '<tr> <td>' + dish.identifier + '</td> <td>' + dish.price + '</td> <td><a onclick="editDish(' + index + ')">edit</a></td></tr>';
+function renderDishTable() {
+  var rows = restaurant.dishes.map(function (dish, index) {
+    return '<tr><td>' + dish.identifier + '</td> <td>' + dish.price + '</td>'
+      + '<td><input type="checkbox" checked="' + dish.availability + '" onclick="toggleDish(' + index + ');" ></td>'
+      + '<td><a onclick="editDish(' + index + ')">edit</a></td></tr>';
   });
-  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Details</td></tr>' + rows + '</table>';
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td><td>Details</td></tr>' + rows + '</table>';
 
   $('.js-dish-table').html(table);
 }
@@ -201,4 +203,59 @@ function editDish(i) {
   context.active_dish = i;
   $('.js-curr-dish-name').html(restaurant.dishes[i].identifier);
   $('.js-curr-dish-value').html(restaurant.dishes[i].price);
+}
+
+function toggleDish(i) {
+  console.log('toggleDish', i);
+  dishShowLoading();
+  $.ajax({
+    url: config.server_url + '/api/v1/dishes/protected/restaurant/'
+    + user.restaurant_name + '/dishes/' + (restaurant.dishes[i].availability ? 'disable' : 'enable'),
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    data: {dish_name: restaurant.dishes[i].identifier},
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      dishRefresh();
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      dishRefresh();
+    }
+  });
+
+}
+
+function dishShowLoading() {
+  $('.js-dish-table').html('loading...');
+}
+
+function dishRefresh() {
+  dishShowLoading();
+  $.ajax({
+    url: config.server_url + '/api/v1/dishes/protected/restaurant/' + user.restaurant_name + '/dishes',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'GET',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if (Array.isArray(json)) {
+        restaurant.dishes = json;
+        renderDishTable();
+      } else {
+        $('.js-dish-table').html('Dishes not found.');
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      $('.js-dish-table').html('Please reload.');
+    }
+  });
 }
