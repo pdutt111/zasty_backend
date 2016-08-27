@@ -16,6 +16,7 @@ var views= require('./routes/viewCalls');
 
 require('./event_recievers/smsSender');
 require('./event_recievers/mailSender');
+require('./event_recievers/fetch_nomnom');
 
 var app = express();
 

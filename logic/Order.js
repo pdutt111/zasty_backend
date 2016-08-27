@@ -113,6 +113,15 @@ var orderLogic={
 
             }
         }
+        var source={
+            name:"website",
+            id:false
+        }
+        if(req.body.source){
+            source.name=req.body.source.name;
+            source.id=req.body.source.id;
+        }
+        log.info(source);
         var order=new orderTable({
             address:req.body.address,
             area:req.body.area,
@@ -124,7 +133,8 @@ var orderLogic={
             customer_email:req.body.customer_email,
             dishes_ordered:dishes_ordered,
             restaurant_assigned:restaurant.name,
-            status:"awaiting response"
+            status:"awaiting response",
+            source:source
         });
         order.save(function(err,order,info){
             log.info(err);

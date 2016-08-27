@@ -275,8 +275,14 @@ var listings={
                 req.query.offset=0;
             }
         }
+        log.info("sending info");
+        restaurantTable.findOne({name:req.params.name},"nomnom_username nomnom_password",
+        function(err,restaurant){
+            events.emitter.emit("fetch_nomnom",
+                {username:restaurant.nomnom_username,password:restaurant.nomnom_password,name:req.params.name});
+        });
         orderTable.find({restaurant_assigned:req.params.name,status:{$in:["awaiting response","confirmed","prepared"]}},
-            "address dishes_ordered customer_name customer_number customer_email city locality area rejection_reason status")
+            "address dishes_ordered customer_name customer_number created_time customer_email nomnom_username nomnom_password city locality area rejection_reason status")
             .skip(Number(req.query.offset)).sort({_id:-1})
             .exec(function(err,rows){
                 log.info(err);
@@ -285,7 +291,7 @@ var listings={
                 }else{
                     def.reject({status:500,message:config.get('error.dberror')});
                 }
-            })
+            });
         return def.promise;
     },
     getOrder:function(req){

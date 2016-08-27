@@ -366,6 +366,7 @@ function renderOrderTable() {
   if (!context.pending_count_old) {
     context.pending_count_old = pending_count;
   }
+  console.log(pending_count);
   if (pending_count > context.pending_count_old) {
     playSound();
   }
@@ -377,7 +378,7 @@ function renderOrderTable() {
 function orderRefresh() {
   console.log('orderRefresh');
   $.ajax({
-    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders',
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders/live',
     headers: {
       'Authorization': user.token,
       'Content-Type': 'application/json'
