@@ -193,33 +193,31 @@
                             </table>
                         </div>
                     </div>
-                    <div class="ordr-dtls col-md-3 nopadright">
+                    <div class="ordr-dtls col-md-3 nopadright js-od" style="display: none">
                         <div>
                             <div class="brdrwthbg tgreydark tnormal tbold">Order Details</div>
                             <div class="clear10"></div>
                             <div class="brdrwthbg tgreydark tnormal">
                                 <p class="dpblk tgreydark tsmall tbold">Order Id:</p>
                                 <div class="clear5"></div>
-                                <p class="dpblk tgreydark uppercase tmicro">qwertyuikjb12345678</p>
+                                <p class="dpblk tgreydark tmicro js-od-id">qwertyuikjb12345678</p>
                             </div>
                             <div class="clear10"></div>
                             <div class="brdrwthbg tgreydark tnormal">
                                 <p class="dpblk tgreydark tsmall tbold">Date:</p>
                                 <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro">Jul 30, 2016 11am</p>
+                                <p class="dpblk tgreydark tmicro js-od-date">Jul 30, 2016 11am</p>
                                 <div class="clear10"></div>
                                 <p class="dpblk tgreydark tsmall tbold">Total Amount:</p>
                                 <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro">Rs. 1223</p>
+                                <p class="dpblk tgreydark tmicro js-od-total">Rs. 1223</p>
                                 <div class="clear10"></div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <p class="dpblk tgreydark tsmall tbold">Order Status:</p>
-                                        <p class="dpblk tgreydark tmicro">Chargeable</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p class="dpblk tgreydark tsmall tbold">Delivery:</p>
-                                        <p class="dpblk tgreydark tmicro">Delivered</p>
+                                        <p class="dpblk tgreydark tsmall tbold js-od-status">Status</p>
                                     </div>
                                 </div>
                             </div>
@@ -227,27 +225,35 @@
                             <div class="brdrwthbg tgreydark tnormal">
                                 <p class="dpblk tgreydark tsmall tbold">Delivery Address:</p>
                                 <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro">Dwarka Sector 1</p>
+                                <p class="dpblk tgreydark tmicro js-od-address">Dwarka Sector 1</p>
                             </div>
                             <div class="clear10"></div>
                             <div class="brdrwthbg tgreydark tnormal">
                                 <p class="dpblk tgreydark tnormal tbold">Order Items:</p>
                                 <div class="clear10"></div>
                                 <div class="row">
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
                                         <p class="dpblk tgreydark tsmall tleft tbold">Name</p>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <p class="dpblk tgreydark tsmall tright tbold">Qty</p>
+                                    </div>
+                                    <div class="col-md-3">
                                         <p class="dpblk tgreydark tsmall tright tbold">Price</p>
                                     </div>
                                 </div>
                                 <div class="hr"></div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <p class="dpblk tgreydark tmicro tleft">sdfghjbbygv flnkbcgh yghjnkm</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="dpblk tgreydark tmicro tright">129</p>
+                                <div class="js-od-dishes">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="dpblk tgreydark tmicro tleft">sdfghjbbygv flnkbcgh yghjnkm</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="dpblk tgreydark tmicro tright">x 2</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="dpblk tgreydark tmicro tright">129</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="hr"></div>
@@ -256,7 +262,7 @@
                                         <p class="dpblk tgreydark tmicro tright">Taxes</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="dpblk tgreydark tmicro tright">129</p>
+                                        <p class="dpblk tgreydark tmicro tright">0</p>
                                     </div>
                                 </div>
                                 <div class="clear5"></div>
@@ -265,7 +271,7 @@
                                         <p class="dpblk tgreydark tmicro tright">Fee</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="dpblk tgreydark tmicro tright">129</p>
+                                        <p class="dpblk tgreydark tmicro tright">0</p>
                                     </div>
                                 </div>
                                 <div class="hr"></div>
@@ -274,7 +280,7 @@
                                         <p class="dpblk tgreydark tsmall tright tbold">Total</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="dpblk tgreydark tsmall tright tbold">1129</p>
+                                        <p class="dpblk tgreydark tsmall tright tbold js-od-total">1129</p>
                                     </div>
                                 </div>
                             </div>
@@ -316,7 +322,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="price col-md-3 nopadright" >
+                    <div class="price col-md-3 nopadright">
                         <div class="js-edit-dish" style="display: none">
                             <div class="brdrwthbg tgreydark tnormal tbold js-curr-dish-name">Dish Name</div>
                             <div class="clear10"></div>
@@ -336,7 +342,8 @@
                                     <div class="clear5"></div>
                                     <div class="frm-field">
                                         <p>
-                                            <input onclick="dishEdit()" class="crsrpntr bg-dgrey twhite" type="button" value="Set New Value">
+                                            <input onclick="dishEdit()" class="crsrpntr bg-dgrey twhite" type="button"
+                                                   value="Set New Value">
                                         </p>
                                     </div>
                             </div>
@@ -349,14 +356,17 @@
                                 <form>
                                     <div class="frm-field">
                                         <p>
-                                            <input type="text" class="bg-lgrey js-ndn" placeholder="Enter New Dish Name">
-                                            <input type="text" class="bg-lgrey js-ndv" placeholder="Enter New Dish Value">
+                                            <input type="text" class="bg-lgrey js-ndn"
+                                                   placeholder="Enter New Dish Name">
+                                            <input type="text" class="bg-lgrey js-ndv"
+                                                   placeholder="Enter New Dish Value">
                                         </p>
                                     </div>
                                     <div class="clear5"></div>
                                     <div class="frm-field">
                                         <p>
-                                            <input onclick="dishAdd()" class="crsrpntr bg-dgrey twhite" type="button" value="Add New Dish">
+                                            <input onclick="dishAdd()" class="crsrpntr bg-dgrey twhite" type="button"
+                                                   value="Add New Dish">
                                         </p>
                                     </div>
                             </div>

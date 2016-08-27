@@ -322,15 +322,23 @@ function dishAdd() {
 
 function renderOrderTable() {
   console.log('renderOrderTable');
-  var rows = restaurant.orders.map(function (order, index) {
-    var total = 0, dishes = '';
+  var rows = [];
+  restaurant.orders.forEach(function (order, index) {
+    var total = 0, dishes = '', dishes_html = '', date = '';
     order.dishes_ordered.forEach(function (e) {
-      dishes = dishes + '<BR/>' + e.identifier;
-      total = total + e.price_to_pay;
+      date = (new Date(order.created_time)).toString().substr(0, 24);
+      dishes = dishes + e.identifier + ' x ' + e.qty + '<BR/>';
+      total = total + (e.price_recieved * e.qty);
+      dishes_html = dishes_html + '<div class="row"> <div class="col-md-6"> <p class="dpblk tgreydark tmicro tleft">' + e.identifier + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">x ' + e.qty + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">' + e.price_recieved + '</p> </div> </div>';
     });
-    return '<tr><td>' + order._id + '</td><td>' + order.status + '</td><td>'
-      + order.date + '</td><td>' + dishes + '</td><td>'
-      + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>';
+    order.date = date;
+    order.total = total;
+    order.dishes = dishes;
+    order.dishes_html = dishes_html;
+
+    rows.push('<tr><td>' + order._id + '</td><td>' + order.status + '</td><td>'
+      + date + '</td><td>' + dishes + '</td><td>'
+      + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
   });
   var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>Order ID</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
   $('.js-order-table').html(table);
@@ -362,4 +370,13 @@ function orderRefresh() {
 
 function orderDetails(i) {
   console.log('orderDetails', i);
+  context.active_order = i;
+
+  var o = restaurant.orders[i];
+  $('.js-od').toggle(true);
+  $('.js-od-id').html(o._id);
+  $('.js-od-date').html(o.date);
+  $('.js-od-total').html(o.total);
+  $('.js-od-status').html(o.status);
+  $('.js-od-dishes').html(o.dishes_html);
 }
