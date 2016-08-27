@@ -1,5 +1,6 @@
 var config = {
-  server_url: window.location.origin
+  server_url: window.location.origin,
+  order_poll_interval: 30
 };
 var user, restaurant, context = {};
 var order_states = ['awaiting response', 'rejected', 'confirmed', 'prepared', 'dispatched'];
@@ -281,6 +282,7 @@ function dishEdit() {
     success: function (json) {
       console.log(json);
       $('.js-edv').val('');
+      $('.js-edit-dish').toggle(false);
       dishRefresh();
     },
     error: function (xhr, _status, errorThrown) {
@@ -323,7 +325,7 @@ function dishAdd() {
 
 function renderOrderTable() {
   console.log('renderOrderTable');
-  var rows = [];
+  var rows = [], pending_count = 0;
   restaurant.orders.forEach(function (order, index) {
     var total = 0, dishes = '', dishes_html = '';
     order.dishes_ordered.forEach(function (e) {
@@ -342,6 +344,7 @@ function renderOrderTable() {
 
     //accept reject buttons
     if (order.status === order_states[0]) {
+      pending_count++;
       order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button> <button type="button" onclick="changeOrderStatus(' + index + ',' + false + ')">Reject</button>';
     }
 
@@ -358,6 +361,17 @@ function renderOrderTable() {
   });
   var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
   $('.js-order-table').html(table);
+
+  // track new orders
+  if (!context.pending_count_old) {
+    context.pending_count_old = pending_count;
+  }
+  if (pending_count > context.pending_count_old) {
+    playSound();
+  }
+  context.pending_count_old = pending_count;
+
+  setTimeout(orderRefresh, 1000 * config.order_poll_interval);
 }
 
 function orderRefresh() {
@@ -453,6 +467,11 @@ function changeOrderStatus(i, accept) {
 }
 
 function compareState(a, b) {
-  console.log('i', order_states.indexOf(a.status) - order_states.indexOf(b.status));
   return order_states.indexOf(a.status) - order_states.indexOf(b.status);
+}
+
+function playSound() {
+  var a = new Audio(config.server_url + '/audio/alertS.mp3');
+  a.play();
+  return a;
 }
