@@ -84,6 +84,9 @@ var orderLogic={
         var dishes_ordered=[];
         for(var i=0;i<restaurant.dishes.length;i++){
             if(req.body.dishes_ordered[restaurant.dishes[i].identifier]){
+                if(!restaurant.dishes[i].availability){
+                    def.reject(def.reject({status:400,message:config.get('error.badrequest')}));
+                }
                 dishes_ordered.push({
                     identifier:restaurant.dishes[i].identifier,
                     price_recieved:req.body.dishes_ordered[restaurant.dishes[i].identifier],
@@ -92,31 +95,41 @@ var orderLogic={
             }
         }
         if(dishes_ordered.length>0){
-            def.resolve(dishes_ordered);
+            def.resolve({dishes_ordered:dishes_ordered,restaurant:restaurant});
         }else{
             def.reject({status:400,message:config.get('error.badrequest')});
         }
         return def.promise;
     },
     saveOrder:function(req,dishes_ordered,restaurant){
+        log.info(dishes_ordered,restaurant);
         var def= q.defer();
+        var location=[90,90];
+        if(req.body.lat&&req.body.lon){
+            try{
+                location=[Number(req.body.lon),Number(req.body.lat)];
+            }catch(err){
+
+            }
+        }
         var order=new orderTable({
             address:req.body.address,
             area:req.body.area,
             locality:req.body.locality,
             city:req.body.city,
-            location:[req.body.lon,req.body.lat],
+            location:location,
             dishes_ordered:dishes_ordered,
             restaurant_assigned:restaurant.name,
             status:"awaiting response",
         });
         order.save(function(err,order,info){
+            log.info(err);
             if(!err){
                 def.resolve(order);
             }else{
                 def.reject({status:500,message:config.get('error.dberror')});
             }
-        })
+        });
         return def.promise;
     },
     deleteOrder:function(req){

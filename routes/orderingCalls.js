@@ -64,10 +64,26 @@ router.get('/servicingRestaurant',
             })
     });
 router.post('/order',
-    params({body:['city','area','locality','address','lon','lat','dishes_ordered','restaurant_name']},
+    params({body:['city','area','locality','address','dishes_ordered','restaurant_name']},
         {message : config.get('error.badrequest')}),
     function(req,res,next){
-       orderLogic.findActualRates()
+        log.info(req.body);
+       orderLogic.findActualRates(req)
+           .then(function(restaurant){
+               log.info(restaurant);
+               return orderLogic.createDishesOrderedList(req,restaurant);
+           })
+           .then(function(data){
+               log.info(data);
+               return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
+           })
+           .then(function(order){
+               log.info(order);
+               res.json(order);
+           })
+           .catch(function(err){
+               res.status(err.status).json(err.message);
+           })
     });
 
 
