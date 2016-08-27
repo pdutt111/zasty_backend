@@ -180,6 +180,26 @@ router.get('/protected/restaurant/:name/orders',
                 res.status(err.status).json(err.message);
             })
     });
+router.get('/protected/restaurant/:name/orders/live',
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.getLiveOrders(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
+
 router.get('/protected/restaurant/:name/order',
     params({query:['order_id']},
         {message : config.get('error.badrequest')}),
@@ -244,7 +264,7 @@ router.post('/protected/restaurant/:name/order/reject',
             })
     });
 router.post('/protected/restaurant/:name/order/status',
-    params({body:['status']},
+    params({body:['status','order_id']},
         {message : config.get('error.badrequest')}),
     function(req,res,next){
         restaurantLogic.checkProperUser(req)

@@ -227,9 +227,42 @@ var listings={
     },
     getOrders:function(req){
         var def= q.defer();
+        if(!req.query.offset){
+            req.query.offset=0;
+        }else{
+            try{
+                req.query.offset=Number(req.query.offset);
+            }catch(e){
+                req.query.offset=0;
+            }
+        }
         orderTable.find({restaurant_assigned:req.params.name},
             "address dishes_ordered customer_name customer_number customer_email city locality area rejection_reason status")
             .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
+            .exec(function(err,rows){
+                log.info(err);
+                if(!err){
+                    def.resolve(rows);
+                }else{
+                    def.reject({status:500,message:config.get('error.dberror')});
+                }
+            })
+        return def.promise;
+    },
+    getLiveOrders:function(req){
+        var def= q.defer();
+        if(!req.query.offset){
+            req.query.offset=0;
+        }else{
+            try{
+                req.query.offset=Number(req.query.offset);
+            }catch(e){
+                req.query.offset=0;
+            }
+        }
+        orderTable.find({restaurant_assigned:req.params.name,status:{$in:["awaiting response","confirmed","prepared"]}},
+            "address dishes_ordered customer_name customer_number customer_email city locality area rejection_reason status")
+            .skip(Number(req.query.offset)).sort({_id:-1})
             .exec(function(err,rows){
                 log.info(err);
                 if(!err){
@@ -255,7 +288,8 @@ var listings={
     },
     confirmOrder:function(req){
         var def= q.defer();
-        orderTable.update({_id:new ObjectId(req.body.order_id)},{$set:{status:"confirmed"}},function(err,info){
+        orderTable.update({_id:new ObjectId(req.body.order_id)},{$set:{status:"confirmed"},
+            $push:{log:{status:"confirmed",date:new Date()}}},function(err,info){
             if(!err){
                 def.resolve(config.get('ok'));
             }else{
@@ -267,7 +301,8 @@ var listings={
     rejectOrder:function(req){
         var def= q.defer();
         orderTable.update({_id:new ObjectId(req.body.order_id)},
-            {$set:{status:"rejected",rejection_reason:req.body.reason}},function(err,info){
+            {$set:{status:"rejected",rejection_reason:req.body.reason},
+                $push:{log:{status:"rejected",date:new Date()}}},function(err,info){
                 if(!err){
                     def.resolve(config.get("ok"));
                 }else{
@@ -286,9 +321,9 @@ var listings={
 
     changeOrderStatus:function(req){
         var def= q.defer();
-        if(req.status=="prepared"||req.status=="dispatched"||req.status=="delivered"||req.status=="new"){
+        if(req.body.status=="prepared"||req.body.status=="dispatched"||req.body.status=="delivered"||req.body.status=="new"){
             orderTable.update({_id:new ObjectId(req.body.order_id)},
-                {$set:{status:req.body.status}},function(err,info){
+                {$set:{status:req.body.status},$push:{log:{status:req.body.status,date:new Date()}}},function(err,info){
                     if(!err){
                         def.resolve(config.get("ok"));
                     }else{
