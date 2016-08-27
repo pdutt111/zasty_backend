@@ -123,7 +123,7 @@ var orderLogic={
             customer_email:req.body.customer_email,
             dishes_ordered:dishes_ordered,
             restaurant_assigned:restaurant.name,
-            status:"awaiting response",
+            status:"awaiting response"
         });
         order.save(function(err,order,info){
             log.info(err);
