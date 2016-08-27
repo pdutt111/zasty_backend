@@ -1,5 +1,5 @@
 var config = {
-  server_url: 'http://127.0.0.1:3000'
+  server_url: window.location.origin
 };
 var user, restaurant, context = {};
 
@@ -191,16 +191,17 @@ function renderDishTable() {
   var rows = restaurant.dishes.map(function (dish, index) {
     return '<tr><td>' + dish.identifier + '</td> <td>' + dish.price + '</td>'
       + '<td><input type="checkbox"' + (dish.availability ? (' checked="' + dish.availability) : '') + '" onclick="toggleDish(' + index + ');" ></td>'
-      + '<td><a onclick="editDish(' + index + ')">edit</a></td></tr>';
+      + '<td><a onclick="dishDetails(' + index + ')">edit</a></td></tr>';
   });
   var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td><td>Details</td></tr>' + rows + '</table>';
 
   $('.js-dish-table').html(table);
 }
 
-function editDish(i) {
+function dishDetails(i) {
   console.log('editDish', i);
   context.active_dish = i;
+  $('.js-edit-dish').toggle(true);
   $('.js-curr-dish-name').html(restaurant.dishes[i].identifier);
   $('.js-curr-dish-value').html(restaurant.dishes[i].price);
 }
@@ -256,6 +257,64 @@ function dishRefresh() {
     error: function (xhr, _status, errorThrown) {
       console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
       $('.js-dish-table').html('Please reload.');
+    }
+  });
+}
+
+function dishEdit() {
+  console.log('dishEdit');
+  var _data = {
+    dish_name: restaurant.dishes[context.active_dish].identifier,
+    price: $('.js-edv').val()
+  };
+  $.ajax({
+    url: config.server_url + '/api/v1/dishes/protected/restaurant/' + user.restaurant_name + '/dishes/update',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(_data),
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      $('.js-ndn').val('');
+      $('.js-ndv').val('');
+      dishRefresh();
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      dishRefresh();
+    }
+  });
+}
+function dishAdd() {
+  console.log('dishAdd');
+  var _data = {
+    dishes: [{
+      identifier: $('.js-ndn').val(),
+      price: $('.js-ndv').val(),
+      availability: true
+    }]
+  };
+  $.ajax({
+    url: config.server_url + '/api/v1/dishes/protected/restaurant/' + user.restaurant_name + '/dishes/add',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(_data),
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      $('.js-ndn').val('');
+      $('.js-ndv').val('');
+      dishRefresh();
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      dishRefresh();
     }
   });
 }
