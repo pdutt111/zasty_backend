@@ -400,8 +400,8 @@
                             </table>
                         </div>
                     </div>
-                    <div class="price col-md-3 nopadright">
-                        <div>
+                    <div class="price col-md-3 nopadright" >
+                        <div class="js-edit-dish" style="display: none">
                             <div class="brdrwthbg tgreydark tnormal tbold js-curr-dish-name">Dish Name</div>
                             <div class="clear10"></div>
                             <div class="brdrwthbg tgreydark tnormal">
@@ -414,13 +414,33 @@
                                 <form>
                                     <div class="frm-field">
                                         <p>
-                                            <input type="text" class="bg-lgrey" placeholder="Enter New Value">
+                                            <input type="text" class="bg-lgrey js-edv" placeholder="Enter New Value">
                                         </p>
                                     </div>
                                     <div class="clear5"></div>
                                     <div class="frm-field">
                                         <p>
-                                            <input class="crsrpntr bg-dgrey twhite" type="button" value="Set New Value">
+                                            <input onclick="dishEdit()" class="crsrpntr bg-dgrey twhite" type="button" value="Set New Value">
+                                        </p>
+                                    </div>
+                            </div>
+                            </form>
+                        </div>
+
+                        <div class="js-add-dish">
+
+                            <div class="brdrwthbg tgreydark tnormal">
+                                <form>
+                                    <div class="frm-field">
+                                        <p>
+                                            <input type="text" class="bg-lgrey js-ndn" placeholder="Enter New Dish Name">
+                                            <input type="text" class="bg-lgrey js-ndv" placeholder="Enter New Dish Value">
+                                        </p>
+                                    </div>
+                                    <div class="clear5"></div>
+                                    <div class="frm-field">
+                                        <p>
+                                            <input onclick="dishAdd()" class="crsrpntr bg-dgrey twhite" type="button" value="Add New Dish">
                                         </p>
                                     </div>
                             </div>
