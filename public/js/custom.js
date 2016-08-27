@@ -100,7 +100,8 @@ function getRestaurant() {
       if ((json.name === user.restaurant_name)) {
         restaurant = json;
         $('#abc').prop('checked', restaurant.open_status);
-        renderDishTable(restaurant.dishes);
+        dishRefresh();
+        orderRefresh();
       } else {
         $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
       }
@@ -193,7 +194,7 @@ function renderDishTable() {
       + '<td><input type="checkbox"' + (dish.availability ? (' checked="' + dish.availability) : '') + '" onclick="toggleDish(' + index + ');" ></td>'
       + '<td><a onclick="dishDetails(' + index + ')">edit</a></td></tr>';
   });
-  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td><td>Details</td></tr>' + rows + '</table>';
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td><td>Details</td></tr>' + rows.join('') + '</table>';
 
   $('.js-dish-table').html(table);
 }
@@ -278,8 +279,7 @@ function dishEdit() {
     dataType: "json",
     success: function (json) {
       console.log(json);
-      $('.js-ndn').val('');
-      $('.js-ndv').val('');
+      $('.js-edv').val('');
       dishRefresh();
     },
     error: function (xhr, _status, errorThrown) {
@@ -288,6 +288,7 @@ function dishEdit() {
     }
   });
 }
+
 function dishAdd() {
   console.log('dishAdd');
   var _data = {
@@ -317,4 +318,48 @@ function dishAdd() {
       dishRefresh();
     }
   });
+}
+
+function renderOrderTable() {
+  console.log('renderOrderTable');
+  var rows = restaurant.orders.map(function (order, index) {
+    var total = 0, dishes = '';
+    order.dishes_ordered.forEach(function (e) {
+      dishes = dishes + '<BR/>' + e.identifier;
+      total = total + e.price_to_pay;
+    });
+    return '<tr><td>' + order._id + '</td><td>' + order.status + '</td><td>'
+      + order.date + '</td><td>' + dishes + '</td><td>'
+      + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>';
+  });
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>Order ID</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
+  $('.js-order-table').html(table);
+}
+
+function orderRefresh() {
+  console.log('orderRefresh');
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'GET',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if (Array.isArray(json)) {
+        restaurant.orders = json;
+        renderOrderTable();
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      orderRefresh();
+    }
+  });
+}
+
+function orderDetails(i) {
+  console.log('orderDetails', i);
 }
