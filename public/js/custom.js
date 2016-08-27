@@ -190,7 +190,7 @@ function doSignup(e) {
 function renderDishTable() {
   var rows = restaurant.dishes.map(function (dish, index) {
     return '<tr><td>' + dish.identifier + '</td> <td>' + dish.price + '</td>'
-      + '<td><input type="checkbox" checked="' + dish.availability + '" onclick="toggleDish(' + index + ');" ></td>'
+      + '<td><input type="checkbox"' + (dish.availability ? (' checked="' + dish.availability) : '') + '" onclick="toggleDish(' + index + ');" ></td>'
       + '<td><a onclick="editDish(' + index + ')">edit</a></td></tr>';
   });
   var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td><td>Details</td></tr>' + rows + '</table>';
@@ -215,7 +215,7 @@ function toggleDish(i) {
       'Authorization': user.token,
       'Content-Type': 'application/json'
     },
-    data: {dish_name: restaurant.dishes[i].identifier},
+    data: JSON.stringify({dish_name: restaurant.dishes[i].identifier}),
     type: 'POST',
     dataType: "json",
     success: function (json) {
