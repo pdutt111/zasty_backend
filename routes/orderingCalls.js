@@ -64,7 +64,7 @@ router.get('/servicingRestaurant',
             })
     });
 router.post('/order',
-    params({body:['city','area','locality','address','dishes_ordered','restaurant_name']},
+    params({body:['city','area','locality','address','dishes_ordered','restaurant_name','customer_name','customer_number']},
         {message : config.get('error.badrequest')}),
     function(req,res,next){
         log.info(req.body);
