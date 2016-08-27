@@ -229,7 +229,7 @@ var listings={
         var def= q.defer();
         orderTable.find({restaurant_assigned:req.params.name},
             "address dishes_ordered customer_name customer_number customer_email city locality area rejection_reason status")
-            .skip(Number(req.query.offset)).limit(20)
+            .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
             .exec(function(err,rows){
                 log.info(err);
                 if(!err){
