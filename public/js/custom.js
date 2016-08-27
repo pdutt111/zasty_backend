@@ -2,6 +2,7 @@ var config = {
   server_url: window.location.origin
 };
 var user, restaurant, context = {};
+var order_states = ['awaiting response', 'rejected', 'accepted', 'prepared', 'dispatched'];
 
 window.onload = function (e) {
   getUser();
@@ -157,7 +158,7 @@ function doLogin() {
   });
 }
 
-function doSignup(e) {
+function doSignup() {
   console.log('dosignup');
   event.preventDefault();
   var _user = {
@@ -335,8 +336,10 @@ function renderOrderTable() {
     order.total = total;
     order.dishes = dishes;
     order.dishes_html = dishes_html;
+    order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button>';
 
-    rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>' + order.status + '</td><td>'
+    rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+      + order.status + '<BR/>' + order.buttons + '</td><td>'
       + order.date + '</td><td>' + dishes + '</td><td>'
       + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
   });
@@ -380,4 +383,92 @@ function orderDetails(i) {
   $('.js-od-status').html(o.status);
   $('.js-od-address').html(o.address_full);
   $('.js-od-dishes').html(o.dishes_html);
+}
+
+function changeOrderStatus(i, accept) {
+  console.log('changeOrderStatus', i);
+  var state = restaurant.orders[i].status;
+  var _id = restaurant.orders[i]._id;
+  if (order_states.indexOf(state) > 1 && order_states.indexOf(state) < order_states.length) {
+    var new_state = order_states[order_states.indexOf(state) + 1];
+    console.log('ostate', state, 'nstate', new_state);
+
+    $.ajax({
+      url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/order/status',
+      headers: {
+        'Authorization': user.token,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({order_id: _id, status: new_state}),
+      type: 'POST',
+      dataType: "json",
+      success: function (json) {
+        console.log(json);
+        orderRefresh();
+      },
+      error: function (xhr, _status, errorThrown) {
+        console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        alert('error');
+      }
+    });
+  }
+  else if (order_states.indexOf(state) == 0) {
+    console.log('ostate', state, accept);
+    $.ajax({
+      url: config.server_url + '/api/v1/res/protected/restaurant/'
+      + user.restaurant_name + '/order/' + (accept ? 'confirm' : 'reject'),
+      headers: {
+        'Authorization': user.token,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({order_id: _id}),
+      type: 'POST',
+      dataType: "json",
+      success: function (json) {
+        console.log(json);
+        orderRefresh();
+      },
+      error: function (xhr, _status, errorThrown) {
+        console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        alert('error');
+      }
+    });
+  }
+  else {
+    alert('Cannot change Status. order-id: ' + _id);
+  }
+
+
+}
+
+function changeOrderStatus(i) {
+  console.log('changeOrderStatus', id);
+  var state = restaurant.orders[i].status;
+  var _id = restaurant.orders[i]._id;
+  if (order_states.indexOf(state) > 0 && order_states.indexOf(state) < order_states.length) {
+    var new_state = order_states[order_states.indexOf(state) + 1];
+    console.log('ostate', state, 'nstate', new_state);
+
+    $.ajax({
+      url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/order/status',
+      headers: {
+        'Authorization': user.token,
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify({order_id: _id, status: new_state}),
+      type: 'POST',
+      dataType: "json",
+      success: function (json) {
+        console.log(json);
+        orderRefresh();
+      },
+      error: function (xhr, _status, errorThrown) {
+        console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        alert('error');
+      }
+    });
+
+  } else {
+    alert('Cannot change Status. order-id: ' + _id);
+  }
 }
