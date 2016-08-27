@@ -13,7 +13,13 @@ var dishes = require('./routes/dishCalls');
 var restaurant = require('./routes/restaurantCalls');
 var order = require('./routes/orderingCalls');
 var views= require('./routes/viewCalls');
+
+require('./event_recievers/smsSender');
+require('./event_recievers/mailSender');
+
 var app = express();
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -38,6 +38,7 @@ var listings={
         }else{
             userTable.findOne({_id:req.user._id},"is_res_owner restaurant",function(err,user){
                 if(!err){
+                    log.info(req.params.name,user.restaurant_name);
                     if(((req.params.name)&&(req.params.name==user.restaurant_name))||
                         ((req.body.name)&&(req.body.name==user.restaurant_name))){
                         def.resolve();
@@ -236,11 +237,25 @@ var listings={
                 req.query.offset=0;
             }
         }
-        orderTable.find({restaurant_assigned:req.params.name},
-            "address dishes_ordered customer_name customer_number customer_email city locality area rejection_reason status")
+        var start_date=new Date(0);
+        if(req.query.start_date){
+            try{
+                req.query.start_date=new Date(req.query.start_date);
+            }catch(e){
+            }
+        }
+        var end_date=new Date();
+        if(req.query.end_date){
+            try{
+                req.query.end_date=new Date(req.query.end_date);
+            }catch(e){
+            }
+        }
+        //log.info(req)
+        orderTable.find({restaurant_assigned:req.params.name,created_time:{$gte:start_date,$lte:end_date}},
+            "address dishes_ordered customer_name created_time log customer_number customer_email city locality area rejection_reason status")
             .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
             .exec(function(err,rows){
-                log.info(err);
                 if(!err){
                     def.resolve(rows);
                 }else{
@@ -292,6 +307,18 @@ var listings={
             $push:{log:{status:"confirmed",date:new Date()}}},function(err,info){
             if(!err){
                 def.resolve(config.get('ok'));
+                orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name customer_number",function(err,order){
+                    if(!err){
+                        if(order.customer_number){
+                            events.emitter.emit("sms",{number:order.customer_number,
+                                message:"Your order was confirmed"})
+                        }
+                        if(order.customer_email){
+                            events.emitter.emit("mail",{subject:"Order Confirmation"
+                                ,message:"Your order was confirmed",plaintext:"Your order was confirmed",toEmail:order.customer_email})
+                        }
+                    }
+                });
             }else{
                 def.reject({status:500,message:config.get('error.dberror')});
             }
@@ -326,6 +353,18 @@ var listings={
                 {$set:{status:req.body.status},$push:{log:{status:req.body.status,date:new Date()}}},function(err,info){
                     if(!err){
                         def.resolve(config.get("ok"));
+                        orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name status customer_number",function(err,order){
+                            if(!err){
+                                if(order.customer_number){
+                                    events.emitter.emit("sms",{number:order.customer_number,
+                                        message:"Your order was "+order.status})
+                                }
+                                if(order.customer_email){
+                                    events.emitter.emit("mail",{subject:"Order Confirmation"
+                                        ,message:"Your order was "+order.status,plaintext:"Your order was "+order.status,toEmail:order.customer_email})
+                                }
+                            }
+                        });
                     }else{
                         def.reject({status:500,message:config.get('error.dberror')});
                     }
