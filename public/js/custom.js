@@ -262,6 +262,31 @@ function dishRefresh() {
 }
 
 function dishEdit() {
+  console.log('dishEdit');
+  var _data = {
+    dish_name: restaurant.dishes[context.active_dish].identifier,
+    price: $('.js-edv').val()
+  };
+  $.ajax({
+    url: config.server_url + '/api/v1/dishes/protected/restaurant/' + user.restaurant_name + '/dishes/update',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(_data),
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      $('.js-ndn').val('');
+      $('.js-ndv').val('');
+      dishRefresh();
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      dishRefresh();
+    }
+  });
 }
 function dishAdd() {
   console.log('dishAdd');
