@@ -87,11 +87,12 @@ var orderLogic={
                 if(!restaurant.dishes[i].availability){
                     def.reject(def.reject({status:400,message:config.get('error.badrequest')}));
                 }
-                dishes_ordered.push({
-                    identifier:restaurant.dishes[i].identifier,
-                    price_recieved:req.body.dishes_ordered[restaurant.dishes[i].identifier],
-                    price_to_pay:restaurant.dishes[i].price
-                });
+                    dishes_ordered.push({
+                        identifier:restaurant.dishes[i].identifier,
+                        price_recieved:req.body.dishes_ordered[restaurant.dishes[i].identifier].price,
+                        price_to_pay:restaurant.dishes[i].price,
+                        qty:req.body.dishes_ordered[restaurant.dishes[i].identifier].qty
+                    });
             }
         }
         if(dishes_ordered.length>0){

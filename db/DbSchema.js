@@ -66,7 +66,10 @@ var orderSchema=new Schema({
     dishes_ordered:[{
         identifier:String,
         price_recieved:Number,
-        price_to_pay:Number}],
+        price_to_pay:Number,
+        qty:{type:Number,default:1},
+        _id:false
+    }],
     restaurant_assigned:String,
     status:String,
     source:String,
