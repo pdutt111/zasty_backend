@@ -336,11 +336,11 @@ function renderOrderTable() {
     order.dishes = dishes;
     order.dishes_html = dishes_html;
 
-    rows.push('<tr><td>' + order._id + '</td><td>' + order.status + '</td><td>'
+    rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>' + order.status + '</td><td>'
       + order.date + '</td><td>' + dishes + '</td><td>'
       + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
   });
-  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>Order ID</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
   $('.js-order-table').html(table);
 }
 
