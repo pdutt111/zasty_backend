@@ -2,7 +2,7 @@ var config = {
   server_url: window.location.origin
 };
 var user, restaurant, context = {};
-var order_states = ['awaiting response', 'rejected', 'accepted', 'prepared', 'dispatched'];
+var order_states = ['awaiting response', 'rejected', 'confirmed', 'prepared', 'dispatched'];
 
 window.onload = function (e) {
   getUser();
@@ -331,12 +331,25 @@ function renderOrderTable() {
       total = total + (e.price_to_pay * e.qty);
       dishes_html = dishes_html + '<div class="row"> <div class="col-md-6"> <p class="dpblk tgreydark tmicro tleft">' + e.identifier + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">x ' + e.qty + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">' + e.price_to_pay + '</p> </div> </div>';
     });
+
     order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
     order.date = (new Date(order.created_time)).toString().substr(0, 24);
     order.total = total;
     order.dishes = dishes;
     order.dishes_html = dishes_html;
-    order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button>';
+    order.buttons = '';
+    var state_index = order_states.indexOf(order.status);
+
+    //accept reject buttons
+    if (order.status === order_states[0]) {
+      order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button> <button type="button" onclick="changeOrderStatus(' + index + ',' + false + ')">Reject</button>';
+    }
+
+    //other buttons
+    if (state_index > 1 && state_index < order_states.length - 1) {
+      order.buttons = '<button type="button" onclick="changeOrderStatus('
+        + index + ')">' + order_states[state_index + 1] + '</button>';
+    }
 
     rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
       + order.status + '<BR/>' + order.buttons + '</td><td>'
@@ -360,7 +373,7 @@ function orderRefresh() {
     success: function (json) {
       console.log(json);
       if (Array.isArray(json)) {
-        restaurant.orders = json;
+        restaurant.orders = json.sort(compareState);
         renderOrderTable();
       }
     },
@@ -389,7 +402,7 @@ function changeOrderStatus(i, accept) {
   console.log('changeOrderStatus', i);
   var state = restaurant.orders[i].status;
   var _id = restaurant.orders[i]._id;
-  if (order_states.indexOf(state) > 1 && order_states.indexOf(state) < order_states.length) {
+  if (order_states.indexOf(state) > 1 && order_states.indexOf(state) < order_states.length - 1) {
     var new_state = order_states[order_states.indexOf(state) + 1];
     console.log('ostate', state, 'nstate', new_state);
 
@@ -437,38 +450,9 @@ function changeOrderStatus(i, accept) {
   else {
     alert('Cannot change Status. order-id: ' + _id);
   }
-
-
 }
 
-function changeOrderStatus(i) {
-  console.log('changeOrderStatus', id);
-  var state = restaurant.orders[i].status;
-  var _id = restaurant.orders[i]._id;
-  if (order_states.indexOf(state) > 0 && order_states.indexOf(state) < order_states.length) {
-    var new_state = order_states[order_states.indexOf(state) + 1];
-    console.log('ostate', state, 'nstate', new_state);
-
-    $.ajax({
-      url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/order/status',
-      headers: {
-        'Authorization': user.token,
-        'Content-Type': 'application/json'
-      },
-      data: JSON.stringify({order_id: _id, status: new_state}),
-      type: 'POST',
-      dataType: "json",
-      success: function (json) {
-        console.log(json);
-        orderRefresh();
-      },
-      error: function (xhr, _status, errorThrown) {
-        console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-        alert('error');
-      }
-    });
-
-  } else {
-    alert('Cannot change Status. order-id: ' + _id);
-  }
+function compareState(a, b) {
+  console.log('i', order_states.indexOf(a.status) - order_states.indexOf(b.status));
+  return order_states.indexOf(a.status) - order_states.indexOf(b.status);
 }
