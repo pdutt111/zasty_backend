@@ -9,12 +9,12 @@ var ses = require('node-ses')
 // Give SES the details and let it construct the message for you.
 events.emitter.on('mail',function(data){
 
-    client.sendEmail({
-        to: data.toEmail,
-        from: config.get('amazonses.fromEmail'),
-        subject: data.subject,
-        message: data.message,
-        altText: data.plainText
-    }, function (err, data, res) {
-    });
+    //client.sendEmail({
+    //    to: data.toEmail,
+    //    from: config.get('amazonses.fromEmail'),
+    //    subject: data.subject,
+    //    message: data.message,
+    //    altText: data.plainText
+    //}, function (err, data, res) {
+    //});
 });
