@@ -43,8 +43,8 @@
     <div class="row" id="tabs">
         <div class="lft-side col-md-2">
             <ul>
-                <li><a href="#tab-1" class="active1 current">transaction history</a></li>
-                <li><a href="#tab-2">order status</a></li>
+                <li><a href="#tab-1" class="active1 current">order status</a></li>
+                <li><a href="#tab-2">transaction history</a></li>
                 <li><a href="#tab-3">Price List</a></li>
                 <li><a href="#tab-4">Restro Details</a></li>
                 <!--
@@ -71,6 +71,110 @@
             </div>
             <div class="row">
                 <div class="rght-side-content col-md-12 tab-content" id="tab-1">
+                    <div class="details">
+                        <h3>Order status</h3>
+                    </div>
+                    <div class="status-tbl-wrpr col-md-9">
+
+                        <div class="row js-order-table"></div>
+
+                    </div>
+                    <div class="ordr-dtls col-md-3 nopadright js-od" style="display: none">
+                        <div>
+                            <div class="brdrwthbg tgreydark tnormal tbold">Order Details</div>
+                            <div class="clear10"></div>
+                            <div class="brdrwthbg tgreydark tnormal">
+                                <p class="dpblk tgreydark tsmall tbold">Order Id:</p>
+                                <div class="clear5"></div>
+                                <p class="dpblk tgreydark tmicro js-od-id">qwertyuikjb12345678</p>
+                            </div>
+                            <div class="clear10"></div>
+                            <div class="brdrwthbg tgreydark tnormal">
+                                <p class="dpblk tgreydark tsmall tbold">Date:</p>
+                                <div class="clear5"></div>
+                                <p class="dpblk tgreydark tmicro js-od-date">Jul 30, 2016 11am</p>
+                                <div class="clear10"></div>
+                                <p class="dpblk tgreydark tsmall tbold">Total Amount:</p>
+                                <div class="clear5"></div>
+                                <p class="dpblk tgreydark tmicro js-od-total">Rs. 1223</p>
+                                <div class="clear10"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="dpblk tgreydark tsmall tbold">Order Status:</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="dpblk tgreydark tsmall tbold js-od-status">Status</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear10"></div>
+                            <div class="brdrwthbg tgreydark tnormal">
+                                <p class="dpblk tgreydark tsmall tbold">Delivery Address:</p>
+                                <div class="clear5"></div>
+                                <p class="dpblk tgreydark tmicro js-od-address">Dwarka Sector 1</p>
+                            </div>
+                            <div class="clear10"></div>
+                            <div class="brdrwthbg tgreydark tnormal">
+                                <p class="dpblk tgreydark tnormal tbold">Order Items:</p>
+                                <div class="clear10"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="dpblk tgreydark tsmall tleft tbold">Name</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p class="dpblk tgreydark tsmall tright tbold">Qty</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p class="dpblk tgreydark tsmall tright tbold">Price</p>
+                                    </div>
+                                </div>
+                                <div class="hr"></div>
+                                <div class="js-od-dishes">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="dpblk tgreydark tmicro tleft">sdfghjbbygv flnkbcgh yghjnkm</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="dpblk tgreydark tmicro tright">x 2</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="dpblk tgreydark tmicro tright">129</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hr"></div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <p class="dpblk tgreydark tmicro tright">Taxes</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="dpblk tgreydark tmicro tright">0</p>
+                                    </div>
+                                </div>
+                                <div class="clear5"></div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <p class="dpblk tgreydark tmicro tright">Fee</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="dpblk tgreydark tmicro tright">0</p>
+                                    </div>
+                                </div>
+                                <div class="hr"></div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <p class="dpblk tgreydark tsmall tright tbold">Total</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="dpblk tgreydark tsmall tright tbold js-od-total">1129</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear20"></div>
+                </div>
+                <div class="rght-side-content col-md-12 tab-content" id="tab-2">
                     <div class="details">
                         <h3 class="tgreydark tbigger">transaction history</h3>
                         <p class="tnormal">search using below things</p>
@@ -175,152 +279,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="rght-side-content col-md-12 tab-content" id="tab-2">
-                    <div class="details">
-                        <h3>Order status</h3>
-                    </div>
-                    <div class="status-tbl-wrpr col-md-9">
-                        <div class="row js-order-table">
-                            <table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12">
-                                <tr class="heading-row">
-                                    <td>Order ID</td>
-                                    <td>Status</td>
-                                    <td>Date</td>
-                                    <td>Dishes</td>
-                                    <td>Total</td>
-                                    <td>Details</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="ordr-dtls col-md-3 nopadright js-od" style="display: none">
-                        <div>
-                            <div class="brdrwthbg tgreydark tnormal tbold">Order Details</div>
-                            <div class="clear10"></div>
-                            <div class="brdrwthbg tgreydark tnormal">
-                                <p class="dpblk tgreydark tsmall tbold">Order Id:</p>
-                                <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro js-od-id">qwertyuikjb12345678</p>
-                            </div>
-                            <div class="clear10"></div>
-                            <div class="brdrwthbg tgreydark tnormal">
-                                <p class="dpblk tgreydark tsmall tbold">Date:</p>
-                                <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro js-od-date">Jul 30, 2016 11am</p>
-                                <div class="clear10"></div>
-                                <p class="dpblk tgreydark tsmall tbold">Total Amount:</p>
-                                <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro js-od-total">Rs. 1223</p>
-                                <div class="clear10"></div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="dpblk tgreydark tsmall tbold">Order Status:</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p class="dpblk tgreydark tsmall tbold js-od-status">Status</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clear10"></div>
-                            <div class="brdrwthbg tgreydark tnormal">
-                                <p class="dpblk tgreydark tsmall tbold">Delivery Address:</p>
-                                <div class="clear5"></div>
-                                <p class="dpblk tgreydark tmicro js-od-address">Dwarka Sector 1</p>
-                            </div>
-                            <div class="clear10"></div>
-                            <div class="brdrwthbg tgreydark tnormal">
-                                <p class="dpblk tgreydark tnormal tbold">Order Items:</p>
-                                <div class="clear10"></div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="dpblk tgreydark tsmall tleft tbold">Name</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <p class="dpblk tgreydark tsmall tright tbold">Qty</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <p class="dpblk tgreydark tsmall tright tbold">Price</p>
-                                    </div>
-                                </div>
-                                <div class="hr"></div>
-                                <div class="js-od-dishes">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="dpblk tgreydark tmicro tleft">sdfghjbbygv flnkbcgh yghjnkm</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p class="dpblk tgreydark tmicro tright">x 2</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p class="dpblk tgreydark tmicro tright">129</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hr"></div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <p class="dpblk tgreydark tmicro tright">Taxes</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="dpblk tgreydark tmicro tright">0</p>
-                                    </div>
-                                </div>
-                                <div class="clear5"></div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <p class="dpblk tgreydark tmicro tright">Fee</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="dpblk tgreydark tmicro tright">0</p>
-                                    </div>
-                                </div>
-                                <div class="hr"></div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <p class="dpblk tgreydark tsmall tright tbold">Total</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="dpblk tgreydark tsmall tright tbold js-od-total">1129</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clear20"></div>
-                </div>
                 <div class="rght-side-content col-md-12 tab-content" id="tab-3">
                     <div class="details">
                         <h3>price list</h3>
                     </div>
                     <div class="status-tbl-wrpr col-md-9">
-                        <div class="row js-dish-table">
-                            <table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12">
-                                <tr class="heading-row">
-                                    <td>Dish Name</td>
-                                    <td>Current Value</td>
-                                    <td>Previous Value</td>
-                                    <td>Details</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
-                        </div>
+
+                        <div class="row js-dish-table"></div>
+
                     </div>
                     <div class="price col-md-3 nopadright">
                         <div class="js-edit-dish" style="display: none">
@@ -342,8 +308,9 @@
                                     <div class="clear5"></div>
                                     <div class="frm-field">
                                         <p>
-                                            <input onclick="dishEdit()" class="crsrpntr bg-dgrey twhite" type="button"
-                                                   value="Set New Value">
+                                            <input onclick="dishEdit()"
+                                                   class="crsrpntr bg-dgrey twhite" type="button"
+                                                   value="Set New Value"/>
                                         </p>
                                     </div>
                             </div>

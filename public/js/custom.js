@@ -327,8 +327,8 @@ function renderOrderTable() {
     var total = 0, dishes = '', dishes_html = '';
     order.dishes_ordered.forEach(function (e) {
       dishes = dishes + e.identifier + ' x ' + e.qty + '<BR/>';
-      total = total + (e.price_recieved * e.qty);
-      dishes_html = dishes_html + '<div class="row"> <div class="col-md-6"> <p class="dpblk tgreydark tmicro tleft">' + e.identifier + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">x ' + e.qty + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">' + e.price_recieved + '</p> </div> </div>';
+      total = total + (e.price_to_pay * e.qty);
+      dishes_html = dishes_html + '<div class="row"> <div class="col-md-6"> <p class="dpblk tgreydark tmicro tleft">' + e.identifier + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">x ' + e.qty + '</p> </div> <div class="col-md-3"> <p class="dpblk tgreydark tmicro tright">' + e.price_to_pay + '</p> </div> </div>';
     });
     order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
     order.date = (new Date(order.created_time)).toString().substr(0, 24);
