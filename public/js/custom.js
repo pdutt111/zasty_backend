@@ -394,7 +394,8 @@ function orderRefresh() {
     },
     error: function (xhr, _status, errorThrown) {
       console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-      orderRefresh();
+      alert('Order Refresh Failed. WIll retry in ' + (1000 * config.order_poll_interval/2) + 'sec. Please check internet connection');
+      setTimeout(orderRefresh, 1000 * config.order_poll_interval/2);
     }
   });
 }
