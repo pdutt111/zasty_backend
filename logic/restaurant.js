@@ -296,7 +296,7 @@ var listings={
     },
     getUnpaidOrders:function(req){
         var def= q.defer();
-        orderTable.find({restaurant_assigned:req.params.name,paid_status_to_restaurant:false,status:{$in:["dispatched"]}},
+        orderTable.find({restaurant_assigned:req.params.name,paid_status_to_restaurant:false,status:"dispatched"},
             "address dishes_ordered customer_name customer_number created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status")
             .sort({_id:-1})
             .exec(function(err,rows){
