@@ -376,6 +376,8 @@ function renderOrderTable() {
         + index + ')">' + order_states[state_index + 1] + '</button>';
     }
 
+    order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
+
     rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/>' + order.address_full + '</td><td>'
       + order.status + '<BR/><BR/>' + order.buttons + '</td><td>'
       + order.date + '</td><td>' + dishes + '</td><td>'
@@ -418,12 +420,11 @@ function orderDetails(i) {
   context.active_order = i;
   context.active_order_details = restaurant.orders[i];
   var o = context.active_order_details;
-  var status = o.status + (o.issue_raised ? '</BR>Issue:' + o.issue_reason : '');
   $('.js-od').toggle(true);
   $('.js-od-id').html(o._id);
   $('.js-od-date').html(o.date);
   $('.js-od-total').html(o.total);
-  $('.js-od-status').html(status);
+  $('.js-od-status').html(o.status);
   $('.js-od-address').html(o.address_full);
   $('.js-od-dishes').html(o.dishes_html);
 }
@@ -578,7 +579,7 @@ function renderUnpaidOrderTable() {
     }
     order.total = total;
     order.dishes = dishes;
-
+    order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
     rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
       + order.status + '</td><td>'
       + order.date + '</td><td>' + dishes + '</td><td>'
@@ -676,6 +677,7 @@ function renderSearchTable() {
     }
     order.total = total;
     order.dishes = dishes;
+    order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
 
     rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
       + order.status + '</td><td>'
