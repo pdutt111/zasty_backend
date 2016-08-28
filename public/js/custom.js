@@ -398,8 +398,9 @@ function orderRefresh() {
 function orderDetails(i) {
   console.log('orderDetails', i);
   context.active_order = i;
+  context.active_order_details = restaurant.orders[i];
 
-  var o = restaurant.orders[i];
+  var o = context.active_order_details;
   $('.js-od').toggle(true);
   $('.js-od-id').html(o._id);
   $('.js-od-date').html(o.date);
@@ -486,7 +487,7 @@ function stopSound() {
 }
 
 function orderIssue() {
-  var _id = restaurant.orders[context.active_order]._id;
+  var _id = context.active_order_details._id;
   var reason = prompt("Please describe your Issue:");
   if (!reason)
     return alert('Issue not described.');
