@@ -485,6 +485,32 @@ function stopSound() {
   a.load();
 }
 
+function orderIssue() {
+  var _id = restaurant.orders[context.active_order]._id;
+  var reason = prompt("Please describe your Issue:");
+  if (!reason)
+    return alert('Issue not described.');
+
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/order/issue',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify({order_id: _id, reason: reason}),
+    type: 'POST',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      orderRefresh();
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      alert('error');
+    }
+  });
+}
+
 function updateRestaurantDetails() {
   var _data = {
     location: $('.js-r-a').val().split(','),
