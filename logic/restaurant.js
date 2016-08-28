@@ -253,7 +253,7 @@ var listings={
         }
         //log.info(req)
         orderTable.find({restaurant_assigned:req.params.name,created_time:{$gte:start_date,$lte:end_date}},
-            "address dishes_ordered customer_name created_time log customer_number customer_email city locality area rejection_reason status")
+            "address dishes_ordered customer_name created_time log customer_number customer_email city issue_raised issue_reason locality area rejection_reason status")
             .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
             .exec(function(err,rows){
                 if(!err){
@@ -282,7 +282,7 @@ var listings={
                 {username:restaurant.nomnom_username,password:restaurant.nomnom_password,name:req.params.name});
         });
         orderTable.find({restaurant_assigned:req.params.name,status:{$in:["awaiting response","confirmed","prepared"]}},
-            "address dishes_ordered customer_name customer_number created_time customer_email nomnom_username nomnom_password city locality area rejection_reason status")
+            "address dishes_ordered customer_name customer_number created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status")
             .skip(Number(req.query.offset)).sort({_id:-1})
             .exec(function(err,rows){
                 log.info(err);
@@ -297,7 +297,7 @@ var listings={
     getUnpaidOrders:function(req){
         var def= q.defer();
         orderTable.find({restaurant_assigned:req.params.name,paid_status_to_restaurant:false,status:{$in:["dispatched"]}},
-            "address dishes_ordered customer_name customer_number created_time customer_email nomnom_username nomnom_password city locality area rejection_reason status")
+            "address dishes_ordered customer_name customer_number created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status")
             .sort({_id:-1})
             .exec(function(err,rows){
                 log.info(err);
@@ -423,6 +423,17 @@ var listings={
         }else{
             def.reject({status:400,message:config.get('error.badrequest')});
         }
+        return def.promise;
+    },
+    raiseIssue:function(req){
+        var def= q.defer();
+        orderTable.update({_id:new ObjectId(req.body.order_id)},{$set:{issue_raised:true,issue_reason:req.body.reason}},function(err,info){
+            if(!err){
+                def.resolve(config.get('ok'));
+            }else{
+                def.reject({status:500,message:config.get('error.dberror')});
+            }
+        });
         return def.promise;
     }
 };

@@ -316,4 +316,25 @@ router.post('/protected/restaurant/:name/order/status',
                 res.status(err.status).json(err.message);
             })
     });
+router.post('/protected/restaurant/:name/order/issue',
+    params({body:['order_id']},
+        {message : config.get('error.badrequest')}),
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.raiseIssue(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
 module.exports = router;
