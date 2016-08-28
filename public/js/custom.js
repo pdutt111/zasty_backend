@@ -343,7 +343,13 @@ function renderOrderTable() {
     });
 
     order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
-    order.date = (new Date(order.created_time)).toString().substr(0, 24);
+    order.date = (new Date(order.created_time)).toString().substr(0, 24) + '<BR/>';
+    if (order.log && Array.isArray(order.log)) {
+      order.log.forEach(function (e) {
+        order.date += '<BR/> ' + e.status + ' in '
+          + parseInt((new Date(e.date) - new Date(order.created_time)) / (1000 * 60), 10) + ' min.';
+      });
+    }
     order.total = total;
     order.dishes = dishes;
     order.dishes_html = dishes_html;
@@ -363,8 +369,8 @@ function renderOrderTable() {
         + index + ')">' + order_states[state_index + 1] + '</button>';
     }
 
-    rows.push('<tr ' + style + '><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
-      + order.status + '<BR/>' + order.buttons + '</td><td>'
+    rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/>' + order.address_full + '</td><td>'
+      + order.status + '<BR/><BR/>' + order.buttons + '</td><td>'
       + order.date + '</td><td>' + dishes + '</td><td>'
       + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
   });
@@ -394,8 +400,8 @@ function orderRefresh() {
     },
     error: function (xhr, _status, errorThrown) {
       console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-      alert('Order Refresh Failed. WIll retry in ' + (1000 * config.order_poll_interval/2) + 'sec. Please check internet connection');
-      setTimeout(orderRefresh, 1000 * config.order_poll_interval/2);
+      alert('Order Refresh Failed. WIll retry in ' + (1000 * config.order_poll_interval / 2) + 'sec. Please check internet connection');
+      setTimeout(orderRefresh, 1000 * config.order_poll_interval / 2);
     }
   });
 }
@@ -597,19 +603,19 @@ function unpaidOrderRefresh() {
 
 function searchTransaction(i) {
   var query = '?offset=' + ( i || 0);
-  var start = new Date($('.js-s-start').val());
-  var end = new Date($('.js-s-end').val());
+  var start = $('.js-s-start').val() ? new Date($('.js-s-start').val()) : '';
+  var end = $('.js-s-end').val() ? new Date($('.js-s-end').val()) : '';
   var search = $('.js-s-search').val();
 
   if (start)
-    query += '&start_date=' + start.toString();
+    query += '&start_date=' + start.toISOString();
   if (end)
-    query += '&end_date=' + end.toString();
+    query += '&end_date=' + end.toISOString();
   if (search)
     query += '&search=' + search.toString();
 
   $.ajax({
-    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders/' + query,
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders' + query,
     headers: {
       'Authorization': user.token,
       'Content-Type': 'application/json'
@@ -624,7 +630,7 @@ function searchTransaction(i) {
         else
           context.search_results = json;
         renderSearchTable();
-        console.log('sr', context.search_results);
+        console.log('result & search result count', json.length, context.search_results.length);
       }
     },
     error: function (xhr, _status, errorThrown) {
