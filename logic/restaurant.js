@@ -296,13 +296,7 @@ var listings={
     },
     getUnpaidOrders:function(req){
         var def= q.defer();
-
-        restaurantTable.findOne({name:req.params.name},"nomnom_username nomnom_password",
-            function(err,restaurant){
-                events.emitter.emit("fetch_nomnom",
-                    {username:restaurant.nomnom_username,password:restaurant.nomnom_password,name:req.params.name});
-            });
-        orderTable.find({restaurant_assigned:req.params.name,paid_status_to_restaurant:false},
+        orderTable.find({restaurant_assigned:req.params.name,paid_status_to_restaurant:false,status:{$in:["dispatched"]}},
             "address dishes_ordered customer_name customer_number created_time customer_email nomnom_username nomnom_password city locality area rejection_reason status")
             .sort({_id:-1})
             .exec(function(err,rows){
