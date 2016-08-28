@@ -67,7 +67,7 @@ var orderLogic={
     findActualRates:function(req){
         var def=q.defer();
         restaurantTable.findOne({name:req.body.restaurant_name,is_deleted:false,is_verified:true},"dishes name open_status",function(err,restaurant){
-           if(!err){
+           if(!err&&restaurant){
                if(restaurant.open_status){
                    def.resolve(restaurant);
                }else{
