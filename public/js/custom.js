@@ -1,6 +1,6 @@
 var config = {
   server_url: window.location.origin,
-  order_poll_interval: 30
+  order_poll_interval: 45
 };
 var user, restaurant, context = {};
 var order_states = ['awaiting response', 'rejected', 'confirmed', 'prepared', 'dispatched'];
@@ -104,6 +104,10 @@ function getRestaurant() {
         $('#abc').prop('checked', restaurant.open_status);
         dishRefresh();
         orderRefresh();
+        $('.js-r-a').val(restaurant.location.join(','));
+        $('.js-r-cp').val(restaurant.contact_number);
+        $('.js-r-cn').val(restaurant.contact_name);
+
       } else {
         $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
       }
@@ -345,7 +349,7 @@ function renderOrderTable() {
     //accept reject buttons
     if (order.status === order_states[0]) {
       playSound();
-      style='class="tr-new""';
+      style = 'class="tr-new""';
       new_pending_ids.push(order._id);
       pending_count++;
       order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button> <button type="button" onclick="changeOrderStatus(' + index + ',' + false + ')">Reject</button>';
@@ -503,4 +507,30 @@ function showNewOrderAlert(i) {
   console.log('showNewOrderAlert', i);
   console.log(restaurant.orders[i]);
   stopSound();
+}
+
+function updateRestaurantDetails() {
+  var _data = {
+    location: $('.js-r-a').val().split(','),
+    contact_number: $('.js-r-cp').val(),
+    contact_name: $('.js-r-cn').val()
+  };
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/update',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'POST',
+    data: JSON.stringify(_data),
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      getRestaurant();
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+      alert('update restaurant detailed failed.');
+    }
+  });
 }
