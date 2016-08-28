@@ -12,6 +12,33 @@ var db=require('../db/DbSchema');
 
 var orderTable=db.getorderdef;
 
+events.emitter.on("fetch_nomnom",function(data){
+    nomnom_login(data).
+        then(function(data){
+            return fetch_orders(data);
+        })
+        .then(function(data){
+            for(var i=0;i<data.order_ids.length;i++){
+                queue.push({restaurant_name:data.restaurant_name,order_id:data.order_ids[i],token:data.token}, function(err) {
+                });
+            }
+        })
+        .catch(function(err){
+            log.info(err);
+        })
+});
+events.emitter.on('status_change_nomnom',function(data){
+    nomnom_login(data)
+        .then(function(data){
+            return changeStatus(data);
+        })
+        .then(function(){
+            log.info("status changed on nomnom");
+        })
+        .catch(function(err){
+            log.info(err);
+        })
+});
 var queue = async.queue(function(task, callback) {
     request({
         url:"http://restaurant-test.gonomnom.in/nomnom/order_restaurant/?order_id="+task.order_id,
@@ -32,6 +59,18 @@ var queue = async.queue(function(task, callback) {
                 }
             }
             log.info(dishes_ordered);
+            if(body[0].status=="order_prepared"){
+                body[0].status='prepared'
+            }else  if(body[0].status=="order_dispatched"){
+                body[0].status='dispatched'
+            }else  if(body[0].status=="restaurant_confirmed"){
+                body[0].status='confirmed'
+            }else  if(body[0].status=="canceled"){
+                body[0].status='rejected'
+            }else  if(body[0].status=="created"){
+                body[0].status='awaiting response'
+            }
+
             var req={}
             req.body={
                 "city":body[0].address.city.name,
@@ -44,6 +83,7 @@ var queue = async.queue(function(task, callback) {
                 "customer_name":body[0].customer.name,
                 "customer_number":body[0].customer.primary_number,
                 "restaurant_name":task.restaurant_name,
+                status:body[0].status,
                 source:{
                     name:"nomnom",
                     id:body[0].id
@@ -79,22 +119,6 @@ queue.drain = function() {
     console.log('all items have been processed');
 };
 
-events.emitter.on("fetch_nomnom",function(data){
-    nomnom_login(data).
-        then(function(data){
-            return fetch_orders(data);
-        })
-        .then(function(data){
-            for(var i=0;i<data.order_ids.length;i++){
-                queue.push({restaurant_name:data.restaurant_name,order_id:data.order_ids[i],token:data.token}, function(err) {
-                });
-            }
-        })
-        .catch(function(err){
-            log.info(err);
-        })
-});
-
 function nomnom_login(data){
     var def= q.defer();
     request({
@@ -106,9 +130,9 @@ function nomnom_login(data){
         var response={};
         try{
             if(body.data.access_token){
-                response.token=body.data.access_token;
-                response.restaurant_name=data.name;
-                def.resolve(response);
+                data.token=body.data.access_token;
+                data.restaurant_name=data.name;
+                def.resolve(data);
             }else{
                 def.reject();
             }
@@ -135,6 +159,53 @@ function fetch_orders(data){
                 data.order_ids.push(body[i].order_id);
             }
             def.resolve(data);
+        }catch(e){
+            def.reject();
+        }
+    });
+    return def.promise;
+}
+function changeStatus(data){
+    var def= q.defer();
+    //order_prepared
+    //restaurant_confirmed
+    //restaurant_dispatched
+    if(data.status=='prepared'){
+        data.status="order_prepared"
+    }
+    else if(data.status=='dispatched'){
+        data.status="order_dispatched";
+    }else if(data.status=='confirmed'){
+        data.status="restaurant_confirmed";
+    }else if(data.status=='rejected'){
+        data.status='canceled';
+    }
+    //delivery_boy_details:"restaurant"
+    //delivery_boy_name:"HAM"
+    //delivery_boy_number:1234567809
+    log.info(data);
+    log.info("http://restaurant-test.gonomnom.in/nomnom/order_restaurant/"+data.source+"/");
+    request({
+        url:"http://restaurant-test.gonomnom.in/nomnom/order_restaurant/"+data.source+"/",
+        method:"PUT",
+        body:{
+            id:data.source,
+            osl_status:data.status,
+            update_status:true
+        },
+        headers:{
+            "Access-Token":data.token,
+            "Content-Type":"application/json"
+        },
+        json:true
+    },function(err,response,body){
+        log.info(err,body);
+        try{
+           if(body.status==data.status){
+               def.resolve();
+           }else{
+               def.reject();
+           }
         }catch(e){
             def.reject();
         }

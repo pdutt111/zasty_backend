@@ -85,7 +85,7 @@ var orderLogic={
         for(var i=0;i<restaurant.dishes.length;i++){
             if(req.body.dishes_ordered[restaurant.dishes[i].identifier]){
                 if(!restaurant.dishes[i].availability){
-                    def.reject(def.reject({status:400,message:config.get('error.badrequest')}));
+                    def.reject({status:400,message:config.get('error.badrequest')});
                 }
                     dishes_ordered.push({
                         identifier:restaurant.dishes[i].identifier,
@@ -95,7 +95,7 @@ var orderLogic={
                     });
             }
         }
-        if(dishes_ordered.length>0){
+        if(dishes_ordered.length==Object.keys(req.body.dishes_ordered).length){
             def.resolve({dishes_ordered:dishes_ordered,restaurant:restaurant});
         }else{
             def.reject({status:400,message:config.get('error.badrequest')});
@@ -121,6 +121,10 @@ var orderLogic={
             source.name=req.body.source.name;
             source.id=req.body.source.id;
         }
+        var status="awaiting response"
+        if(req.body.status){
+            status=req.body.status;
+        }
         log.info(source);
         var order=new orderTable({
             address:req.body.address,
@@ -133,7 +137,7 @@ var orderLogic={
             customer_email:req.body.customer_email,
             dishes_ordered:dishes_ordered,
             restaurant_assigned:restaurant.name,
-            status:"awaiting response",
+            status:status,
             source:source
         });
         order.save(function(err,order,info){

@@ -313,8 +313,14 @@ var listings={
             $push:{log:{status:"confirmed",date:new Date()}}},function(err,info){
             if(!err){
                 def.resolve(config.get('ok'));
-                orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name customer_number",function(err,order){
+                orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name restaurant_assigned customer_number",function(err,order){
                     if(!err){
+                        if(order.source.name=="nomnom"){
+                            restaurantTable.findOne({name:order.restaurant_assigned},"nomnom_username nomnom_password",function(err,restaurant){
+                                events.emitter.emit("status_change_nomnom",
+                                    {username:restaurant.nomnom_username,password:restaurant.nomnom_password,status:"confirmed",source:order.source.id});
+                            })
+                        }
                         if(order.customer_number){
                             events.emitter.emit("sms",{number:order.customer_number,
                                 message:"Your order was confirmed"})
@@ -338,6 +344,24 @@ var listings={
                 $push:{log:{status:"rejected",date:new Date()}}},function(err,info){
                 if(!err){
                     def.resolve(config.get("ok"));
+                    orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name restaurant_assigned customer_number",function(err,order){
+                        if(!err){
+                            if(order.source.name=="nomnom"){
+                                restaurantTable.findOne({name:order.restaurant_assigned},"nomnom_username nomnom_password",function(err,restaurant){
+                                    events.emitter.emit("status_change_nomnom",
+                                        {username:restaurant.nomnom_username,password:restaurant.nomnom_password,status:"rejected",source:order.source.id});
+                                })
+                            }
+                            if(order.customer_number){
+                                events.emitter.emit("sms",{number:order.customer_number,
+                                    message:"Your order was rejected"})
+                            }
+                            if(order.customer_email){
+                                events.emitter.emit("mail",{subject:"Order rejected"
+                                    ,message:"Your order was rejected",plaintext:"Your order was confirmed",toEmail:order.customer_email})
+                            }
+                        }
+                    });
                 }else{
                     def.reject({status:500,message:config.get('error.dberror')});
                 }
@@ -354,13 +378,19 @@ var listings={
 
     changeOrderStatus:function(req){
         var def= q.defer();
-        if(req.body.status=="prepared"||req.body.status=="dispatched"||req.body.status=="delivered"||req.body.status=="new"){
+        if(req.body.status=="prepared"||req.body.status=="dispatched"||req.body.status=="delivered"||req.body.status=="new"||req.body.status=="confirmed"||req.body.status=="rejected"){
             orderTable.update({_id:new ObjectId(req.body.order_id)},
                 {$set:{status:req.body.status},$push:{log:{status:req.body.status,date:new Date()}}},function(err,info){
                     if(!err){
                         def.resolve(config.get("ok"));
-                        orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name status customer_number",function(err,order){
+                        orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name source status restaurant_assigned customer_number",function(err,order){
                             if(!err){
+                                if(order.source.name=="nomnom"){
+                                    restaurantTable.findOne({name:order.restaurant_assigned},"nomnom_username nomnom_password",function(err,restaurant){
+                                        events.emitter.emit("status_change_nomnom",
+                                            {username:restaurant.nomnom_username,password:restaurant.nomnom_password,status:req.body.status,source:order.source.id});
+                                    })
+                                }
                                 if(order.customer_number){
                                     events.emitter.emit("sms",{number:order.customer_number,
                                         message:"Your order was "+order.status})
