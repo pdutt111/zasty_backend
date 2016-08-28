@@ -41,6 +41,8 @@ function initDash() {
   $('#abc').click(function () {
     toggleRestaurant(this.checked);
   });
+  document.getElementById('dateE').valueAsDate = new Date();
+  document.getElementById('dateS').valueAsDate = (new Date()).setDate((new Date()).getDate() - 7);
 }
 
 function logOut() {
@@ -105,6 +107,7 @@ function getRestaurant() {
         dishRefresh();
         orderRefresh();
         unpaidOrderRefresh();
+        searchTransaction();
         $('.js-r-a').val(restaurant.location.join(','));
         $('.js-r-cp').val(restaurant.contact_number);
         $('.js-r-cn').val(restaurant.contact_name);
@@ -391,7 +394,8 @@ function orderRefresh() {
     },
     error: function (xhr, _status, errorThrown) {
       console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-      orderRefresh();
+      alert('Order Refresh Failed. WIll retry in ' + (1000 * config.order_poll_interval/2) + 'sec. Please check internet connection');
+      setTimeout(orderRefresh, 1000 * config.order_poll_interval/2);
     }
   });
 }
@@ -541,7 +545,6 @@ function updateRestaurantDetails() {
 }
 
 function renderUnpaidOrderTable() {
-  console.log('renderOrderTable');
   var rows = [];
   var grand_total = 0;
   restaurant.unpaid_orders.forEach(function (order, index) {
@@ -590,4 +593,71 @@ function unpaidOrderRefresh() {
       console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
     }
   });
+}
+
+function searchTransaction(i) {
+  var query = '?offset=' + ( i || 0);
+  var start = new Date($('.js-s-start').val());
+  var end = new Date($('.js-s-end').val());
+  var search = $('.js-s-search').val();
+
+  if (start)
+    query += '&start_date=' + start.toString();
+  if (end)
+    query += '&end_date=' + end.toString();
+  if (search)
+    query += '&search=' + search.toString();
+
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders/' + query,
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'GET',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if (Array.isArray(json)) {
+        if (i)
+          context.search_results = context.search_results.concat(json);
+        else
+          context.search_results = json;
+        renderSearchTable();
+        console.log('sr', context.search_results);
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+    }
+  });
+}
+
+function loadMoreSearch() {
+  searchTransaction(context.search_results.length);
+}
+
+function renderSearchTable() {
+  var rows = [];
+  context.search_results.forEach(function (order, index) {
+    var total = 0, dishes = '';
+
+    order.dishes_ordered.forEach(function (e) {
+      dishes = dishes + e.identifier + ' x ' + e.qty + '<BR/>';
+      total = total + (e.price_to_pay * e.qty);
+    });
+
+    order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
+    order.date = (new Date(order.created_time)).toString().substr(0, 24);
+    order.total = total;
+    order.dishes = dishes;
+
+    rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+      + order.status + '</td><td>'
+      + order.date + '</td><td>' + dishes + '</td><td>'
+      + total + '</td></tr>');
+  });
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12">' + rows.join('') + '</table>';
+
+  $('.js-search-table').html(table);
 }

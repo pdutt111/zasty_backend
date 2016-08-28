@@ -59,16 +59,7 @@
         </div>
         <div class="rght-side col-md-10">
             <div class="row">
-                <form>
-                    <div class="col-md-6">
-                        <div class="frm-field searchbox">
-                            <p>
-                                <input type="text" placeholder="Search Order Id" class="bg-lgrey"/><input
-                                    class="crsrpntr bg-dgrey twhite" type="button" value="Search">
-                            </p>
-                        </div>
-                    </div>
-                </form>
+
             </div>
             <div class="row">
                 <div class="rght-side-content col-md-12 tab-content" id="tab-1">
@@ -190,9 +181,9 @@
                         <div class="row">
                             <div class="col-md-5 transactions">
                                 <p class="col-md-12"><font class="col-md-8">Total number of transactions</font> <strong
-                                        class="col-md-4 js-ct-count">: 548</strong></p>
+                                        class="col-md-4 js-ct-count">: </strong></p>
                                 <p class="col-md-12"><font class="col-md-8">Total payout amount</font> <strong
-                                        class="col-md-4 js-ct-total">: ₹<span>2345678</span></strong></p>
+                                        class="col-md-4 js-ct-total">: ₹<span></span></strong></p>
                             </div>
                             <div class="col-md-3 dwnld-csv">
                                 <p class="col-md-12">
@@ -213,90 +204,46 @@
                 <div class="rght-side-content col-md-12 tab-content" id="tab-3">
                     <div class="details">
                         <h3 class="tgreydark tbigger">transaction history</h3>
-                        <p class="tnormal">search using below things</p>
                     </div>
                     <div class="detail-form row col-md-12">
                         <form>
                             <div class="row date-entry">
-                                <p class="col-md-3"><label class="col-md-12">start date </label> <input
-                                        class="col-md-12" type="date" placeholder="dd/mm/yy"></p>
-                                <p class="col-md-3 nopadleft"><label class="col-md-12">end date </label> <input
-                                        class="col-md-12" type="date" placeholder="dd/mm/yy"></p>
+                                <p class="col-md-3"><label class="col-md-12">start date </label>
+                                    <input id="dateS"
+                                           class="col-md-12 js-s-start" type="date" placeholder="dd/mm/yy"></p>
+                                <p class="col-md-3 nopadleft"><label class="col-md-12">end date </label>
+                                    <input id="dateE"
+                                           class="col-md-12 js-s-end" type="date" placeholder="dd/mm/yy"></p>
                                 <p class="col-md-3 nopadleft"><label class="col-md-12">&nbsp; </label><input
-                                        class="col-md-12" type="tel" placeholder="Enter Phone Number" min="10" max="10">
+                                        class="col-md-12 js-s-search" type="tel" placeholder="Search"
+                                        min="10" max="10">
                                 </p>
-                                <p class="col-md-3 nopadleft"><label class="col-md-12">&nbsp; </label><input
-                                        class="col-md-12" type="tel" placeholder="Enter Amount" min="1"></p>
                             </div>
                             <div class="row srch">
-                                <p class="col-md-6"><input class="col-md-12 crsrpntr bg-dgrey twhite" type="button"
-                                                           value="Search"></p>
+                                <p class="col-md-6">
+                                    <input onclick="searchTransaction()" type="button"
+                                           class="col-md-12 crsrpntr bg-dgrey twhite"
+                                           value="Search">
+                                </p>
                             </div>
                         </form>
                     </div>
                     <div class="clear fn"></div>
                     <div class="status-wrpr">
-                        <div class="row">
-                            <div class="col-md-5 transactions">
-                                <p class="col-md-12"><font class="col-md-8">Total number of transactions</font> <strong
-                                        class="col-md-4">: 548</strong></p>
-                                <p class="col-md-12"><font class="col-md-8">Total payout amount</font> <strong
-                                        class="col-md-4">: ₹<span>2345678</span></strong></p>
-                            </div>
-                        </div>
+                        <table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tbody><tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> </tr></tbody></table>
                     </div>
                     <div class="status-tbl-wrpr col-md-12">
-                        <div class="row">
-                            <table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12">
-                                <tr class="heading-row">
-                                    <td>Order ID</td>
-                                    <td>Txn ID</td>
-                                    <td>User Phone</td>
-                                    <td>User Email</td>
-                                    <td>Txn Date</td>
-                                    <td>Txn Amount</td>
-                                    <td>Fee</td>
-                                    <td>Service Tax</td>
-                                    <td>Status Message</td>
-                                    <td>Date</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
+                        <div class="row js-search-table">
+
+                        </div>
+                    </div>
+                    <div class="status-wrpr">
+                        <div class="row srch">
+                            <p class="col-md-6">
+                                <input style="min-height: 30px" onclick="loadMoreSearch()"
+                                       class="col-md-12 crsrpntr bg-dgrey twhite" type="button"
+                                       value="LoadMore">
+                            </p>
                         </div>
                     </div>
                 </div>
