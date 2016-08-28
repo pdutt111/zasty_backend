@@ -112,6 +112,12 @@ function getRestaurant() {
         $('.js-r-cp').val(restaurant.contact_number);
         $('.js-r-cn').val(restaurant.contact_name);
 
+        if (!restaurant.dish_add_allowed)
+          $('.js-add-dish').html('');
+
+        if (!restaurant.dish_editable)
+          $('.js-edit-dish').html('');
+
       } else {
         $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
       }
