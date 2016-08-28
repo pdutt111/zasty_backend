@@ -329,7 +329,7 @@ function dishAdd() {
 
 function renderOrderTable() {
   console.log('renderOrderTable');
-  var rows = [], pending_count = 0, new_pending_ids = [];
+  var rows = [];
   restaurant.orders.forEach(function (order, index) {
     var total = 0, dishes = '', dishes_html = '';
     order.dishes_ordered.forEach(function (e) {
@@ -350,8 +350,6 @@ function renderOrderTable() {
     if (order.status === order_states[0]) {
       playSound();
       style = 'class="tr-new""';
-      new_pending_ids.push(order._id);
-      pending_count++;
       order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button> <button type="button" onclick="changeOrderStatus(' + index + ',' + false + ')">Reject</button>';
     }
 
@@ -367,24 +365,8 @@ function renderOrderTable() {
       + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
   });
   var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
+
   $('.js-order-table').html(table);
-
-  // track new orders
-  if (!context.pending_count_old) {
-    context.pending_count_old = pending_count;
-    context.old_pending_ids = new_pending_ids;
-  }
-
-  if (pending_count > context.pending_count_old) {
-    new_pending_ids.forEach(function (id, i) {
-      if (context.old_pending_ids.indexOf(id) === -1) {
-        showNewOrderAlert(i);
-      }
-    });
-    playSound();
-  }
-  context.pending_count_old = pending_count;
-
   setTimeout(orderRefresh, 1000 * config.order_poll_interval);
 }
 
@@ -501,12 +483,6 @@ function playSound() {
 }
 function stopSound() {
   a.load();
-}
-
-function showNewOrderAlert(i) {
-  console.log('showNewOrderAlert', i);
-  console.log(restaurant.orders[i]);
-  stopSound();
 }
 
 function updateRestaurantDetails() {
