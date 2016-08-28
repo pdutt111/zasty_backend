@@ -211,7 +211,7 @@ function renderDishTable() {
       + (restaurant.dish_editable ? '<td><a onclick="dishDetails(' + index + ')">edit</a></td>' : '') + '</tr>';
   });
   var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td>'
-    + (restaurant.dish_editable ? '<td>Details</td>':'')+'</tr>' + rows.join('') + '</table>';
+    + (restaurant.dish_editable ? '<td>Details</td>' : '') + '</tr>' + rows.join('') + '</table>';
 
   $('.js-dish-table').html(table);
 }
@@ -617,14 +617,19 @@ function unpaidOrderRefresh() {
 
 function searchTransaction(i) {
   var query = '?offset=' + ( i || 0);
-  var start = $('.js-s-start').val() ? new Date($('.js-s-start').val()) : '';
-  var end = $('.js-s-end').val() ? new Date($('.js-s-end').val()) : '';
+  var start = $('.js-s-start').val() ? Date.parse($('.js-s-start').val()) : '';
+  var end = $('.js-s-end').val() ? Date.parse($('.js-s-end').val()) : '';
   var search = $('.js-s-search').val();
 
-  if (start)
+  if (start) {
+    start = new Date(start);
     query += '&start_date=' + start.toISOString();
-  if (end)
+  }
+  if (end) {
+    end = new Date(end);
+    end = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59);
     query += '&end_date=' + end.toISOString();
+  }
   if (search)
     query += '&search=' + search.toString();
 
