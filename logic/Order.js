@@ -82,17 +82,27 @@ var orderLogic={
     createDishesOrderedList:function(req,restaurant){
         var def= q.defer();
         var dishes_ordered=[];
+        if(Object.keys(req.body.dishes_ordered).length==0){
+            def.reject({status:400,message:config.get('error.badrequest')});
+        }
         for(var i=0;i<restaurant.dishes.length;i++){
             if(req.body.dishes_ordered[restaurant.dishes[i].identifier]){
-                if(!restaurant.dishes[i].availability){
-                    def.reject({status:400,message:config.get('error.badrequest')});
-                }
+                if(
+                    restaurant.dishes[i].availability&&
+                    req.body.dishes_ordered[restaurant.dishes[i].identifier].qty>0&&
+                    req.body.dishes_ordered[restaurant.dishes[i].identifier].qty<10&&
+                    req.body.dishes_ordered[restaurant.dishes[i].identifier].price>0
+                ){
                     dishes_ordered.push({
                         identifier:restaurant.dishes[i].identifier,
                         price_recieved:req.body.dishes_ordered[restaurant.dishes[i].identifier].price,
                         price_to_pay:restaurant.dishes[i].price,
                         qty:req.body.dishes_ordered[restaurant.dishes[i].identifier].qty
                     });
+                }else{
+                    def.reject({status:400,message:config.get('error.badrequest')});
+                    def.reject({status:400,message:config.get('error.badrequest')});
+                }
             }
         }
         if(dishes_ordered.length==Object.keys(req.body.dishes_ordered).length){
