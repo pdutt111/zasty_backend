@@ -481,6 +481,7 @@ var a;
 a = new Audio(config.server_url + '/audio/alertS.mp3');
 a.loop = true;
 function playSound() {
+  $('a[rel="tab1"]').trigger("click");
   a.play();
 }
 function stopSound() {
