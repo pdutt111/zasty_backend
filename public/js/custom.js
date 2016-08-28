@@ -410,13 +410,13 @@ function orderDetails(i) {
   console.log('orderDetails', i);
   context.active_order = i;
   context.active_order_details = restaurant.orders[i];
-
   var o = context.active_order_details;
+  var status = o.status + (o.issue_raised ? '</BR>Issue:' + o.issue_reason : '');
   $('.js-od').toggle(true);
   $('.js-od-id').html(o._id);
   $('.js-od-date').html(o.date);
   $('.js-od-total').html(o.total);
-  $('.js-od-status').html(o.status);
+  $('.js-od-status').html(status);
   $('.js-od-address').html(o.address_full);
   $('.js-od-dishes').html(o.dishes_html);
 }
@@ -562,7 +562,13 @@ function renderUnpaidOrderTable() {
     });
     grand_total += total;
     order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
-    order.date = (new Date(order.created_time)).toString().substr(0, 24);
+    order.date = (new Date(order.created_time)).toString().substr(0, 24) + '<BR/>';
+    if (order.log && Array.isArray(order.log)) {
+      order.log.forEach(function (e) {
+        order.date += '<BR/> ' + e.status + ' in '
+          + parseInt((new Date(e.date) - new Date(order.created_time)) / (1000 * 60), 10) + ' min.';
+      });
+    }
     order.total = total;
     order.dishes = dishes;
 
@@ -654,7 +660,13 @@ function renderSearchTable() {
     });
 
     order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
-    order.date = (new Date(order.created_time)).toString().substr(0, 24);
+    order.date = (new Date(order.created_time)).toString().substr(0, 24) + '<BR/>';
+    if (order.log && Array.isArray(order.log)) {
+      order.log.forEach(function (e) {
+        order.date += '<BR/> ' + e.status + ' in '
+          + parseInt((new Date(e.date) - new Date(order.created_time)) / (1000 * 60), 10) + ' min.';
+      });
+    }
     order.total = total;
     order.dishes = dishes;
 
