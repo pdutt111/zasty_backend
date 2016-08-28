@@ -256,15 +256,15 @@ var listings={
             regex=new RegExp(req.query.search, 'i');
         }
         //log.info(req)
-        orderTable.find({restaurant_assigned:req.params.name,created_time:{$gte:start_date,$lte:end_date},
-            $or:[
+        orderTable.find({$and:[{restaurant_assigned:req.params.name,created_time:{$gte:start_date,$lte:end_date}},
+            {$or:[
                 {address:regex},
                 {customer_name:regex},
                 {locality:regex},
                 {area:regex},
                 {customer_name:regex},
                 {customer_number:regex},
-            ]},
+            ]}]},
             "address dishes_ordered customer_name created_time log customer_number customer_email city issue_raised issue_reason locality area rejection_reason status")
             .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
             .exec(function(err,rows){
