@@ -325,7 +325,7 @@ function dishAdd() {
 
 function renderOrderTable() {
   console.log('renderOrderTable');
-  var rows = [], pending_count = 0;
+  var rows = [], pending_count = 0, new_pending_ids = [];
   restaurant.orders.forEach(function (order, index) {
     var total = 0, dishes = '', dishes_html = '';
     order.dishes_ordered.forEach(function (e) {
@@ -341,9 +341,12 @@ function renderOrderTable() {
     order.dishes_html = dishes_html;
     order.buttons = '';
     var state_index = order_states.indexOf(order.status);
-
+    var style = '';
     //accept reject buttons
     if (order.status === order_states[0]) {
+      playSound();
+      style='class="tr-new""';
+      new_pending_ids.push(order._id);
       pending_count++;
       order.buttons = '<button type="button" onclick="changeOrderStatus(' + index + ',' + true + ')">Accept</button> <button type="button" onclick="changeOrderStatus(' + index + ',' + false + ')">Reject</button>';
     }
@@ -354,7 +357,7 @@ function renderOrderTable() {
         + index + ')">' + order_states[state_index + 1] + '</button>';
     }
 
-    rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+    rows.push('<tr ' + style + '><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
       + order.status + '<BR/>' + order.buttons + '</td><td>'
       + order.date + '</td><td>' + dishes + '</td><td>'
       + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
@@ -365,18 +368,25 @@ function renderOrderTable() {
   // track new orders
   if (!context.pending_count_old) {
     context.pending_count_old = pending_count;
+    context.old_pending_ids = new_pending_ids;
   }
-  console.log(pending_count);
+
   if (pending_count > context.pending_count_old) {
+    new_pending_ids.forEach(function (id, i) {
+      if (context.old_pending_ids.indexOf(id) === -1) {
+        showNewOrderAlert(i);
+      }
+    });
     playSound();
   }
   context.pending_count_old = pending_count;
 
-  setTimeout(orderRefresh, 1000 * config.order_poll_interval);
+  //setTimeout(orderRefresh, 1000 * config.order_poll_interval);
 }
 
 function orderRefresh() {
   console.log('orderRefresh');
+  stopSound();
   $.ajax({
     url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders/live',
     headers: {
@@ -442,6 +452,13 @@ function changeOrderStatus(i, accept) {
   }
   else if (order_states.indexOf(state) == 0) {
     console.log('ostate', state, accept);
+    var reason = '', _data = {order_id: _id};
+    if (!accept) {
+      reason = prompt("Please enter your reason for Rejection.");
+      if (!reason)
+        return alert('Cannot cancel order without reason');
+      _data.reason = reason;
+    }
     $.ajax({
       url: config.server_url + '/api/v1/res/protected/restaurant/'
       + user.restaurant_name + '/order/' + (accept ? 'confirm' : 'reject'),
@@ -449,7 +466,7 @@ function changeOrderStatus(i, accept) {
         'Authorization': user.token,
         'Content-Type': 'application/json'
       },
-      data: JSON.stringify({order_id: _id}),
+      data: JSON.stringify(_data),
       type: 'POST',
       dataType: "json",
       success: function (json) {
@@ -464,6 +481,7 @@ function changeOrderStatus(i, accept) {
   }
   else {
     alert('Cannot change Status. order-id: ' + _id);
+    orderRefresh();
   }
 }
 
@@ -471,8 +489,18 @@ function compareState(a, b) {
   return order_states.indexOf(a.status) - order_states.indexOf(b.status);
 }
 
+var a;
+a = new Audio(config.server_url + '/audio/alertS.mp3');
+a.loop = true;
 function playSound() {
-  var a = new Audio(config.server_url + '/audio/alertS.mp3');
   a.play();
-  return a;
+}
+function stopSound() {
+  a.load();
+}
+
+function showNewOrderAlert(i) {
+  console.log('showNewOrderAlert', i);
+  console.log(restaurant.orders[i]);
+  stopSound();
 }

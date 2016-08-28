@@ -83,3 +83,7 @@
 .tggl-wrpr input[type="checkbox"]:checked ~ .status:after{ content:'Open';}
 .tggl-wrpr input[type="checkbox"] ~ .status:after{ content:'Close';}
 .status{font-size: 18px; display: inline-block; vertical-align: middle; margin-left:10px;}
+
+.tr-new {
+    background-color: #ffbbbb;
+}
