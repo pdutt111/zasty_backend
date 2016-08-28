@@ -52,8 +52,7 @@
 .status-wrpr .mode-details	p label input{display: inline-block; vertical-align: middle; margin-right:5px; } 
 
 .dwnld-csv{padding:0 !important; text-align:center; padding: 18px; }
-.dwnld-btn{background-color:rgb(0, 148, 72); color:#fff; border: 1px solid #fff; padding:14px; cursor: pointer; }
-.dwnld-btn i{background:url(../images/Download-24x24-white.png) no-repeat scroll left center; width: 24px; height: 24px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+.dwnld-btn{background-color:#577882; color:#fff; border: 1px solid #fff; padding:14px; cursor: pointer; }
 .status-tbl-wrpr{ margin-bottom:50px; max-height: 700px; overflow: auto;}
 .status-tbl.col-md-12{border: 1px solid #dadada; border-right: 0; border-bottom: 0; padding: 0; }
 .heading-row{background-color: #f7f7f7; }

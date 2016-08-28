@@ -104,6 +104,7 @@ function getRestaurant() {
         $('#abc').prop('checked', restaurant.open_status);
         dishRefresh();
         orderRefresh();
+        unpaidOrderRefresh();
         $('.js-r-a').val(restaurant.location.join(','));
         $('.js-r-cp').val(restaurant.contact_number);
         $('.js-r-cn').val(restaurant.contact_name);
@@ -534,6 +535,58 @@ function updateRestaurantDetails() {
     error: function (xhr, _status, errorThrown) {
       console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
       alert('update restaurant detailed failed.');
+    }
+  });
+}
+
+function renderUnpaidOrderTable() {
+  console.log('renderOrderTable');
+  var rows = [];
+  var grand_total = 0;
+  restaurant.unpaid_orders.forEach(function (order, index) {
+    var total = 0, dishes = '', dishes_html = '';
+
+    order.dishes_ordered.forEach(function (e) {
+      dishes = dishes + e.identifier + ' x ' + e.qty + '<BR/>';
+      total = total + (e.price_to_pay * e.qty);
+    });
+    grand_total += total;
+    order.address_full = order.address + '<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
+    order.date = (new Date(order.created_time)).toString().substr(0, 24);
+    order.total = total;
+    order.dishes = dishes;
+
+    rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+      + order.status + '</td><td>'
+      + order.date + '</td><td>' + dishes + '</td><td>'
+      + total + '</td></tr>');
+  });
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> </tr>' + rows.join('') + '</table>';
+
+  $('.js-current-transaction-table').html(table);
+  $('.js-ct-total').html(grand_total);
+  $('.js-ct-count').html(restaurant.unpaid_orders.length);
+}
+
+function unpaidOrderRefresh() {
+  console.log('unpaidOrderRefresh');
+  $.ajax({
+    url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/orders/unpaid',
+    headers: {
+      'Authorization': user.token,
+      'Content-Type': 'application/json'
+    },
+    type: 'GET',
+    dataType: "json",
+    success: function (json) {
+      console.log(json);
+      if (Array.isArray(json)) {
+        restaurant.unpaid_orders = json;
+        renderUnpaidOrderTable();
+      }
+    },
+    error: function (xhr, _status, errorThrown) {
+      console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
     }
   });
 }
