@@ -105,6 +105,8 @@ var restaurantSchema=new Schema({
     nomnom_username:String,
     nomnom_password:String,
     owner_id:{type:ObjectId, ref:'restaurants'},
+    dish_editable:{type:Boolean,default:false},
+    dish_add_allowed:{type:Boolean,default:false},
     is_deleted:{type:Boolean,default:false},
     is_verified:{type:Boolean,default:false},
     created_time:{type:Date,default:Date.now},

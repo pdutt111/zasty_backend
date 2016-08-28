@@ -84,7 +84,7 @@ var listings={
     },
     getRestaurant:function(req){
         var def= q.defer();
-        restaurantTable.findOne({name:req.params.name,is_deleted:false,is_verified:true},"name location contact_name contact_number dishes open_status is_deleted",
+        restaurantTable.findOne({name:req.params.name,is_deleted:false,is_verified:true},"name dish_editable dish_add_allowed location contact_name contact_number dishes open_status is_deleted",
         function(err,restaurant){
             if(!err){
                 def.resolve(restaurant);
