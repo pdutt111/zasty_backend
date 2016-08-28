@@ -205,6 +205,32 @@ router.get('/protected/restaurant/:name/orders/live',
                 res.status(err.status).json(err.message);
             })
     });
+router.get('/protected/restaurant/:name/orders/unpaid',
+    function(req,res,next){
+        res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.header("Pragma", "no-cache");
+        res.header("Expires", 0);
+        next();
+    },
+    function(req,res,next){
+        restaurantLogic.checkProperUser(req)
+            .then(function(){
+                next();
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    },
+    function(req,res){
+        restaurantLogic.getUnpaidOrders(req)
+            .then(function(restaurant){
+                res.json(restaurant);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+    });
+
 
 router.get('/protected/restaurant/:name/order',
     params({query:['order_id']},

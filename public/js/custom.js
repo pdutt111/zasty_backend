@@ -381,7 +381,7 @@ function renderOrderTable() {
   }
   context.pending_count_old = pending_count;
 
-  //setTimeout(orderRefresh, 1000 * config.order_poll_interval);
+  setTimeout(orderRefresh, 1000 * config.order_poll_interval);
 }
 
 function orderRefresh() {

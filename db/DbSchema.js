@@ -72,6 +72,7 @@ var orderSchema=new Schema({
     }],
     restaurant_assigned:String,
     status:String,
+    paid_status_to_restaurant:{type:Boolean,default:false},
     source:String,
     log:[{status:String,_id:false, date:{type:Date,default:Date.now}}],
     customer_number:String,
