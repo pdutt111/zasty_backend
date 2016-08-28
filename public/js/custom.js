@@ -208,9 +208,10 @@ function renderDishTable() {
   var rows = restaurant.dishes.map(function (dish, index) {
     return '<tr><td>' + dish.identifier + '</td> <td>' + dish.price + '</td>'
       + '<td><input type="checkbox"' + (dish.availability ? (' checked="' + dish.availability) : '') + '" onclick="toggleDish(' + index + ');" ></td>'
-      + '<td><a onclick="dishDetails(' + index + ')">edit</a></td></tr>';
+      + (restaurant.dish_editable ? '<td><a onclick="dishDetails(' + index + ')">edit</a></td>' : '') + '</tr>';
   });
-  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td><td>Details</td></tr>' + rows.join('') + '</table>';
+  var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"><tr class="heading-row"><td>Dish Name</td><td>Value</td><td>Available</td>'
+    + (restaurant.dish_editable ? '<td>Details</td>':'')+'</tr>' + rows.join('') + '</table>';
 
   $('.js-dish-table').html(table);
 }
