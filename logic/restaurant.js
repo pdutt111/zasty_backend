@@ -240,23 +240,26 @@ var listings={
         var start_date=new Date(0);
         if(req.query.start_date){
             try{
-                req.query.start_date=new Date(req.query.start_date);
+                start_date=Date.parse(req.query.start_date);
             }catch(e){
             }
         }
         var end_date=new Date();
         if(req.query.end_date){
             try{
-                req.query.end_date=new Date(req.query.end_date);
+                end_date=Date.parse(req.query.end_date);
             }catch(e){
+                log.info(e);
             }
         }
         var regex=new RegExp("", 'i')
         if(req.query.search&&req.query.search.length>=3){
             regex=new RegExp(req.query.search, 'i');
         }
-        //log.info(req)
-        orderTable.find({$and:[{restaurant_assigned:req.params.name,created_time:{$gte:start_date,$lte:end_date}},
+        log.info(start_date,end_date);
+        orderTable.find({$and:[
+            {restaurant_assigned:req.params.name},
+            {created_time:{$gte:start_date,$lte:end_date}},
             {$or:[
                 {address:regex},
                 {customer_name:regex},
@@ -264,7 +267,8 @@ var listings={
                 {area:regex},
                 {customer_name:regex},
                 {customer_number:regex},
-            ]}]},
+            ]}
+        ]},
             "address dishes_ordered customer_name created_time log customer_number customer_email city issue_raised issue_reason locality area rejection_reason status")
             .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
             .exec(function(err,rows){
