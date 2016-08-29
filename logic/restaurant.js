@@ -253,7 +253,7 @@ var listings={
             }
         }
         var regex=new RegExp("", 'i')
-        if(req.query.search&&req.query.search.length>=3){
+        if(req.query.search){
             regex=new RegExp(req.query.search, 'i');
         }
         log.info(start_date,end_date);
@@ -265,11 +265,14 @@ var listings={
                 {customer_name:regex},
                 {locality:regex},
                 {area:regex},
+                {status:regex},
                 {customer_name:regex},
                 {customer_number:regex},
             ]}
         ]},
-            "address dishes_ordered customer_name created_time log customer_number customer_email city issue_raised issue_reason locality area rejection_reason status")
+            "address dishes_ordered customer_name created_time log " +
+            "customer_number customer_email city issue_raised issue_reason" +
+            " locality area rejection_reason status")
             .skip(Number(req.query.offset)).limit(20).sort({_id:-1})
             .exec(function(err,rows){
                 if(!err){
