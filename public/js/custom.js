@@ -672,7 +672,7 @@ function renderSearchTable() {
       total = total + (e.price_to_pay * e.qty);
     });
 
-    order.address_full = order.address +'<BR/> Locality: ' + order.locality +'<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
+    order.address_full = order.customer_name+'('+customer_number+')<BR/>'+order.address +'<BR/> Locality: ' + order.locality +'<BR/> Area: ' + order.area + '<BR/> City: ' + order.city;
     order.date = (new Date(order.created_time)).toString().substr(0, 24) + '<BR/>';
     if (order.log && Array.isArray(order.log)) {
       order.log.forEach(function (e) {
