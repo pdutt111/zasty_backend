@@ -419,6 +419,9 @@ var listings={
                         def.resolve(config.get("ok"));
                         orderTable.findOne({_id:new ObjectId(req.body.order_id)},"customer_name source status restaurant_assigned customer_number",function(err,order){
                             if(!err){
+                                if(order.status=="prepared"){
+                                    events.emitter.emit("process_delivery_queue",order._id);
+                                }
                                 if(order.source.name=="nomnom"){
                                     restaurantTable.findOne({name:order.restaurant_assigned},"nomnom_username nomnom_password",function(err,restaurant){
                                         events.emitter.emit("status_change_nomnom",
