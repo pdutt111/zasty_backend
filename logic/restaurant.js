@@ -414,6 +414,11 @@ var listings = {
     },
     rejectOrder: function (req) {
         var def = q.defer();
+        events.emitter.emit("mail_admin", {
+            subject: "Order Rejected by Restaurant - "+ req.body.order_id,
+            message: "Order Rejected by Restaurant - for order id-" + req.body.order_id + 'reason-' + req.body.reason,
+            plaintext: "Order Rejected by Restaurant - for order id-" + req.body.order_id + 'reason-' + req.body.reason
+        });
         orderTable.update({_id: new ObjectId(req.body.order_id)},
             {
                 $set: {status: "rejected", rejection_reason: req.body.reason},
@@ -520,9 +525,9 @@ var listings = {
     raiseIssue: function (req) {
         var def = q.defer();
         events.emitter.emit("mail_admin", {
-            subject: "Delivery Order Issue Raised by Restaurant - "+ req.body.order_id,
-            message: "order delivery service issue for order id-" + req.body.order_id + 'reason-' + req.body.reason,
-            plaintext: "order delivery service issue for order id-" + req.body.order_id + 'reason-' + req.body.reason
+            subject: "Order Issue Raised by Restaurant - "+ req.body.order_id,
+            message: "order issue for order id-" + req.body.order_id + 'reason-' + req.body.reason,
+            plaintext: "order issue for order id-" + req.body.order_id + 'reason-' + req.body.reason
         });
         orderTable.update({_id: new ObjectId(req.body.order_id)}, {
             $set: {
