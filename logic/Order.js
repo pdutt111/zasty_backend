@@ -101,7 +101,6 @@ var orderLogic={
                     });
                 }else{
                     def.reject({status:400,message:config.get('error.badrequest')});
-                    def.reject({status:400,message:config.get('error.badrequest')});
                 }
             }
         }

@@ -5,6 +5,8 @@ var config = require('config');
 var events = require('../events');
 var ses = require('node-ses')
     , client = ses.createClient({key: config.get('amazonses.key'), secret: config.get('amazonses.secret')});
+var db = require('../db/DbSchema');
+var userTable = db.getuserdef;
 
 // Give SES the details and let it construct the message for you.
 events.emitter.on('mail', function (data) {
@@ -27,3 +29,14 @@ events.emitter.on('mail', function (data) {
 //    message: 'test123',
 //    plainText: 'test123'
 //});
+
+events.emitter.on('mail_admin', function (data) {
+    userTable.findOne({is_admin: true}, function (err, user) {
+        events.emitter.emit("mail", {
+            subject: data.subject,
+            message: data.message,
+            altText: data.plainText,
+            toEmail: user.email
+        });
+    });
+});

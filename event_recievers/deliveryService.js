@@ -4,7 +4,6 @@ var request = require('request');
 var db = require('../db/DbSchema');
 var restaurantTable = db.getrestaurantdef;
 var orderTable = db.getorderdef;
-var userTable = db.getuserdef;
 
 events.emitter.on('process_delivery_queue', function (_id) {
     var query = {
@@ -99,12 +98,9 @@ function resetNSave(doc) {
 }
 
 function sendAdminAlert(doc) {
-    userTable.findOne({is_admin: true}, function (err, user) {
-        events.emitter.emit("mail", {
-            subject: "Delivery Order Issue",
-            message: "order delivery service issue for order id-" + doc._id,
-            plaintext: "order delivery service issue for order id-" + doc._id,
-            toEmail: user.email
-        });
+    events.emitter.emit("mail_admin", {
+        subject: "Delivery Order Issue",
+        message: "order delivery service issue for order id-" + doc._id,
+        plaintext: "order delivery service issue for order id-" + doc._id
     });
 }
