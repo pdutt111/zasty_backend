@@ -70,6 +70,8 @@ var orderSchema = new Schema({
         qty: {type: Number, default: 1},
         _id: false
     }],
+    total_price_recieved: Number,
+    total_price_to_pay: Number,
     restaurant_assigned: String,
     status: String,
     paid_status_to_restaurant: {type: Boolean, default: false},
