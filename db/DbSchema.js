@@ -8,6 +8,8 @@ var events = require('../events');
 var log = require('tracer').colorConsole(config.get('log'));
 var ObjectId = require('mongoose').Schema.Types.ObjectId;
 var validate = require('mongoose-validator');
+var autoIncrement = require('mongoose-auto-increment');
+
 var nameValidator = [
     validate({
         validator: 'isLength',
@@ -29,6 +31,7 @@ var phoneValidator = [
     })
 ];
 var db = mongoose.createConnection(config.get('mongo.location'), config.get('mongo.database'));
+autoIncrement.initialize(db);
 
 var Schema = mongoose.Schema;
 mongoose.set('debug', config.get('mongo.debug'));
@@ -102,6 +105,7 @@ var orderSchema = new Schema({
     created_time: {type: Date, default: Date.now},
     modified_time: {type: Date, default: Date.now}
 });
+orderSchema.plugin(autoIncrement.plugin, 'Order');
 
 var restaurantSchema = new Schema({
     name: {type: String, unique: true, dropDups: true},

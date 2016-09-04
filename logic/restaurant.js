@@ -357,7 +357,7 @@ var listings = {
     },
     getOrder: function (req) {
         var def = q.defer();
-        orderTable.findOne({_id: new ObjectId(req.query.order_id)},
+        orderTable.findOne({_id: req.query.order_id},
             "address dishes_ordered city locality area rejection_reason status"
             , function (err, order) {
                 if (!err) {
@@ -370,13 +370,13 @@ var listings = {
     },
     confirmOrder: function (req) {
         var def = q.defer();
-        orderTable.update({_id: new ObjectId(req.body.order_id)}, {
+        orderTable.update({_id: req.body.order_id}, {
             $set: {status: "confirmed"},
             $push: {log: {status: "confirmed", date: new Date()}}
         }, function (err, info) {
             if (!err) {
                 def.resolve(config.get('ok'));
-                orderTable.findOne({_id: new ObjectId(req.body.order_id)}, "customer_name restaurant_assigned customer_number", function (err, order) {
+                orderTable.findOne({_id: req.body.order_id}, "customer_name restaurant_assigned customer_number", function (err, order) {
                     if (!err) {
                         if (order.source.name == "nomnom") {
                             restaurantTable.findOne({name: order.restaurant_assigned}, "nomnom_username nomnom_password", function (err, restaurant) {
@@ -415,18 +415,18 @@ var listings = {
     rejectOrder: function (req) {
         var def = q.defer();
         events.emitter.emit("mail_admin", {
-            subject: "Order Rejected by Restaurant - "+ req.body.order_id,
+            subject: "Order Rejected by Restaurant - " + req.body.order_id,
             message: "Order Rejected by Restaurant - for order id-" + req.body.order_id + 'reason-' + req.body.reason,
             plaintext: "Order Rejected by Restaurant - for order id-" + req.body.order_id + 'reason-' + req.body.reason
         });
-        orderTable.update({_id: new ObjectId(req.body.order_id)},
+        orderTable.update({_id: req.body.order_id},
             {
                 $set: {status: "rejected", rejection_reason: req.body.reason},
                 $push: {log: {status: "rejected", date: new Date()}}
             }, function (err, info) {
                 if (!err) {
                     def.resolve(config.get("ok"));
-                    orderTable.findOne({_id: new ObjectId(req.body.order_id)}, "customer_name restaurant_assigned customer_number", function (err, order) {
+                    orderTable.findOne({_id: req.body.order_id}, "customer_name restaurant_assigned customer_number", function (err, order) {
                         if (!err) {
                             if (order.source.name == "nomnom") {
                                 restaurantTable.findOne({name: order.restaurant_assigned}, "nomnom_username nomnom_password", function (err, restaurant) {
@@ -460,7 +460,7 @@ var listings = {
                     def.reject({status: 500, message: config.get('error.dberror')});
                 }
             });
-        orderTable.findOne({_id: new ObjectId(req.body.order_id)},
+        orderTable.findOne({_id: req.body.order_id},
             "address dishes_ordered city locality area rejection_reason status"
             , function (err, order) {
                 if (!err) {
@@ -473,14 +473,14 @@ var listings = {
     changeOrderStatus: function (req) {
         var def = q.defer();
         if (req.body.status == "prepared" || req.body.status == "dispatched" || req.body.status == "delivered" || req.body.status == "new" || req.body.status == "confirmed" || req.body.status == "rejected") {
-            orderTable.update({_id: new ObjectId(req.body.order_id)},
+            orderTable.update({_id: req.body.order_id},
                 {
                     $set: {status: req.body.status},
                     $push: {log: {status: req.body.status, date: new Date()}}
                 }, function (err, info) {
                     if (!err) {
                         def.resolve(config.get("ok"));
-                        orderTable.findOne({_id: new ObjectId(req.body.order_id)}, "customer_name source status restaurant_assigned customer_number", function (err, order) {
+                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status restaurant_assigned customer_number", function (err, order) {
                             if (!err) {
                                 if (order.status == "prepared") {
                                     events.emitter.emit("process_delivery_queue", order._id);
@@ -525,11 +525,11 @@ var listings = {
     raiseIssue: function (req) {
         var def = q.defer();
         events.emitter.emit("mail_admin", {
-            subject: "Order Issue Raised by Restaurant - "+ req.body.order_id,
+            subject: "Order Issue Raised by Restaurant - " + req.body.order_id,
             message: "order issue for order id-" + req.body.order_id + 'reason-' + req.body.reason,
             plaintext: "order issue for order id-" + req.body.order_id + 'reason-' + req.body.reason
         });
-        orderTable.update({_id: new ObjectId(req.body.order_id)}, {
+        orderTable.update({_id: req.body.order_id}, {
             $set: {
                 issue_raised: true,
                 issue_reason: req.body.reason

@@ -31,6 +31,7 @@
     "moment": "^2.10.3",
     "mongodb": "^2.0.39",
     "mongoose": "^4.0.5",
+    "mongoose-auto-increment": "^5.0.1",
     "mongoose-promised": "^0.1.0",
     "mongoose-validator": "^1.1.1",
     "morgan": "~1.5.1",

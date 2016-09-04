@@ -205,7 +205,7 @@ var orderLogic = {
     },
     deleteOrder: function (req) {
         var def = q.defer();
-        orderTable.update({_id: new ObjectId(req.body.order_id)},
+        orderTable.update({_id: req.body.order_id},
             {$set: {is_deleted: true}}, function (err, info) {
                 if (!err) {
                     def.resolve(config.get("ok"));

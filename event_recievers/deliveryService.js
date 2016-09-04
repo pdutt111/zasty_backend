@@ -2,6 +2,7 @@ var config = require('config');
 var events = require('../events');
 var request = require('request');
 var db = require('../db/DbSchema');
+var log = require('tracer').colorConsole(config.get('log'));
 var restaurantTable = db.getrestaurantdef;
 var orderTable = db.getorderdef;
 
@@ -38,7 +39,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                     console.log('process_delivery_queue SUCC - ', order, restaurant);
 
                     var payload = JSON.stringify({
-                        "store_code": 2,
+                        "store_code": restaurant.shadowfax_store_code,
                         "callback_url": config.base_url + '/api/deliverystatus/' + order._id,
                         "pickup_contact_number": restaurant.contact_number,
                         "order_details": {
@@ -56,7 +57,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                             "latitude": order.location[1]
                         }
                     });
-
+                    log.info(payload);
                     request({
                         method: 'POST',
                         url: 'http://api.shadowfax.in/api/v1/stores/orders/',
@@ -66,6 +67,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         },
                         body: payload
                     }, function (error, response, body) {
+                        console.log('Error:', error);
                         console.log('Status:', response.statusCode);
                         console.log('Headers:', JSON.stringify(response.headers));
                         console.log('Response:', body);
