@@ -172,6 +172,31 @@ var orderLogic = {
             log.info(err);
             if (!err) {
                 def.resolve(order);
+
+                var message = "new order id- " + order.order_id + ' \n';
+                order.dishes_ordered.forEach(function (d) {
+                    message += '\ndish:' + d.identifier + ' \tqty: ' + d.qty + ' \tprice: ' + d.price_to_pay;
+                });
+                message += '\ntotal price to restaurant: ' + order.total_price_to_pay;
+
+                var email = {
+                    subject: "New Order" + order.order_id,
+                    message: message,
+                    plaintext: message
+                };
+
+                userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, doc) {
+                    if (doc && doc.email) {
+                        email.toEmail = doc.email;
+                        events.emitter.emit("mail", email);
+                    }
+                });
+
+                email.message += '\ntotal price: ' + order.total_price_recieved;
+                email.plaintext += '\ntotal price: ' + order.total_price_recieved;
+
+                events.emitter.emit("mail_admin", email);
+
             } else {
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
