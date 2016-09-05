@@ -94,15 +94,18 @@ setInterval(function () {
 
 function resetNSave(doc, err) {
     doc.delivery.retry_count++;
-    if (doc.delivery.retry_count > 4) {
-        console.log("CRITICAL ERROR- DELIVERY SERVICE ORDER FAIL for order_id- ", doc._id);
-        sendAdminAlert(doc);
-    }
     doc.status = 'prepared';
 
     if (err) {
         doc.error.push({status: err, date: new Date()})
     }
+
+    if (doc.delivery.retry_count > 4) {
+        doc.status = 'error';
+        console.log("CRITICAL ERROR- DELIVERY SERVICE ORDER FAIL for order_id- ", doc._id);
+        sendAdminAlert(doc);
+    }
+
     doc.save();
 }
 
