@@ -27,17 +27,14 @@ events.emitter.on('process_delivery_queue', function (_id) {
     }, function (err, order) {
         if (err) {
             console.log('error process_delivery_queue - ', order, err);
-            resetNSave(order);
         }
         if (!err && order) {
             restaurantTable.findOne({name: order.restaurant_assigned}, function (err, restaurant) {
                 if (err || !restaurant) {
                     console.log('error process_delivery_queue - ', order, restaurant, err);
-                    resetNSave(order);
+                    resetNSave(order, 'restaurant not found');
                 }
                 if (restaurant) {
-                    console.log('process_delivery_queue SUCC - ', order, restaurant);
-
                     var payload = JSON.stringify({
                         "store_code": restaurant.shadowfax_store_code,
                         "callback_url": config.base_url + '/api/deliverystatus/' + order._id,
@@ -67,16 +64,22 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         },
                         body: payload
                     }, function (error, response, body) {
-                        console.log('Error:', error);
-                        console.log('Status:', response.statusCode);
-                        console.log('Headers:', JSON.stringify(response.headers));
-                        console.log('Response:', body);
-                        if (response.statusCode == 201) {
+                        if (response && response.statusCode == 201) {
                             var data = JSON.parse(body);
-                            order.delivery.details = data;
-                            order.save();
+                            console.log(data);
+                            if (data.data.status === 'ACCEPTED') {
+                                order.delivery.details = data;
+                                order.delivery.status = data.data.status;
+                                order.delivery.log.push({status: data.status, date: new Date()});
+                                order.status = "prepared";
+                                order.save();
+                            } else {
+                                resetNSave(order, 'sfx reject- ' + body);
+                                //TODO: try fallback service
+                            }
                         } else {
-                            resetNSave(order);
+                            var err = (error || '').toString() + (response || '').toString() + (body || '').toString();
+                            resetNSave(order, 'sfx failed- ' + err);
                         }
                     });
                 }
@@ -89,13 +92,17 @@ setInterval(function () {
     events.emitter.emit("process_delivery_queue");
 }, config.deliveryServiceInterval);
 
-function resetNSave(doc) {
+function resetNSave(doc, err) {
     doc.delivery.retry_count++;
     if (doc.delivery.retry_count > 4) {
         console.log("CRITICAL ERROR- DELIVERY SERVICE ORDER FAIL for order_id- ", doc._id);
         sendAdminAlert(doc);
     }
     doc.status = 'prepared';
+
+    if (err) {
+        doc.error.push({status: err, date: new Date()})
+    }
     doc.save();
 }
 

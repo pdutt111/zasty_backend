@@ -30,6 +30,8 @@ var phoneValidator = [
         message: 'phonenumber should be 10 digits'
     })
 ];
+
+mongoose.Promise = global.Promise;
 var db = mongoose.createConnection(config.get('mongo.location'), config.get('mongo.database'));
 autoIncrement.initialize(db);
 
@@ -78,7 +80,6 @@ var orderSchema = new Schema({
     restaurant_assigned: String,
     status: String,
     paid_status_to_restaurant: {type: Boolean, default: false},
-    source: String,
     issue_raised: {type: Boolean, default: false},
     issue_reason: String,
     log: [{status: String, _id: false, date: {type: Date, default: Date.now}}],
@@ -88,7 +89,7 @@ var orderSchema = new Schema({
     delivery: {
         details: Schema.Types.Mixed,
         retry_count: {type: Number, default: 0},
-        log: {type: [String], default: []},
+        log: [{status: String, _id: false, date: {type: Date, default: Date.now}}],
         status: {type: String, default: 'not_ready'}
     },
     delivery_person_alloted: String,
@@ -100,6 +101,7 @@ var orderSchema = new Schema({
         id: String
     },
     rejection_reason: String,
+    error: [{status: String, _id: false, date: {type: Date, default: Date.now}}],
     is_verified: {type: Boolean, default: false},
     is_deleted: {type: Boolean, default: false},
     created_time: {type: Date, default: Date.now},
