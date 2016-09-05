@@ -230,6 +230,8 @@ var orderLogic = {
                 doc.status = req.body.order_status;
             }
 
+            doc.delivery.status = req.body.order_status;
+
             if (parseInt(req.body.cancel_reason) > -1) {
                 doc.status = 'DELIVERY_ERROR';
                 var text = "order delivery service issue for order id-" + doc._id + ' r- ' + JSON.stringify(req.body);
