@@ -37,7 +37,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                 if (restaurant) {
                     var payload = JSON.stringify({
                         "store_code": restaurant.shadowfax_store_code,
-                        "callback_url": config.base_url + '/api/deliverystatus/' + order._id,
+                        "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
                         "pickup_contact_number": restaurant.contact_number,
                         "order_details": {
                             "client_order_id": order._id,

@@ -214,8 +214,37 @@ var orderLogic = {
                 }
             });
         return def.promise;
+    },
+    deliveryCallback: function (req) {
+        log.info(req.params, req.body);
+        var def = q.defer();
+
+        orderTable.findOne({_id: req.params.order_id}, function (err, doc) {
+            if (err || !doc) {
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
+
+            doc.delivery.log.push({status: JSON.stringify(req.body)});
+
+            if (req.body.order_status == 'DELIVERED') {
+                doc.status = req.body.order_status;
+            }
+
+            if (parseInt(req.body.cancel_reason) > -1) {
+                doc.status = 'DELIVERY_ERROR';
+                var text = "order delivery service issue for order id-" + doc._id + ' r- ' + JSON.stringify(req.body);
+                events.emitter.emit("mail_admin", {
+                    subject: "Order Delivery Issue",
+                    message: text,
+                    plaintext: text
+                });
+            }
+            doc.save();
+            def.resolve(doc);
+        });
+        return def.promise;
     }
 
 };
 
-module.exports = orderLogic
+module.exports = orderLogic;
