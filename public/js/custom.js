@@ -47,8 +47,10 @@ function initDash() {
     $('#abc').click(function () {
         toggleRestaurant(this.checked);
     });
-    document.getElementById('dateE').valueAsDate = new Date();
-    document.getElementById('dateS').valueAsDate = (new Date()).setDate((new Date()).getDate() - 7);
+    try{
+        document.getElementById('dateE').valueAsDate = new Date();
+        document.getElementById('dateS').valueAsDate = (new Date()).setDate((new Date()).getDate() - 7);
+    }
 }
 
 function logOut() {
