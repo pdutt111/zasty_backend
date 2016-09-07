@@ -50,7 +50,7 @@ function initDash() {
     try{
         document.getElementById('dateE').valueAsDate = new Date();
         document.getElementById('dateS').valueAsDate = (new Date()).setDate((new Date()).getDate() - 7);
-    }
+    }catch(e){}
 }
 
 function logOut() {
