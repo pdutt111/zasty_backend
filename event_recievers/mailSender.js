@@ -40,12 +40,15 @@ events.emitter.on('mail', function (data) {
 
 events.emitter.on('mail_admin', function (data) {
     userTable.findOne({is_admin: true}, function (err, user) {
-        events.emitter.emit("mail", {
-            subject: data.subject,
-            message: data.message,
-            altText: data.plainText,
-            toEmail: user.email
-        });
+        if(user.email){
+            events.emitter.emit("mail", {
+                subject: data.subject,
+                message: data.message,
+                altText: data.plainText,
+                toEmail: user.email
+            });
+        }
+
     });
 });
 
