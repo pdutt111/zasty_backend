@@ -15,6 +15,8 @@ function deliveryOrderCallback(response, body, order, error, service) {
 
     if (service == 'quickli' && response && response.statusCode == 200) {
         if (data.status === 'Success') {
+            data.pooled_at = new Date();
+            data.pooling = false;
             order.delivery.details = data;
             order.delivery.status = data.order_status;
             order.delivery.log.push({status: JSON.stringify(data), date: new Date()});
@@ -188,7 +190,7 @@ events.emitter.on('process_quickli', function () {
         $set: {"delivery.details.pooling": true}
     }, {
         new: true,
-        sort: {created_time: -1}
+        sort: {'delivery.details.pooled_at': 1}
     }, function (err, order) {
         if (err) {
             console.log('error process_quickli - ', err);
@@ -224,19 +226,19 @@ events.emitter.on('process_quickli', function () {
                                 if (Array.isArray(data) && data.length == 1) {
                                     data = data[0];
                                     if (order.delivery.log[0] && order.delivery.log[0].status != JSON.stringify(data)) {
-                                        order.delivery.log.push({status: JSON.stringify(data), date: new Date()});
+                                        order.delivery.log.unshift({status: JSON.stringify(data), date: new Date()});
                                     }
                                     if (!order.delivery.log[0]) {
-                                        order.delivery.log.push({status: JSON.stringify(data), date: new Date()});
+                                        order.delivery.log.unshift({status: JSON.stringify(data), date: new Date()});
                                     }
                                     if (validQuickliStates.indexOf(data.status) == -1 && data.status != 'Delivered') {
                                         sendAdminAlert(order);
                                     }
-//                                    order.delivery.status = data.status;
-                                    console.log(order.delivery.status, data.status);
+                                    order.delivery.status = data.status;
                                 }
                             }
                             order.delivery.details.pooling = false;
+                            order.delivery.details.pooled_at = new Date();
                             order.markModified('delivery.details');
                             return order.save();
                         });
