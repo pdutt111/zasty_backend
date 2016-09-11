@@ -70,6 +70,8 @@ events.emitter.on('process_delivery_queue', function (_id) {
                     resetNSave(order, 'restaurant not found');
                 }
                 if (restaurant) {
+
+                    // Quickli
                     if (order.delivery.retry_count < 3) {
                         var options = {
                             method: 'POST',
@@ -99,6 +101,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         });
 
                     }
+                    // ShadowFax
                     var payload = JSON.stringify({
                         "store_code": restaurant.shadowfax_store_code,
                         "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
@@ -142,6 +145,10 @@ setInterval(function () {
     events.emitter.emit("process_delivery_queue");
 }, config.deliveryServiceInterval);
 
+setInterval(function () {
+    events.emitter.emit("process_quickli");
+}, config.quickliServiceInterval);
+
 function resetNSave(doc, err) {
     doc.delivery.retry_count++;
     doc.status = book_at;
@@ -166,3 +173,78 @@ function sendAdminAlert(doc) {
         plaintext: "order delivery service issue for order id-" + doc._id
     });
 }
+
+var validQuickliStates = ['Processing', 'Accepted', 'Picked', 'In Transit'];
+
+events.emitter.on('process_quickli', function () {
+    var query = {
+        "delivery.details.pooling": false,
+        "delivery.retry_count": {$lt: max_retry},
+        "delivery.details.service": "quickli",
+        "delivery.status": {$in: validQuickliStates}
+    };
+
+    orderTable.findOneAndUpdate(query, {
+        $set: {"delivery.details.pooling": true}
+    }, {
+        new: true,
+        sort: {created_time: -1}
+    }, function (err, order) {
+        if (err) {
+            console.log('error process_quickli - ', err);
+        }
+        if (!err && order) {
+            restaurantTable.findOne({name: order.restaurant_assigned}, function (err, restaurant) {
+                if (err || !restaurant) {
+                    console.log('error process_quickli - ', order, restaurant, err);
+                }
+                if (restaurant) {
+                    if (order.delivery.details.order_id) {
+                        var options = {
+                            method: 'POST',
+                            url: config.quickli.url_track,
+                            headers: {
+                                'content-type': 'application/x-www-form-urlencoded',
+                                'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
+                                'cache-control': 'no-cache'
+                            },
+                            form: {
+                                partner_id: '2',
+                                store_id: restaurant.quickli_store_id,
+                                app_id: config.quickli.app_id,
+                                access_key: config.quickli.access_key,
+                                order_id: order.delivery.details.order_id
+                            }
+                        };
+                        log.info(options);
+                        request(options, function (error, response, body) {
+                            if (response && response.statusCode == 200) {
+                                var data = JSON.parse(body);
+                                console.log(data);
+                                if (Array.isArray(data) && data.length == 1) {
+                                    data = data[0];
+                                    if (order.delivery.log[0] && order.delivery.log[0].status != JSON.stringify(data)) {
+                                        order.delivery.log.push({status: JSON.stringify(data), date: new Date()});
+                                    }
+                                    if (!order.delivery.log[0]) {
+                                        order.delivery.log.push({status: JSON.stringify(data), date: new Date()});
+                                    }
+                                    if (validQuickliStates.indexOf(data.status) == -1 && data.status != 'Delivered') {
+                                        sendAdminAlert(order);
+                                    }
+//                                    order.delivery.status = data.status;
+                                    console.log(order.delivery.status, data.status);
+                                }
+                            }
+                            order.delivery.details.pooling = false;
+                            order.markModified('delivery.details');
+                            return order.save();
+                        });
+                    }
+
+                }
+            });
+        }
+
+    });
+});
