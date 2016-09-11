@@ -106,6 +106,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         "order_details": {
                             "client_order_id": order._id,
                             "order_value": order.value || 300,
+                            "preparation_time": config.preparation_time,
                             "paid": order.paid || true
                         },
                         "customer_details": {
