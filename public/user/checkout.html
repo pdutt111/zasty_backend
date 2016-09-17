@@ -1,0 +1,377 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Food Ordering Site</title>
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link href="css/layout.css" type="text/css" rel="stylesheet">
+<link href="css/style.css" type="text/css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+</head>
+
+<body id="itemlist">
+
+<div class="sec-header">
+	<div class="container pad15 tcenter posrel top-part">
+		<h2 class="logo_black fL">
+	    	<a href="#"><img src="images/logo_black.png" alt="logo_name"></a>
+	    </h2>	    	    
+	    <ul class="rgt-menu fR tright">
+	    	<li class="popup-trig lh">Gurgaon <i class="fa fa-angle-down"></i></li>
+	    	<li class="brdrght lh"><a href="login.html">Login</a></li>
+	        <li class="lh"><a href="signup.html">Sign Up</a></li>
+	        <!-- <li><em>Hi <strong>abcasd@gmail.com</strong></em></li>
+	        <li><span class="dpInblk vam logout">Logout</span></li> -->
+	    </ul>
+	    <div class="clear fN"></div>
+    </div>    
+</div>
+<div class="checkout-wrpr">
+	<div class="container">	
+		<div class="checkout-details">
+			<div class="cstmr-info">
+				<form>
+					<div class="address">					
+						<div>
+							<div class="tgreydark uppercase">customer information</div>
+							<div class="clear10"></div>
+							<div class="info">
+								<p class="split"><input type="text" placeholder="First Name" class="brdrghtgrey"><input type="text" placeholder="Last Name"></p>
+								<p><input type="tel" placeholder="Mobile Number"></p>
+								<p class="nobdr"><input type="email" placeholder="Email Address"></p>
+							</div>
+						</div>
+						<div class="clear20"></div>
+						<div>
+							<div class="tgreydark uppercase">Shipping Address</div>
+							<div class="clear10"></div>
+							<div class="info">
+								<p><input type="text" placeholder="Door no., apartment no."></p>						
+								<p><input type="text" placeholder="City"></p>
+								<p class="nobdr"><input type="tel" placeholder="Pincode"></p>
+							</div>
+						</div>					
+						<div class="clear20"></div>
+						<div>
+							<div class="tgreydark uppercase">Special Request(If Any)</div>
+							<div class="tgreylight t12">We don't take order customization requests</div>
+							<div class="clear10"></div>
+							<div>
+								<p class="nobdr"><textarea rows="3" columns="5" placeholder="Please write here..." ></textarea></p>		
+							</div>
+						</div>
+					</div>
+					<div class="clear30"></div>
+					<div class="payment-block">
+						<div class="tgreydark uppercase">Payment option</div>
+						<div class="tgreylight t12">Online payments are made  through verified, secure payment gateway.</div>
+						<div class="clear10"></div>
+						<div id="tabs" class="item-detail-tab">
+							<div class="navbar">
+					            <ul>                
+					                <li><a href="#cards">Credit/Debit Cards</a></li>
+					                <li><a href="#netbanking">Internet Banking</a></li>
+					                <li><a href="#wallet">Wallet</a></li>
+					                <li><a href="#cod">Pay Later</a></li>				                
+					            </ul>            
+					        </div>
+					        <div class="navbar-info">
+					        	<div id="cards" class="cards pad15">						        				
+									<p class="tgreyteel">Name on the Card</p>
+									<div class="clear5"></div>
+									<div class="frm-field">
+			                            <p><input type="text" placeholder="Enter name"></p>
+			                            <span class="error">Please enter valid name.</span>
+			                        </div>
+			                        <div class="clear20"></div>
+			                        <p class="tgreyteel">Card Number</p>
+			                        <div class="clear5"></div>
+									<div class="frm-field">
+			                            <p><input type="tel" placeholder="Enter name"></p>
+			                            <span class="error">Please enter card no.</span>
+			                        </div>
+			                        <div class="clear20"></div>	
+			                        <p class="tgreyteel">Expiry date</p>
+									<div class="clear5"></div>								
+									<div class="frm-field split expiry">														
+										<p>		
+											<select class="dpInblk vam">
+												<option value="0">MM</option>
+												<option value="01">01</option>
+												<option value="02">02</option>
+												<option value="03">03</option>
+												<option value="04">04</option>
+												<option value="05">05</option>
+												<option value="06">06</option>
+												<option value="07">07</option>
+												<option value="08">08</option>
+												<option value="09">09</option>
+												<option value="10">10</option>
+												<option value="11">11</option>
+												<option value="12">12</option>
+											</select>
+										</p>
+										<p>
+											<select class="dpInblk vam">
+												<option value="0">YY</option>
+												<option value="2016">2016</option>					
+												<option value="2017">2017</option>
+												<option value="2018">2018</option>
+												<option value="2019">2019</option>
+												<option value="2020">2020</option>
+												<option value="2021">2021</option>
+												<option value="2022">2022</option>
+												<option value="2023">2023</option>
+												<option value="2024">2024</option>
+												<option value="2025">2025</option>
+												<option value="2026">2026</option>
+												<option value="2027">2027</option>
+												<option value="2028">2028</option>
+												<option value="2029">2029</option>
+												<option value="2030">2030</option>
+												<option value="2031">2031</option>
+												<option value="2032">2032</option>
+												<option value="2033">2033</option>
+												<option value="2034">2034</option>
+												<option value="2035">2035</option>
+												<option value="2036">2036</option>
+												<option value="2037">2037</option>
+												<option value="2038">2038</option>
+												<option value="2039">2039</option>
+												<option value="2040">2040</option>
+												<option value="2041">2041</option>
+												<option value="2042">2042</option>
+												<option value="2043">2043</option>						
+												<option value="2044">2044</option>
+												<option value="2045">2045</option>
+												<option value="2046">2046</option>
+												<option value="2047">2047</option>
+												<option value="2048">2048</option>
+												<option value="2049">2049</option>
+												<option value="2050">2050</option>
+												<option value="2051">2051</option>
+											</select>
+										</p>										
+									</div>
+									<div class="clear20"></div>
+									<p class="tgreyteel">CVV</p>
+			                        <div class="clear5"></div>
+									<div class="frm-field">
+			                            <p><input type="tel" placeholder="Enter CVV"></p>
+			                            <span class="error">Please enter valid cvv.</span>
+			                        </div>
+			                        <div class="clear20"></div>
+					        	</div>
+					        	<div id="netbanking" class="netbanking pad15">
+					        		<div class="frm-field">														
+					        			<p>		
+					        				<select class="dpBlk pad15 nobdr w100 vam">
+					        					<option value="0">Select Bank</option>
+					        					<option value="0">SBI</option>
+					        					<option value="0">ICICI</option>
+					        					<option value="0">Axis</option>
+					        					<option value="0">HDFC</option>
+					        				</select>
+					        			</p>
+					        		</div>
+					        	</div>
+					        	<div id="wallet" class="wallet pad15">
+					        		<div>	
+					        			<p class="dpInblk">
+					        				<label class="dpBlk pad15" for="mobikwik">				
+					        					<input type="radio" class="" name="card" value="visa" id="mobikwik" checked> Mobikwik
+					        				</label>
+					        			</p>
+					        			<p class="dpInblk">	
+					        				<label class="dpBlk pad15" for="paytm">				
+					        					<input type="radio" name="card" value="amex" id="paytm"> Paytm  
+					        				</label>
+					        			</p>
+					        			<p class="dpInblk">	
+					        				<label class="dpBlk pad15" for="payu">				
+					        					<input type="radio" name="card" value="amex" id="payu"> Pay u Money
+					        				</label>
+					        			</p>
+					        		</div>
+					        	</div>
+					        	<div id="cod" class="cod pad15">
+					        		Cash on Delivery is also available.
+					        	</div>
+					        </div>					        
+					    </div>
+					</div>
+					<div class="clear20"></div>
+					<p><button type="submit" class="action-btn">Continue to Payment</button></p>
+				</form>
+			</div>
+			<div class="ordr-smmry">
+				<p class="uppercase tgreydark">Order Summary</p>
+				<div class="clear10"></div>
+				<div class="dlvry-info late pad15">
+					<p class="uppercase t13 tbold">This order will be delivered after <span>6:00 PM</span></p>
+					<div class="clear5"></div>
+					<p class="t12">Our kitchen will start preparing abc. Our kitchen will start preparing abc Our kitchen will start preparing abc.</p>
+				</div>
+				<div class="dlvry-info ontime pad15">
+					<p class="uppercase tbold t13">This order will be delivered on time</p>
+					<div class="clear5"></div>
+					<p class="t12">Our kitchen will start preparing abc. Our kitchen will start preparing abc Our kitchen will start preparing abc.</p>
+				</div>	
+				<div class="clear20"></div>			
+				<p class="other-item twhite t12">Forgot something? <a href="#" class="twhite">Add another item</a></p>
+				<div class="ordr fill">
+					<div class="cartlist fill">					
+						<div class="item">
+							<div class="lft-pane"></div>
+							<div class="rght-pane">
+								<div class="item-info">
+									<h4>Roasted Veggies & Cheese Quesadillas</h4>
+									<font class="dpBlk">
+										<select class="fL dpInblk vab">
+											<option>1</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+										<span class="fR dpInblk vab">₹ 100</span>
+										<div class="clear fN"></div>
+									</font>
+									<span class="dpInblk close fa fa-close"></span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="lft-pane"></div>
+							<div class="rght-pane">
+								<div class="item-info">
+									<h4>Roasted Veggies & Cheese Quesadillas</h4>
+									<font class="dpBlk">
+										<select class="fL dpInblk vab">
+											<option>1</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4	</option>
+										</select>
+										<span class="fR dpInblk vab">₹ 100</span>
+										<div class="clear fN"></div>
+									</font>
+									<span class="dpInblk close fa fa-close"></span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="lft-pane"></div>
+							<div class="rght-pane">
+								<div class="item-info">
+									<h4>Roasted Veggies & Cheese Quesadillas</h4>
+									<font class="dpBlk">
+										<select class="fL dpInblk vab">
+											<option>1</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4	</option>
+										</select>
+										<span class="fR dpInblk vab">₹ 100</span>
+										<div class="clear fN"></div>
+									</font>
+									<span class="dpInblk close fa fa-close"></span>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="lft-pane"></div>
+							<div class="rght-pane">
+								<div class="item-info">
+									<h4>Roasted Veggies & Cheese Quesadillas</h4>
+									<font class="dpBlk">
+										<select class="fL dpInblk vab">
+											<option>1</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4	</option>
+										</select>
+										<span class="fR dpInblk vab">₹ 100</span>
+										<div class="clear fN"></div>
+									</font>
+									<span class="dpInblk close fa fa-close"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="dpTable pad15 w100 tgreydark bg-grey">
+						<span class="dpTblcl vam tleft">SUB TOTAL</span>
+						<span class="dpTblcl vam tright">₹ 400</span>
+					</div>
+					<div class="cart-footer">
+						<div class="promobox nopad nomargin">
+							<form>
+								<input type="text" placeholder="Enter Promo Code" class="fL dpInblk vam pad15_vrt">
+								<button type="submit" class="fR dpInblk vam">Apply</button>
+								<div class="clear fN"></div>
+							</form>
+						</div>
+					</div>
+					<div class="dpTable pad15 w100 tgreydark bg-grey">
+						<span class="dpTblcl vam tleft">TOTAL</span>
+						<span class="dpTblcl vam tright">₹ 300</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+	<div class="container">
+		<div class="top-row tcenter">
+			<p class="tbold t18">Premium Support</p>
+			<p class="clear20"></p>
+			<p>Our customer support lines are open from 10 AM to 7 PM, Monday to Saturday. </p>
+			<p>You can call us at : <strong>011-65021482</strong></p>
+			<p class="clear20"></p>
+			<p>For Customer queries : Mail us at <a href="mailto:care@abc.com">care@abc.com</a></p>
+			<p>For Business queries : Mail us at <a href="mailto:business@abc.com">business@abc.com</a></p>
+			<p>For Marketing queries : Mail us at <a href="mailto:marketing@abc.com"> marketing@abc.com</a></p>
+			<p class="clear60"></p>
+		</div>
+		<div class="btm-footer tcenter">
+			<div class="useful-links-wrpr">
+				<h4 class="t18">Policies</h4>
+				<ul>
+					<li><a href="tnc.html">Terms and Conditions</a></li>
+					<li><a href="privacy.html">Privacy and Policies</a></li>
+					<li><a href="dlvry-tnc">Delivery and Shipping</a></li>
+					<li><a href="payment-policy">Payment Policy</a></li>
+					<li><a href="return-tnc">Returns and Cancelations</a></li>					
+				</ul>
+			</div>
+			<div class="reg">
+				<h2 class="logo_black nomargin">
+			    	<a href="#" class="dpInblk"><img src="images/logo_black.png" alt="logo_name"></a>
+			    </h2>
+			    <div class="clear20"></div>
+			    <h3 class="nomargin">ABC 2016</h3>
+			    <p class="t12">All Rights Reserved</p>
+			</div>
+			<div class="social-icons-wrpr">
+				<h4 class="t18">Social Media</h4>
+				<ul>
+					<li class="fb"><a href="#"><i class="fa fa-facebook-official"></i></a></li>
+					<li class="insta"><a href="#"><i class="fa fa-instagram"></i></a></li>
+					<li class="twitt"><a href="#"><i class="fa fa-twitter"></i></a></li>
+					<li class="linkedin"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+					<li class="gp"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+				</ul>
+			</div>
+			<p class="fN clear"></p>
+		</div>
+	</div>
+</footer>
+<script src="js/jq-min.js" type="text/javascript"></script>
+<script src="js/jq-ui.js" type="text/javascript"></script>
+<script src="js/functions.js" type="text/javascript"></script>
+<script> $( function() {$( "#tabs" ).tabs(); } ); </script> 
+</body>
+</html>
