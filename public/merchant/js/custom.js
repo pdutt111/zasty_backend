@@ -6,16 +6,11 @@ var user, restaurant, context = {};
 var order_states = ['awaiting response', 'rejected', 'confirmed', 'prepared', 'dispatched'];
 var orderUpdateTimer;
 
-
 window.onload = function (e) {
     getUser();
     initSignupNLogin();
     initDash();
 };
-window.onerror = function () {
-    window.location.reload();
-};
-
 
 function toggleRestaurant(val) {
     console.log('toggleResturant', val);
@@ -47,10 +42,11 @@ function initDash() {
     $('#abc').click(function () {
         toggleRestaurant(this.checked);
     });
-    try{
+    try {
         document.getElementById('dateE').valueAsDate = new Date();
         document.getElementById('dateS').valueAsDate = (new Date()).setDate((new Date()).getDate() - 7);
-    }catch(e){}
+    } catch (e) {
+    }
 }
 
 function logOut() {
@@ -115,7 +111,7 @@ function getRestaurant() {
                 dishRefresh();
                 orderRefresh();
                 clearTimeout(orderUpdateTimer);
-                orderUpdateTimer = setTimeout(orderRefresh, 1000 * config.order_poll_interval);
+                orderUpdateTimer = setInterval(orderRefresh, 1000 * config.order_poll_interval);
                 unpaidOrderRefresh();
                 searchTransaction();
                 $('.js-r-a').val(restaurant.location.join(','));
