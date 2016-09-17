@@ -1,1044 +1,1158 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Food Ordering Site</title>
-<link rel="stylesheet" href="css/font-awesome.min.css">
-<link href="css/layout.css" type="text/css" rel="stylesheet">
-<link href="css/style.css" type="text/css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
-<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Food Ordering Site</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href="css/layout.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+    <script src="js/js.cookie.js"></script>
+    <script src="js/custom.js" type="text/javascript"></script>
+    <script>
+        window.zasty_page = 'menu';
+    </script>
 </head>
 
 <body id="itemlist">
 <div class="sec-header">
-	<div class="container pad15 tcenter posrel">
-		<h2 class="logo_black fL">
-	    	<a href="#"><img src="images/logo_black.png" alt="logo_name"></a>
-	    </h2>
-	    <div class="loc-bar dpInblk">	    	
-    		<select class="dpInblk vam">
-    			<option selected="selected">Type your location here so that we can make sure our menu is accurate</option>
-				<option>O</option>
-				<option>P</option>
-				<option>Q</option>					    			
-    		</select>
-    		<input type="text" class="dpInblk vam" placeholder="Search"></p>            
-	    </div>
-	    <ul class="rgt-menu fR tright">
-	    	<li class="brdrght lh"><a href="login.html">Login</a></li>
-	        <li class="lh"><a href="signup.html">Sign Up</a></li>
-	        <!-- <li><em>Hi <strong>abcasd@gmail.com</strong></em></li>
-	        <li><span class="dpInblk vam logout">Logout</span></li> -->
-	    </ul>
-	    <div class="clear fN"></div>
-    </div>    
+    <div class="container pad15 tcenter posrel">
+        <h2 class="logo_black fL">
+            <a href="#"><img src="images/logo_black.png" alt="logo_name"></a>
+        </h2>
+        <div class="loc-bar dpInblk">
+            <select class="dpInblk vam">
+                <option selected="selected">Type your location here so that we can make sure our menu is accurate
+                </option>
+                <option>O</option>
+                <option>P</option>
+                <option>Q</option>
+            </select>
+            <input type="text" class="dpInblk vam" placeholder="Search"></p>
+        </div>
+        <ul class="rgt-menu fR tright">
+            <li class="brdrght lh"><a href="login.html">Login</a></li>
+            <li class="lh"><a href="signup.html">Sign Up</a></li>
+            <!-- <li><em>Hi <strong>abcasd@gmail.com</strong></em></li>
+            <li><span class="dpInblk vam logout">Logout</span></li> -->
+        </ul>
+        <div class="clear fN"></div>
+    </div>
 </div>
 <div class="foodrslt-wrpr">
-	<div id="tabs1">
-		<div class="container tcenter posrel cat-type">
-			<div class="fltr-wrpr">
-				<div class="fltr-btn pad15">
-					<i class="fa fa-filter"></i>				
-				</div>
-				<div class="foodcat-wrpr tleft">					
-					<p class="fltr-blk">												
-						<span class="active">All Dishes</span>
-						<span>Eggetarian</span>
-						<span>Vegetarian</span>		
-					</p>
-				</div>
-			</div>
-		    <ul class="dpBlk w100 dish-menu">
-		    	<li><a href="#trending">Trending</a></li>
-		    	<li><a href="#sdishes">Signature Dishes</a></li>
-		        <li><a href="#burgers">Burgers</a></li>
-		        <li><a href="#mains">Mains</a></li>
-		        <li><a href="#paninis">Paninis</a></li>
-		    </ul>	    
-		    <div class="cart-wrpr">
-		    	<div class="cart-btn pad15">
-		   			<i class="fa fa-shopping-cart"></i>
-		   			<span>2</span>
-		   		</div>
-		    </div>	    
-	    </div>
-		<div class="container food-rslt-cntnr">			
-			<div class="food-rslt" id="trending">
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/trending.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>				
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/trending.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/trending.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/trending.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>				
-				<div class="clear fN"></div>
-			</div>
-			<div class="food-rslt" id="sdishes">
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/sdishes.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>				
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/sdishes.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/sdishes.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/sdishes.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>				
-				<div class="clear fN"></div>
-			</div>
-			<div class="food-rslt" id="burgers">
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/burgers.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>				
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/burgers.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/burgers.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/burgers.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>				
-				<div class="clear fN"></div>
-			</div>
-			<div class="food-rslt" id="mains">
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/mains.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>				
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/mains.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/mains.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/mains.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>				
-				<div class="clear fN"></div>
-			</div>
-			<div class="food-rslt" id="paninis">
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/paninis.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>				
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/paninis.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/paninis.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>
-				<div class="food-item">
-					<div class="item-image">
-						<img src="images/paninis.jpg" alt="">
-						<div class="item-summary-wrpr">
-							<div>
-								<div class="item-summary">
-									<p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new signature dish's lilting fragrance and delicious warmth will stay with you. This is how this dish was described by its first customer.</p>
-									<div class="clear20"></div>
-									<span class="action-btn dpInblk knowmore">Know More</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="item-summary"></div>
-					<div class="item-info">
-						<h5 class="tgreydark">Family Feast Veg Combo</h5>
-						<div>
-							<div class="veg-type fL dpInblk">
-								<span class="non-veg dpInblk"></span>
-								<font class="item-cat dpInblk tgreyteel">Universal</font>
-							</div>
-							<div class="avail-time fR dpInblk">Available from <small>10:00 am</small></div>
-							<div class="clear fN"></div>
-						</div>
-						<div class="clear10"></div>
-						<div>
-							<div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
-							<div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span></div>
-							<div class="clear fN"></div>
-						</div>
-					</div>
-				</div>				
-				<div class="clear fN"></div>
-			</div>
-		</div>
-	</div>
+    <div id="tabs1">
+        <div class="container tcenter posrel cat-type">
+            <div class="fltr-wrpr">
+                <div class="fltr-btn pad15">
+                    <i class="fa fa-filter"></i>
+                </div>
+                <div class="foodcat-wrpr tleft">
+                    <p class="fltr-blk">
+                        <span class="active">All Dishes</span>
+                        <span>Eggetarian</span>
+                        <span>Vegetarian</span>
+                    </p>
+                </div>
+            </div>
+            <ul class="dpBlk w100 dish-menu">
+                <li><a href="#trending">Trending</a></li>
+                <li><a href="#sdishes">Signature Dishes</a></li>
+                <li><a href="#burgers">Burgers</a></li>
+                <li><a href="#mains">Mains</a></li>
+                <li><a href="#paninis">Paninis</a></li>
+            </ul>
+            <div class="cart-wrpr">
+                <div class="cart-btn pad15">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>2</span>
+                </div>
+            </div>
+        </div>
+        <div class="container food-rslt-cntnr">
+            <div class="food-rslt" id="trending">
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/trending.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/trending.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/trending.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/trending.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear fN"></div>
+            </div>
+            <div class="food-rslt" id="sdishes">
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/sdishes.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/sdishes.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/sdishes.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/sdishes.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear fN"></div>
+            </div>
+            <div class="food-rslt" id="burgers">
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/burgers.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/burgers.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/burgers.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/burgers.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear fN"></div>
+            </div>
+            <div class="food-rslt" id="mains">
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/mains.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/mains.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/mains.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/mains.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear fN"></div>
+            </div>
+            <div class="food-rslt" id="paninis">
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/paninis.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/paninis.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/paninis.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="food-item">
+                    <div class="item-image">
+                        <img src="images/paninis.jpg" alt="">
+                        <div class="item-summary-wrpr">
+                            <div>
+                                <div class="item-summary">
+                                    <p>Rainbow veggies, luscious tomato sauce and lightly sautéed happiness. Our new
+                                        signature dish's lilting fragrance and delicious warmth will stay with you. This
+                                        is how this dish was described by its first customer.</p>
+                                    <div class="clear20"></div>
+                                    <span class="action-btn dpInblk knowmore">Know More</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-summary"></div>
+                    <div class="item-info">
+                        <h5 class="tgreydark">Family Feast Veg Combo</h5>
+                        <div>
+                            <div class="veg-type fL dpInblk">
+                                <span class="non-veg dpInblk"></span>
+                                <font class="item-cat dpInblk tgreyteel">Universal</font>
+                            </div>
+                            <div class="avail-time fR dpInblk">Available from
+                                <small>10:00 am</small>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                        <div class="clear10"></div>
+                        <div>
+                            <div class="price fL dpInblk t16"> &#8377; <span>550</span></div>
+                            <div class="addtocart-btn fR dpInblk"><span class="dpInblk action-btn">Add to Cart</span>
+                            </div>
+                            <div class="clear fN"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear fN"></div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- cart section -->
 <div class="cartslide-wrpr pop-cntnt">
-	<div class="overlay"></div>
-	<div class="cntnt fill">
-		<div class="head">
-			<p class="dpTblcl vam">Your Cart</p>
-			<span class="fa fa-angle-right rightslide"></span>
-		</div>
-		<div class="cartlist">
-			<div class="item">
-				<div class="lft-pane"></div>
-				<div class="rght-pane">
-					<div class="item-info">
-						<h4>Roasted Veggies & Cheese Quesadillas</h4>
-						<font class="dpBlk">
-							<select class="fL dpInblk vab">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
-							</select>
-							<span class="fR dpInblk vab">₹ 100</span>
-							<div class="clear fN"></div>
-						</font>
-						<span class="dpInblk close fa fa-close"></span>
-					</div>
-				</div>
-			</div>
-			<div class="item">
-				<div class="lft-pane"></div>
-				<div class="rght-pane">
-					<div class="item-info">
-						<h4>Roasted Veggies & Cheese Quesadillas</h4>
-						<font class="dpBlk">
-							<select class="fL dpInblk vab">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4	</option>
-							</select>
-							<span class="fR dpInblk vab">₹ 100</span>
-							<div class="clear fN"></div>
-						</font>
-						<span class="dpInblk close fa fa-close"></span>
-					</div>
-				</div>
-			</div>
-			<div class="item">
-				<div class="lft-pane"></div>
-				<div class="rght-pane">
-					<div class="item-info">
-						<h4>Roasted Veggies & Cheese Quesadillas</h4>
-						<font class="dpBlk">
-							<select class="fL dpInblk vab">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4	</option>
-							</select>
-							<span class="fR dpInblk vab">₹ 100</span>
-							<div class="clear fN"></div>
-						</font>
-						<span class="dpInblk close fa fa-close"></span>
-					</div>
-				</div>
-			</div>
-			<div class="item">
-				<div class="lft-pane"></div>
-				<div class="rght-pane">
-					<div class="item-info">
-						<h4>Roasted Veggies & Cheese Quesadillas</h4>
-						<font class="dpBlk">
-							<select class="fL dpInblk vab">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4	</option>
-							</select>
-							<span class="fR dpInblk vab">₹ 100</span>
-							<div class="clear fN"></div>
-						</font>
-						<span class="dpInblk close fa fa-close"></span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="cartlist-empty">
-			<div class="tgreylight">
-				<img src="images/smiley.png" alt="">
-				<p class="t20">Awww shucks!</p>
-				<p>Your cart is empty</p>
-				<div class="clear10"></div>
-				<p><a href="" class="dpInblk brws-btn">Browse Food</a></p>
-			</div>
-		</div>
-		<div class="cart-footer">
-			<div class="promobox nopad">
-			<form>
-				<input type="text" placeholder="Enter Promo Code" class="fL dpInblk vam">
-				<button type="submit" class="fR dpInblk vam">Apply</button>
-				<div class="clear fN"></div>
-			</form>
-			</div>
-			<div class="totalamnt tgreydark t16">
-				<span class="fL dpInblk vam">Total</span>
-				<font class="fR dpInblk vam">₹ 1200</font>
-				<div class="clear fN"></div>
-			</div>
-			<p class="checkout"><input type="button" value="Checkout"></p>
-		</div>
-	</div>
+    <div class="overlay"></div>
+    <div class="cntnt fill">
+        <div class="head">
+            <p class="dpTblcl vam">Your Cart</p>
+            <span class="fa fa-angle-right rightslide"></span>
+        </div>
+        <div class="cartlist">
+            <div class="item">
+                <div class="lft-pane"></div>
+                <div class="rght-pane">
+                    <div class="item-info">
+                        <h4>Roasted Veggies & Cheese Quesadillas</h4>
+                        <font class="dpBlk">
+                            <select class="fL dpInblk vab">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                            <span class="fR dpInblk vab">₹ 100</span>
+                            <div class="clear fN"></div>
+                        </font>
+                        <span class="dpInblk close fa fa-close"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="lft-pane"></div>
+                <div class="rght-pane">
+                    <div class="item-info">
+                        <h4>Roasted Veggies & Cheese Quesadillas</h4>
+                        <font class="dpBlk">
+                            <select class="fL dpInblk vab">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                            <span class="fR dpInblk vab">₹ 100</span>
+                            <div class="clear fN"></div>
+                        </font>
+                        <span class="dpInblk close fa fa-close"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="lft-pane"></div>
+                <div class="rght-pane">
+                    <div class="item-info">
+                        <h4>Roasted Veggies & Cheese Quesadillas</h4>
+                        <font class="dpBlk">
+                            <select class="fL dpInblk vab">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                            <span class="fR dpInblk vab">₹ 100</span>
+                            <div class="clear fN"></div>
+                        </font>
+                        <span class="dpInblk close fa fa-close"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="lft-pane"></div>
+                <div class="rght-pane">
+                    <div class="item-info">
+                        <h4>Roasted Veggies & Cheese Quesadillas</h4>
+                        <font class="dpBlk">
+                            <select class="fL dpInblk vab">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                            <span class="fR dpInblk vab">₹ 100</span>
+                            <div class="clear fN"></div>
+                        </font>
+                        <span class="dpInblk close fa fa-close"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cartlist-empty">
+            <div class="tgreylight">
+                <img src="images/smiley.png" alt="">
+                <p class="t20">Awww shucks!</p>
+                <p>Your cart is empty</p>
+                <div class="clear10"></div>
+                <p><a href="" class="dpInblk brws-btn">Browse Food</a></p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="promobox nopad">
+                <form>
+                    <input type="text" placeholder="Enter Promo Code" class="fL dpInblk vam">
+                    <button type="submit" class="fR dpInblk vam">Apply</button>
+                    <div class="clear fN"></div>
+                </form>
+            </div>
+            <div class="totalamnt tgreydark t16">
+                <span class="fL dpInblk vam">Total</span>
+                <font class="fR dpInblk vam">₹ 1200</font>
+                <div class="clear fN"></div>
+            </div>
+            <p class="checkout"><input type="button" value="Checkout"></p>
+        </div>
+    </div>
 </div>
 <!-- location overlay -->
 <div class="location-wrpr pop-cntnt">
-	<div class="overlay"></div>
-	<div class="tcenter cntnt">
-		<div>
-			<p>Select Your City </p>
-			<div class="clear20"></div>
-			<ul>
-				<li><a href="#">Gurgaon</a></li>
-				<li><a href="#">Delhi</a></li>
-				<li><a href="#">Noida</a></li>
-				<li><a href="#">Faridabad</a></li>			
-			</ul>
-		</div>
-	</div>
+    <div class="overlay"></div>
+    <div class="tcenter cntnt">
+        <div>
+            <p>Select Your City </p>
+            <div class="clear20"></div>
+            <ul>
+                <li><a href="#">Gurgaon</a></li>
+                <li><a href="#">Delhi</a></li>
+                <li><a href="#">Noida</a></li>
+                <li><a href="#">Faridabad</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 <!-- know more content -->
 <div class="knowmore-wrpr">
-	<div class="overlay"></div>
-	<div class="cntnt">
-		<div>
-			<div class="lft-pane"></div>
-			<div class="rght-pane">
-				<div class="item-info">
-					<h5 class="tgreyteel t20 nomargin uppercase">Roasted Veggies & Cheese Quesadillas</h5>
-					<p class="tgreylight t12">jasmine rice, spicy mint & cucumber salad, garlic</p>
-					<div class="clear10"></div>
-					<span class="dpBlk t16">₹ 100</span>
-					<div class="clear10"></div>
-					<font class="dpInblk action-btn"><i class="fa fa-plus"></i> Add to Cart</font>
-					<div class="clear20"></div>
-					<div id="tabs2" class="item-detail-tab">
-						<div class="navbar">
-				            <ul>                
-				                <li><a href="#details">details</a></li>
-				                <li><a href="#prep">prep</a></li>
-				                <li><a href="#ingredients">ingredients</a></li>
-				                <li><a href="#nutrition">nutrition</a></li>				                
-				            </ul>            
-				        </div>
-				        <div class="navbar-info">
-				        	<div id="details" class="details t12 pad15">
-				        		<p class="tgreydark tbold">Calories</p>
-				        		<p class="tgreyteel">*Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-				        	</div>
-				        	<div id="prep" class="prep pad15 t12">				        		
-				        		<p class="tgreydark tbold">Calories</p>
-				        		<p class="tgreyteel">860</p>
-				        		<div class="clear20"></div>
-				        		<div class="split">
-				        			<div>
-					        			<p class="tgreydark tbold">Calories</p>
-					        			<p class="tgreyteel">860</p>
-				        			</div>
-				        			<div>
-					        			<p class="tgreydark tbold">Calories</p>
-					        			<p class="tgreyteel">860</p>
-				        			</div>				        			
-				        		</div>
-				        		<div class="clear20"></div>
-				        		<p class="tgreydark tbold">Calories</p>
-				        		<p class="tgreyteel">860</p>
-				        	</div>
-				        	<div id="ingredients" class="ingredients t12">
-				        		<ul class="pri-cntnt dpBlk pad15">
-				        			<li>
-				        				<p class="tgreyteel tbold">No Dairy Added</p>				        				
-				        			</li>
-				        			<li>
-				        				<p class="tgreyteel tbold">No Egg Added</p>				        				
-				        			</li>				        			
-				        		</ul>
-				        		<div class="pad15 sec-cntnt">
-				        			<p class="tgreydark tbold">Ingredients</p>
-				        			<div class="clear5"></div>
-				        			<ul>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        			</ul>
-				        			<ul>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        			</ul>
-				        			<ul>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        				<li>White Rice</li>
-				        			</ul>
-				        			<div class="clear20"></div>
-				        			<p class="tgreydark tbold">Contains</p>
-				        			<div class="clear5"></div>
-				        			<ul>
-				        				<li>Nuts, Soyabean, Wheat</li>				        				
-				        			</ul>				        			
-				        		</div>
-				        	</div>
-				        	<div id="nutrition" class="nutrition t12">
-				        		<ul class="pri-cntnt">
-				        			<li>
-				        				<p class="tgreydark tbold">Calories</p>
-				        				<p class="tgreyteel">860</p>
-				        			</li>
-				        			<li>
-				        				<p class="tgreydark tbold">Calories</p>
-				        				<p class="tgreyteel">860</p>
-				        			</li>
-				        			<li>
-				        				<p class="tgreydark tbold">Calories</p>
-				        				<p class="tgreyteel">860</p>
-				        			</li>				        			
-				        		</ul>
-				        		<div class="clear10"></div>
-				        		<div class="clear5"></div>
-				        		<p class="dpTable w100 pad15_vrt">
-				        			<span class="dpTblcl tleft vam">Per Saving*</span>
-				        			<span class="dpTblcl tright vam">Saving per container*</span>
-				        		</p>
-				        		<div class="clear5"></div>
-				        		<ul class="pad15 nopadtop sec-cntnt dpBlk">
-				        			<li>
-				        				<span>Total Fat</span>
-				        				<font>3g</font>
-				        			</li>
-				        			<li>
-				        				<span>Total Fat</span>
-				        				<font>3g</font>
-				        			</li>
-				        			<li>
-				        				<span>Total Fat</span>
-				        				<font>3g</font>
-				        			</li>
-				        			<li>
-				        				<span>Total Fat</span>
-				        				<font>3g</font>
-				        			</li>
-				        		</ul>
-				        		<p class="t10 tgreyteel pad15">*Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-				        	</div>
-				        </div>
-					</div>
-				</div>
-			</div>
-			<span class="fa fa-close knowmore-close"></span>
-		</div>
-	</div>
+    <div class="overlay"></div>
+    <div class="cntnt">
+        <div>
+            <div class="lft-pane"></div>
+            <div class="rght-pane">
+                <div class="item-info">
+                    <h5 class="tgreyteel t20 nomargin uppercase">Roasted Veggies & Cheese Quesadillas</h5>
+                    <p class="tgreylight t12">jasmine rice, spicy mint & cucumber salad, garlic</p>
+                    <div class="clear10"></div>
+                    <span class="dpBlk t16">₹ 100</span>
+                    <div class="clear10"></div>
+                    <font class="dpInblk action-btn"><i class="fa fa-plus"></i> Add to Cart</font>
+                    <div class="clear20"></div>
+                    <div id="tabs2" class="item-detail-tab">
+                        <div class="navbar">
+                            <ul>
+                                <li><a href="#details">details</a></li>
+                                <li><a href="#prep">prep</a></li>
+                                <li><a href="#ingredients">ingredients</a></li>
+                                <li><a href="#nutrition">nutrition</a></li>
+                            </ul>
+                        </div>
+                        <div class="navbar-info">
+                            <div id="details" class="details t12 pad15">
+                                <p class="tgreydark tbold">Calories</p>
+                                <p class="tgreyteel">*Lorem Ipsum is simply dummy text of the printing and typesetting
+                                    industry. Lorem Ipsum has been the industry's standard dummy text ever since the
+                                    1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                                    specimen book.</p>
+                            </div>
+                            <div id="prep" class="prep pad15 t12">
+                                <p class="tgreydark tbold">Calories</p>
+                                <p class="tgreyteel">860</p>
+                                <div class="clear20"></div>
+                                <div class="split">
+                                    <div>
+                                        <p class="tgreydark tbold">Calories</p>
+                                        <p class="tgreyteel">860</p>
+                                    </div>
+                                    <div>
+                                        <p class="tgreydark tbold">Calories</p>
+                                        <p class="tgreyteel">860</p>
+                                    </div>
+                                </div>
+                                <div class="clear20"></div>
+                                <p class="tgreydark tbold">Calories</p>
+                                <p class="tgreyteel">860</p>
+                            </div>
+                            <div id="ingredients" class="ingredients t12">
+                                <ul class="pri-cntnt dpBlk pad15">
+                                    <li>
+                                        <p class="tgreyteel tbold">No Dairy Added</p>
+                                    </li>
+                                    <li>
+                                        <p class="tgreyteel tbold">No Egg Added</p>
+                                    </li>
+                                </ul>
+                                <div class="pad15 sec-cntnt">
+                                    <p class="tgreydark tbold">Ingredients</p>
+                                    <div class="clear5"></div>
+                                    <ul>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                    </ul>
+                                    <ul>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                    </ul>
+                                    <ul>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                        <li>White Rice</li>
+                                    </ul>
+                                    <div class="clear20"></div>
+                                    <p class="tgreydark tbold">Contains</p>
+                                    <div class="clear5"></div>
+                                    <ul>
+                                        <li>Nuts, Soyabean, Wheat</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="nutrition" class="nutrition t12">
+                                <ul class="pri-cntnt">
+                                    <li>
+                                        <p class="tgreydark tbold">Calories</p>
+                                        <p class="tgreyteel">860</p>
+                                    </li>
+                                    <li>
+                                        <p class="tgreydark tbold">Calories</p>
+                                        <p class="tgreyteel">860</p>
+                                    </li>
+                                    <li>
+                                        <p class="tgreydark tbold">Calories</p>
+                                        <p class="tgreyteel">860</p>
+                                    </li>
+                                </ul>
+                                <div class="clear10"></div>
+                                <div class="clear5"></div>
+                                <p class="dpTable w100 pad15_vrt">
+                                    <span class="dpTblcl tleft vam">Per Saving*</span>
+                                    <span class="dpTblcl tright vam">Saving per container*</span>
+                                </p>
+                                <div class="clear5"></div>
+                                <ul class="pad15 nopadtop sec-cntnt dpBlk">
+                                    <li>
+                                        <span>Total Fat</span>
+                                        <font>3g</font>
+                                    </li>
+                                    <li>
+                                        <span>Total Fat</span>
+                                        <font>3g</font>
+                                    </li>
+                                    <li>
+                                        <span>Total Fat</span>
+                                        <font>3g</font>
+                                    </li>
+                                    <li>
+                                        <span>Total Fat</span>
+                                        <font>3g</font>
+                                    </li>
+                                </ul>
+                                <p class="t10 tgreyteel pad15">*Lorem Ipsum is simply dummy text of the printing and
+                                    typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
+                                    since the 1500s, when an unknown printer took a galley of type and scrambled it to
+                                    make a type specimen book.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span class="fa fa-close knowmore-close"></span>
+        </div>
+    </div>
 </div>
 <!-- footer -->
 <footer class="footer">
-	<div class="container">
-		<div class="top-row tcenter">
-			<p class="tbold t18">Premium Support</p>
-			<p class="clear20"></p>
-			<p>Our customer support lines are open from 10 AM to 7 PM, Monday to Saturday. </p>
-			<p>You can call us at : <strong>011-65021482</strong></p>
-			<p class="clear20"></p>
-			<p>For Customer queries : Mail us at <a href="mailto:care@abc.com">care@abc.com</a></p>
-			<p>For Business queries : Mail us at <a href="mailto:business@abc.com">business@abc.com</a></p>
-			<p>For Marketing queries : Mail us at <a href="mailto:marketing@abc.com"> marketing@abc.com</a></p>
-			<p class="clear60"></p>
-		</div>
-		<div class="btm-footer tcenter">
-			<div class="useful-links-wrpr">
-				<h4 class="t18">Policies</h4>
-				<ul>
-					<li><a href="#">Terms and Conditions</a></li>
-					<li><a href="#">Privacy and Policies</a></li>
-					<li><a href="#">Delivery and Shipping</a></li>
-					<li><a href="#">Payment Policy</a></li>
-					<li><a href="#">Returns and Cancelations</a></li>					
-				</ul>
-			</div>
-			<div class="reg">
-				<h2 class="logo_black nomargin">
-			    	<a href="#" class="dpInblk"><img src="images/logo_black.png" alt="logo_name"></a>
-			    </h2>
-			    <div class="clear20"></div>
-			    <h3 class="nomargin">ABC 2016</h3>
-			    <p class="t12">All Rights Reserved</p>
-			</div>
-			<div class="social-icons-wrpr">
-				<h4 class="t18">Social Media</h4>
-				<ul>
-					<li class="fb"><a href="#"><i class="fa fa-facebook-official"></i></a></li>
-					<li class="insta"><a href="#"><i class="fa fa-instagram"></i></a></li>
-					<li class="twitt"><a href="#"><i class="fa fa-twitter"></i></a></li>
-					<li class="linkedin"><a href="#"><i class="fa fa-linkedin"></i></a></li>
-					<li class="gp"><a href="#"><i class="fa fa-google-plus"></i></a></li>
-				</ul>
-			</div>
-			<p class="fN clear"></p>
-		</div>
-	</div>
+    <div class="container">
+        <div class="top-row tcenter">
+            <p class="tbold t18">Premium Support</p>
+            <p class="clear20"></p>
+            <p>Our customer support lines are open from 10 AM to 7 PM, Monday to Saturday. </p>
+            <p>You can call us at : <strong>011-65021482</strong></p>
+            <p class="clear20"></p>
+            <p>For Customer queries : Mail us at <a href="mailto:care@abc.com">care@abc.com</a></p>
+            <p>For Business queries : Mail us at <a href="mailto:business@abc.com">business@abc.com</a></p>
+            <p>For Marketing queries : Mail us at <a href="mailto:marketing@abc.com"> marketing@abc.com</a></p>
+            <p class="clear60"></p>
+        </div>
+        <div class="btm-footer tcenter">
+            <div class="useful-links-wrpr">
+                <h4 class="t18">Policies</h4>
+                <ul>
+                    <li><a href="#">Terms and Conditions</a></li>
+                    <li><a href="#">Privacy and Policies</a></li>
+                    <li><a href="#">Delivery and Shipping</a></li>
+                    <li><a href="#">Payment Policy</a></li>
+                    <li><a href="#">Returns and Cancelations</a></li>
+                </ul>
+            </div>
+            <div class="reg">
+                <h2 class="logo_black nomargin">
+                    <a href="#" class="dpInblk"><img src="images/logo_black.png" alt="logo_name"></a>
+                </h2>
+                <div class="clear20"></div>
+                <h3 class="nomargin">ABC 2016</h3>
+                <p class="t12">All Rights Reserved</p>
+            </div>
+            <div class="social-icons-wrpr">
+                <h4 class="t18">Social Media</h4>
+                <ul>
+                    <li class="fb"><a href="#"><i class="fa fa-facebook-official"></i></a></li>
+                    <li class="insta"><a href="#"><i class="fa fa-instagram"></i></a></li>
+                    <li class="twitt"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li class="linkedin"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                    <li class="gp"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                </ul>
+            </div>
+            <p class="fN clear"></p>
+        </div>
+    </div>
 </footer>
 <script src="js/jq-min.js" type="text/javascript"></script>
 <script src="js/jq-ui.js" type="text/javascript"></script>
 <script src="js/functions.js" type="text/javascript"></script>
-<script> $( function() {$( "#tabs1, #tabs2" ).tabs(); } ); </script> 
+<script> $(function () {
+    $("#tabs1, #tabs2").tabs();
+}); </script>
 </body>
 </html>
