@@ -1,18 +1,60 @@
 var config = {
     server_url: window.location.origin,
+    location_url: 'https://runkit.io/rahulroy9202/57de3489e057cd14001ba5e3/branches/master',
     afterLogin: 'location.html'
 };
-
-var user, restaurant, context = {};
-var orderUpdateTimer;
+var user, location, afterLogin, context = {};
 
 window.onload = function (e) {
     getUser();
     initSignupNLogin();
+    init();
 };
-window.onerror = function () {
 
-};
+function init() {
+    switch (window.zasty_page) {
+        case 'location':
+            initLocation();
+            break;
+        case 'menu':
+            break;
+        case 'checkout':
+            break;
+    }
+}
+
+function initLocation() {
+    var select = $(".js-location-select");
+    select.select2({});
+    select.prop("disabled", true);
+    $.ajax({
+        url: config.location_url,
+        type: 'GET',
+        dataType: "json",
+        success: function (json) {
+            console.log(json);
+            var loc = [];
+            json.forEach(function (e, i) {
+                loc.push({id: i, text: e});
+            });
+
+            select.select2({
+                data: loc
+            });
+
+            select.prop("disabled", false);
+            select.on("select2:select", function (e) {
+                console.log("change", e.params.data.text);
+                Cookies.set('location', e.params.data.text);
+                window.location = '/menu.html';
+            });
+        },
+        error: function (xhr, _status, errorThrown) {
+            console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+            $('.error').toggle(true);
+        }
+    });
+}
 
 function initSignupNLogin() {
     console.log('initSignupNLogin');
@@ -31,13 +73,14 @@ function initSignupNLogin() {
 function logOut() {
     console.log('logOut');
     Cookies.remove('user');
+    Cookies.remove('location');
     window.location.href = '/login.html';
 }
 
 function getUser() {
     console.log('getUser');
     user = Cookies.getJSON('user');
-    if (/login|signup/.test(window.location.href)) {
+    if (/login|signup/.test(window.location.href || window.zasty_page === 'location')) {
         return false;
     }
     if (user && user.token && (new Date(user.expires) > Date.now())) {
@@ -56,7 +99,11 @@ function getUser() {
                     user.phonenumber = json.phonenumber || '';
                     user.restaurant_name = json.restaurant_name || null;
                     $('.js-user-email').html(user.email);
-                    getRestaurant();
+
+                    afterLogin
+                        ? afterLogin()
+                        : '';
+
                 } else {
                     logOut();
                 }
