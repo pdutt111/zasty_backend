@@ -146,14 +146,14 @@ function initMenu() {
                 allowClear: true
             });
             search.prop("disabled", false);
-            search.select2().select2("val", {text:'search the menu'});
+            search.select2().select2("val", {text: 'search the menu'});
 
             search.on("select2:select", function (e) {
 
                 console.log("change", e.params.data.id);
                 restaurant.dishes_active = [restaurant.dishes[e.params.data.id]];
                 renderMenu();
-                search.select2().select2("val", {text:'search the menu'});
+                search.select2().select2("val", {text: 'search the menu'});
             });
 
         },
@@ -193,7 +193,7 @@ function renderMenu() {
         });
         var categoryDishesHtml = categoryMenu[i].map(function (dish) {
 
-            var dishVar="";
+            var dishVar = "";
             dishVar += "<div class=\"food-item\">";
             dishVar += "                    <div class=\"item-image\">";
             dishVar += "                        <img src=\" " + dish.details.image + "\" alt=\"\">";
@@ -202,7 +202,9 @@ function renderMenu() {
             dishVar += "                                <div class=\"item-summary\">";
             dishVar += dish.details.description;
             dishVar += "                                    <div class=\"clear20\"><\/div>";
-            dishVar += "                                    <span class=\"action-btn dpInblk knowmore\">Know More<\/span>";
+            dishVar += "                                    <span class=\"action-btn dpInblk knowmore\""
+                + "onclick=knowMore(" + dish.id + ")"
+                + ">Know More<\/span>";
             dishVar += "                                <\/div>";
             dishVar += "                            <\/div>";
             dishVar += "                        <\/div>";
@@ -212,9 +214,9 @@ function renderMenu() {
             dishVar += "                        <div>";
             dishVar += "                            <div class=\"veg-type fL dpInblk\">";
             dishVar += "                                <span class=\""
-            + (dish.details.type=='veg'
-                ? 'veg'
-                : 'non-veg')
+                + (dish.details.type == 'veg'
+                    ? 'veg'
+                    : 'non-veg')
                 + " dpInblk\"><\/span>";
             dishVar += "                                <font class=\"item-cat dpInblk tgreyteel\">"
                 + dish.details.category.join(', ') + "<\/font>";
@@ -227,7 +229,9 @@ function renderMenu() {
             dishVar += "                        <div class=\"clear10\"><\/div>";
             dishVar += "                        <div>";
             dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>550<\/span><\/div>";
-            dishVar += "                            <div class=\"addtocart-btn fR dpInblk\"><span class=\"dpInblk action-btn\">Add to Cart<\/span>";
+            dishVar += "                            <div class=\"addtocart-btn fR dpInblk\""
+                + "onclick=addToCart(" + dish.id + ")"
+                + "><span class=\"dpInblk action-btn\">Add to Cart<\/span>";
             dishVar += "                            <\/div>";
             dishVar += "                            <div class=\"clear fN\"><\/div>";
             dishVar += "                        <\/div>";
@@ -238,7 +242,7 @@ function renderMenu() {
             return dishVar;
         }).join('');
 
-        categoryMenuHtml += '<div class="food-rslt" id="'+e.replace(/\s+/, "")+'">'
+        categoryMenuHtml += '<div class="food-rslt" id="' + e.replace(/\s+/, "") + '">'
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
@@ -285,7 +289,7 @@ function renderMenu() {
 
     $(function () {
         $("#tabs1, #tabs2").tabs();
-        $( "#tabs" ).tabs({ active: 1 });
+        $("#tabs").tabs({active: 1});
         $(".popup-trig").click(function () {
             $(".pop-cntnt").css('display', 'table');
         });
@@ -328,6 +332,27 @@ function filterMenu(type) {
         });
     }
     renderMenu();
+}
+
+function knowMore(id) {
+    console.log('knowMore', id, restaurant.dishes[id]);
+}
+
+function addToCart(id) {
+    console.log('addToCart', id, restaurant.dishes[id]);
+    renderCart();
+}
+
+function removeFromCart(id) {
+    console.log('removeFromCart', id, restaurant.dishes[id]);
+    renderCart();
+}
+
+function chnageQuantity(id, quantity) {
+    console.log('chnageQuantity', id, quantity, restaurant.dishes[id]);
+}
+
+function renderCart() {
 }
 
 function doLogin() {
