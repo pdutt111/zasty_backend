@@ -228,7 +228,7 @@ function renderMenu() {
             dishVar += "                        <\/div>";
             dishVar += "                        <div class=\"clear10\"><\/div>";
             dishVar += "                        <div>";
-            dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>550<\/span><\/div>";
+            dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>" + dish.price + "<\/span><\/div>";
             dishVar += "                            <div class=\"addtocart-btn fR dpInblk\""
                 + "onclick=addToCart(" + dish.id + ")"
                 + "><span class=\"dpInblk action-btn\">Add to Cart<\/span>";
@@ -336,6 +336,55 @@ function filterMenu(type) {
 
 function knowMore(id) {
     console.log('knowMore', id, restaurant.dishes[id]);
+    var d = restaurant.dishes[id];
+    var html="";
+    html += "<div class=\"overlay\"><\/div>";
+    html += "    <div class=\"cntnt\">";
+    html += "        <div>";
+    html += "            <div class=\"lft-pane\"><\/div>";
+    html += "            <div class=\"rght-pane\">";
+    html += "                <div class=\"item-info\">";
+    html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.identifier + "<\/h5>";
+    html += "                    <p class=\"tgreylight t12\">" + d.description + "<\/p>";
+    html += "                    <div class=\"clear10\"><\/div>";
+    html += "                    <span class=\"dpBlk t16 \">₹ " + d.price + "<\/span>";
+    html += "                    <div class=\"clear10\"><\/div>";
+    html += "                    <font class=\"dpInblk action-btn\" onclick='addToCart(" + d.id + ")'><i class=\"fa fa-plus\"><\/i> Add to Cart<\/font>";
+    html += "                    <div class=\"clear20\"><\/div>";
+    html += "                    <div id=\"tabs2\" class=\"item-detail-tab\">";
+    html += "                        <div class=\"navbar\">";
+    html += "                            <ul>";
+    html += "                                <li><a href=\"#details\">details<\/a><\/li>";
+    html += "                                <li><a href=\"#prep\">prep<\/a><\/li>";
+    html += "                                <li><a href=\"#ingredients\">ingredients<\/a><\/li>";
+    html += "                                <li><a href=\"#nutrition\">nutrition<\/a><\/li>";
+    html += "                            <\/ul>";
+    html += "                        <\/div>";
+    html += "                        <div class=\"navbar-info\">";
+    html += "                            <div id=\"details\" class=\"details t12 pad15\">"
+                                                        + (d.details.details || '') + "<\/div>";
+    html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
+                                                        + (d.details.prep || '') + "<\/div>";
+    html += "                            <div id=\"ingredients\" class=\"ingredients t12\">"
+                                                        + (d.details.ingredients || '') + "<\/div>";
+    html += "                            <div id=\"nutrition\" class=\"nutrition t12\">"
+                                                        + (d.details.nutrition || '') + "<\/div>";
+    html += "                        <\/div>";
+    html += "                    <\/div>";
+    html += "                <\/div>";
+    html += "            <\/div>";
+    html += "            <span class=\"fa fa-close knowmore-close\"><\/span>";
+    html += "        <\/div>";
+    html += "    <\/div>";
+
+
+    $(".knowmore-wrpr").html(html);
+    $(".knowmore-wrpr").css('display', 'table');
+    $(function () {
+        $(".knowmore-close").click(function () {
+            $('.knowmore-wrpr').css('display', 'none');
+        });
+    });
 }
 
 function addToCart(id) {
