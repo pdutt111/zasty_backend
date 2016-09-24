@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link href="css/layout.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="css/select2.min.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
-    <script src="js/js.cookie.js"></script>
-    <script src="js/custom.js" type="text/javascript"></script>
 </head>
 
 <body id="itemlist">
@@ -20,14 +19,9 @@
             <a href="#"><img src="images/logo_black.png" alt="logo_name"></a>
         </h2>
         <div class="loc-bar dpInblk">
-            <select class="dpInblk vam">
-                <option selected="selected">Type your location here so that we can make sure our menu is accurate
-                </option>
-                <option>O</option>
-                <option>P</option>
-                <option>Q</option>
+            <select class="dpInblk vam js-dish-search" >
             </select>
-            <input type="text" class="dpInblk vam" placeholder="Search"></p>
+            <input onclick="window.location='/'" type="button" class="">Your Location</p>
         </div>
         <ul class="rgt-menu fR tright">
             <li class="brdrght lh"><a href="login.html">Login</a></li>
@@ -369,6 +363,9 @@
 <script src="js/jq-min.js" type="text/javascript"></script>
 <script src="js/jq-ui.js" type="text/javascript"></script>
 <script src="js/functions.js" type="text/javascript"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/js.cookie.js"></script>
+<script src="js/custom.js" type="text/javascript"></script>
 <script> $(function () {
     $("#tabs1, #tabs2").tabs();
 }); </script>

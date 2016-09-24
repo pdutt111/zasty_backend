@@ -120,6 +120,9 @@ function getUser() {
 }
 
 function initMenu() {
+    var search = $(".js-dish-search");
+    search.select2({placeholder: "search the menu"});
+    search.prop("disabled", true);
     $.ajax({
         url: 'https://runkit.io/rahulroy9202/57e6169b900b9c13004e5083/branches/master',
         headers: {
@@ -130,8 +133,29 @@ function initMenu() {
         success: function (json) {
             console.log(json);
             restaurant = json;
+            restaurant.dishes.forEach(function (e, i) {
+                e.id = i;
+                e.text = e.identifier;
+            });
             restaurant.dishes_active = restaurant.dishes.slice();
             renderMenu();
+
+            search.select2({
+                data: restaurant.dishes,
+                placeholder: "search the menu",
+                allowClear: true
+            });
+            search.prop("disabled", false);
+            search.select2().select2("val", {text:'search the menu'});
+
+            search.on("select2:select", function (e) {
+
+                console.log("change", e.params.data.id);
+                restaurant.dishes_active = [restaurant.dishes[e.params.data.id]];
+                renderMenu();
+                search.select2().select2("val", {text:'search the menu'});
+            });
+
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
@@ -230,7 +254,7 @@ function renderMenu() {
     strVar += "                <\/div>";
     strVar += "                <div class=\"foodcat-wrpr tleft\">";
     strVar += "                    <p class=\"fltr-blk\">";
-    strVar += "                        <span onclick=\"filterMenu('all')\" class=\"active\">All Dishes<\/span>";
+    strVar += "                        <span onclick=\"filterMenu('all')\">All Dishes<\/span>";
     strVar += "                        <span onclick=\"filterMenu('egg')\">Eggetarian<\/span>";
     strVar += "                        <span onclick=\"filterMenu('veg')\">Vegetarian<\/span>";
     strVar += "                    <\/p>";
