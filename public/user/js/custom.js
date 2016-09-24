@@ -3,7 +3,7 @@ var config = {
     location_url: 'https://runkit.io/rahulroy9202/57de3489e057cd14001ba5e3/branches/master',
     afterLogin: 'location.html'
 };
-var user, location, afterLogin, context = {};
+var user, restaurant, location, context = {};
 
 window.onload = function (e) {
     getUser();
@@ -17,6 +17,7 @@ function init() {
             initLocation();
             break;
         case 'menu':
+            initMenu();
             break;
         case 'checkout':
             break;
@@ -80,84 +81,92 @@ function logOut() {
 function getUser() {
     console.log('getUser');
     user = Cookies.getJSON('user');
-    if (/login|signup/.test(window.location.href || window.zasty_page === 'location')) {
-        return false;
-    }
-    if (user && user.token && (new Date(user.expires) > Date.now())) {
-        $.ajax({
-            url: config.server_url + '/api/v1/users/protected/info',
-            headers: {
-                'Authorization': user.token,
-                'Content-Type': 'application/json'
-            },
-            type: 'GET',
-            dataType: "json",
-            success: function (json) {
-                console.log(json);
-                if (json.email) {
-                    user.email = json.email;
-                    user.phonenumber = json.phonenumber || '';
-                    user.restaurant_name = json.restaurant_name || null;
-                    $('.js-user-email').html(user.email);
-
-                    afterLogin
-                        ? afterLogin()
-                        : '';
-
-                } else {
-                    logOut();
-                }
-            },
-            error: function (xhr, _status, errorThrown) {
-                console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-                $('.js-login-error').toggle(true);
-            }
-        });
-    } else {
-        window.location.href = '/login.html';
-    }
+    //if (/login|signup/.test(window.location.href || window.zasty_page === 'location')) {
+    //    return false;
+    //}
+    //if (user && user.token && (new Date(user.expires) > Date.now())) {
+    //    $.ajax({
+    //        url: config.server_url + '/api/v1/users/protected/info',
+    //        headers: {
+    //            'Authorization': user.token,
+    //            'Content-Type': 'application/json'
+    //        },
+    //        type: 'GET',
+    //        dataType: "json",
+    //        success: function (json) {
+    //            console.log(json);
+    //            if (json.email) {
+    //                user.email = json.email;
+    //                user.phonenumber = json.phonenumber || '';
+    //                user.restaurant_name = json.restaurant_name || null;
+    //                $('.js-user-email').html(user.email);
+    //
+    //                afterLogin
+    //                    ? afterLogin()
+    //                    : '';
+    //
+    //            } else {
+    //                logOut();
+    //            }
+    //        },
+    //        error: function (xhr, _status, errorThrown) {
+    //            console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+    //            $('.js-login-error').toggle(true);
+    //        }
+    //    });
+    //} else {
+    //    window.location.href = '/login.html';
+    //}
 }
 
-function getRestaurant() {
+function initMenu() {
     $.ajax({
-        url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name,
+        url: 'https://runkit.io/rahulroy9202/57e6169b900b9c13004e5083/branches/master',
         headers: {
-            'Authorization': user.token,
             'Content-Type': 'application/json'
         },
         type: 'GET',
         dataType: "json",
         success: function (json) {
             console.log(json);
-            if ((json.name === user.restaurant_name)) {
-                restaurant = json;
-                $('#abc').prop('checked', restaurant.open_status);
-                dishRefresh();
-                orderRefresh();
-                clearTimeout(orderUpdateTimer);
-                orderUpdateTimer = setTimeout(orderRefresh, 1000 * config.order_poll_interval);
-                unpaidOrderRefresh();
-                searchTransaction();
-                $('.js-r-a').val(restaurant.location.join(','));
-                $('.js-r-cp').val(restaurant.contact_number);
-                $('.js-r-cn').val(restaurant.contact_name);
-
-                if (!restaurant.dish_add_allowed)
-                    $('.js-add-dish').html('');
-
-                if (!restaurant.dish_editable)
-                    $('.js-edit-dish').html('');
-
-            } else {
-                $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
-            }
+            restaurant = json;
+            restaurant.dishes_active = Object.assign({}, restaurant.dishes);
+            renderMenu();
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-            $('#tabs').html('Your restaurant is not yet ready. Please contact Support.');
         }
     });
 
+}
+
+function renderMenu() {
+    var categories = [];
+    restaurant.dishes_active.forEach(function (e) {
+        var c = e.details.category[0];
+        if (categories.indexOf(c) == -1) {
+            categories.push(c);
+        }
+    });
+    restaurant.dishes_active.forEach(function (e) {
+        e.details.category.forEach(function (c) {
+            if (categories.indexOf(c) == -1) {
+                categories.push(c);
+            }
+        })
+    });
+}
+
+function filterMenu(type) {
+    if (type == 'all')
+        restaurant.dishes_active = Object.assign({}, restaurant.dishes);
+    else {
+        restaurant.dishes_active = restaurant.dishes.filter(function (e) {
+            if (e.details.type == type)
+                return true;
+        });
+    }
+    renderMenu();
 }
 
 function doLogin() {
