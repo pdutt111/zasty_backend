@@ -167,8 +167,46 @@ function renderMenu() {
                 categoryMenu[i].push(d);
             }
         });
-        var categoryDishesHtml = categoryMenu[i].map(function (e) {
-            return JSON.stringify(e);
+        var categoryDishesHtml = categoryMenu[i].map(function (dish) {
+
+            var dishVar="";
+            dishVar += "<div class=\"food-item\">";
+            dishVar += "                    <div class=\"item-image\">";
+            dishVar += "                        <img src=\" " + dish.details.image + "\" alt=\"\">";
+            dishVar += "                        <div class=\"item-summary-wrpr\">";
+            dishVar += "                            <div>";
+            dishVar += "                                <div class=\"item-summary\">";
+            dishVar += dish.details.description;
+            dishVar += "                                    <div class=\"clear20\"><\/div>";
+            dishVar += "                                    <span class=\"action-btn dpInblk knowmore\">Know More<\/span>";
+            dishVar += "                                <\/div>";
+            dishVar += "                            <\/div>";
+            dishVar += "                        <\/div>";
+            dishVar += "                    <\/div>";
+            dishVar += "                    <div class=\"item-info\">";
+            dishVar += "                        <h5 class=\"tgreydark\">" + dish.identifier + "<\/h5>";
+            dishVar += "                        <div>";
+            dishVar += "                            <div class=\"veg-type fL dpInblk\">";
+            dishVar += "                                <span class=\"veg dpInblk\"><\/span>";
+            dishVar += "                                <font class=\"item-cat dpInblk tgreyteel\">Universal<\/font>";
+            dishVar += "                            <\/div>";
+            dishVar += "                            <div class=\"avail-time fR dpInblk\">Available from";
+            dishVar += "                                <small>10:00 am<\/small>";
+            dishVar += "                            <\/div>";
+            dishVar += "                            <div class=\"clear fN\"><\/div>";
+            dishVar += "                        <\/div>";
+            dishVar += "                        <div class=\"clear10\"><\/div>";
+            dishVar += "                        <div>";
+            dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>550<\/span><\/div>";
+            dishVar += "                            <div class=\"addtocart-btn fR dpInblk\"><span class=\"dpInblk action-btn\">Add to Cart<\/span>";
+            dishVar += "                            <\/div>";
+            dishVar += "                            <div class=\"clear fN\"><\/div>";
+            dishVar += "                        <\/div>";
+            dishVar += "                    <\/div>";
+            dishVar += "                <\/div>";
+
+
+            return dishVar;
         }).join('');
 
         categoryMenuHtml += '<div class="food-rslt" id="'+e.replace(/\s+/, "")+'">'
@@ -218,6 +256,36 @@ function renderMenu() {
 
     $(function () {
         $("#tabs1, #tabs2").tabs();
+        $( "#tabs" ).tabs({ active: 1 });
+        $(".popup-trig").click(function () {
+            $(".pop-cntnt").css('display', 'table');
+        });
+        $(".pop-cntnt li").click(function () {
+            $('.pop-cntnt').css('display', 'none');
+        });
+
+        $(".knowmore").click(function () {
+            $(".knowmore-wrpr").css('display', 'table');
+        });
+        $(".knowmore-close").click(function () {
+            $('.knowmore-wrpr').css('display', 'none');
+        });
+
+        $(".fltr-wrpr").click(function () {
+            $(".foodcat-wrpr").slideToggle();
+        });
+
+        $(".cart-wrpr").click(function () {
+            $('.cartslide-wrpr').css('display', 'block')
+            $('.cartslide-wrpr .cntnt').css('right', '0px');
+        });
+        $(".rightslide").click(function () {
+            $(".cartslide-wrpr").css('display', 'none');
+        });
+        $(".cartslide-wrpr .cntnt").click(function (e) {
+            e.stopPropagation();
+            return false;
+        });
     });
 }
 
