@@ -417,11 +417,13 @@ function removeFromCart(id) {
 function changeQuantity(id, quantity) {
     console.log('chnageQuantity', id, quantity, restaurant.dishes[id]);
     cart[id] = parseInt(quantity, 10);
+    renderCart();
 }
 
 function renderCart() {
-    $('.js-cart-count').html(Object.keys(cart).length);
+    var total = 0;
 
+    $('.js-cart-count').html(Object.keys(cart).length);
     var cartHtml = "";
     cartHtml += "<div class=\"item\">";
     cartHtml += "<div class=\"tgreylight\">";
@@ -436,7 +438,7 @@ function renderCart() {
         cartHtml = "";
         for (var i in cart) {
             var d = restaurant.dishes[i];
-
+            total = total + d.price * cart[i];
             var selectOpt = '';
             for (var j = 1; j < (5 >= cart[i] ? 5 : cart[i]); j++) {
                 if (j == cart[i])
@@ -469,6 +471,9 @@ function renderCart() {
         }
     }
     $(".cartlist").html(cartHtml);
+
+
+    $(".js-total-price").html(total);
 
 }
 
