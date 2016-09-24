@@ -407,7 +407,7 @@ function removeFromCart(id) {
 
 function changeQuantity(id, quantity) {
     console.log('chnageQuantity', id, quantity, restaurant.dishes[id]);
-    cart[id] = quantity;
+    cart[id] = parseInt(quantity, 10);
 }
 
 function renderCart() {
@@ -428,6 +428,14 @@ function renderCart() {
         for (var i in cart) {
             var d = restaurant.dishes[i];
 
+            var selectOpt = '';
+            for (var j = 1; j < (5 >= cart[i] ? 5 : cart[i]); j++) {
+                if (j == cart[i])
+                    selectOpt += '<option selected="selected">'+j+'<\/option>';
+                else
+                    selectOpt += '<option>'+j+'<\/option>';
+            }
+
             var cartItem = "";
             cartItem += "<div class=\"item\">";
             cartItem += "<div class=\"lft-pane\" style='background-image: url(\"" + d.details.image + "\")'><\/div>";
@@ -435,11 +443,9 @@ function renderCart() {
             cartItem += "    <div class=\"item-info\">";
             cartItem += "        <h4>" + d.identifier + "<\/h4>";
             cartItem += "        <font class=\"dpBlk\">";
-            cartItem += "            <select class=\"fL dpInblk vab\">";
-            cartItem += "                <option>1<\/option>";
-            cartItem += "                <option>2<\/option>";
-            cartItem += "                <option>3<\/option>";
-            cartItem += "                <option>4<\/option>";
+            cartItem += "            <select onchange=\"changeQuantity(" + d.id + ",this.value);\" class=\"fL dpInblk vab\">";
+            cartItem += selectOpt;
+
             cartItem += "            <\/select>";
             cartItem += "            <span class=\"fR dpInblk vab\">₹ " + d.price + "<\/span>";
             cartItem += "            <div class=\"clear fN\"><\/div>";
