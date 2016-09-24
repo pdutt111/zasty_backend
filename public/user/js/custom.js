@@ -195,6 +195,10 @@ function renderMenu() {
         });
         var categoryDishesHtml = categoryMenu[i].map(function (dish) {
 
+            var cartButtonText = 'Add to Cart';
+            if (cart[dish.id])
+                cartButtonText = 'In Cart';
+
             var dishVar = "";
             dishVar += "<div class=\"food-item\">";
             dishVar += "                    <div class=\"item-image\">";
@@ -233,7 +237,7 @@ function renderMenu() {
             dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>" + dish.price + "<\/span><\/div>";
             dishVar += "                            <div class=\"addtocart-btn fR dpInblk\""
                 + "onclick=addToCart(" + dish.id + ")"
-                + "><span class=\"dpInblk action-btn\">Add to Cart<\/span>";
+                + "><span class=\"dpInblk action-btn js-menu-id-" + dish.id + "\">" + cartButtonText + "<\/span>";
             dishVar += "                            <\/div>";
             dishVar += "                            <div class=\"clear fN\"><\/div>";
             dishVar += "                        <\/div>";
@@ -395,14 +399,19 @@ function addToCart(id) {
     if (!cart[id])
         cart[id] = 1;
     else
-        cart[id]++;
+        cart[id] = cart[id] + 1;
     renderCart();
+    // creates jump to first tab.
+    //renderMenu();
+
+    $('.js-menu-id-' + id).html('In Cart');
 }
 
 function removeFromCart(id) {
     console.log('removeFromCart', id, restaurant.dishes[id]);
     delete cart[id];
     renderCart();
+    $('.js-menu-id-' + id).html('Add to Cart');
 }
 
 function changeQuantity(id, quantity) {
@@ -431,9 +440,9 @@ function renderCart() {
             var selectOpt = '';
             for (var j = 1; j < (5 >= cart[i] ? 5 : cart[i]); j++) {
                 if (j == cart[i])
-                    selectOpt += '<option selected="selected">'+j+'<\/option>';
+                    selectOpt += '<option selected="selected">' + j + '<\/option>';
                 else
-                    selectOpt += '<option>'+j+'<\/option>';
+                    selectOpt += '<option>' + j + '<\/option>';
             }
 
             var cartItem = "";
