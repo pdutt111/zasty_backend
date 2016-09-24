@@ -430,7 +430,7 @@ function renderCart() {
 
             var cartItem = "";
             cartItem += "<div class=\"item\">";
-            cartItem += "<div class=\"lft-pane\"><\/div>";
+            cartItem += "<div class=\"lft-pane\" style='background-image: url(\"" + d.details.image + "\")'><\/div>";
             cartItem += "<div class=\"rght-pane\">";
             cartItem += "    <div class=\"item-info\">";
             cartItem += "        <h4>" + d.identifier + "<\/h4>";
