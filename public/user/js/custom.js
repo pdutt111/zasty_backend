@@ -187,11 +187,16 @@ function renderMenu() {
             dishVar += "                        <h5 class=\"tgreydark\">" + dish.identifier + "<\/h5>";
             dishVar += "                        <div>";
             dishVar += "                            <div class=\"veg-type fL dpInblk\">";
-            dishVar += "                                <span class=\"veg dpInblk\"><\/span>";
-            dishVar += "                                <font class=\"item-cat dpInblk tgreyteel\">Universal<\/font>";
+            dishVar += "                                <span class=\""
+            + (dish.details.type=='veg'
+                ? 'veg'
+                : 'non-veg')
+                + " dpInblk\"><\/span>";
+            dishVar += "                                <font class=\"item-cat dpInblk tgreyteel\">"
+                + dish.details.category.join(', ') + "<\/font>";
             dishVar += "                            <\/div>";
-            dishVar += "                            <div class=\"avail-time fR dpInblk\">Available from";
-            dishVar += "                                <small>10:00 am<\/small>";
+            dishVar += "                            <div class=\"avail-time fR dpInblk\">";
+            dishVar += "                                <small><\/small>";
             dishVar += "                            <\/div>";
             dishVar += "                            <div class=\"clear fN\"><\/div>";
             dishVar += "                        <\/div>";
