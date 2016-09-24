@@ -171,14 +171,54 @@ function renderMenu() {
             return JSON.stringify(e);
         }).join('');
 
-        categoryMenuHtml = '<div class="food-rslt" id="sdishes">'
+        categoryMenuHtml += '<div class="food-rslt" id="'+e.replace(/\s+/, "")+'">'
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
         categoryList += '<li><a href="#' + e.replace(/\s+/, "") + '">' + e + '</a></li>';
     });
-    categoryList = '<ul class="dpBlk w100 dish-menu">' + categoryList + '</ul>';
-    console.log(categoryList, categoryMenu);
+
+    var strVar = "";
+    strVar += "<div id=\"tabs1\">";
+    strVar += "        <div class=\"container tcenter posrel cat-type\">";
+    strVar += "            <div class=\"fltr-wrpr\">";
+    strVar += "                <div class=\"fltr-btn pad15\">";
+    strVar += "                    <i class=\"fa fa-filter\"><\/i>";
+    strVar += "                <\/div>";
+    strVar += "                <div class=\"foodcat-wrpr tleft\">";
+    strVar += "                    <p class=\"fltr-blk\">";
+    strVar += "                        <span onclick=\"filterMenu('all')\" class=\"active\">All Dishes<\/span>";
+    strVar += "                        <span onclick=\"filterMenu('egg')\">Eggetarian<\/span>";
+    strVar += "                        <span onclick=\"filterMenu('veg')\">Vegetarian<\/span>";
+    strVar += "                    <\/p>";
+    strVar += "                <\/div>";
+    strVar += "            <\/div>";
+    strVar += "            <ul class=\"dpBlk w100 dish-menu\">";
+
+    strVar += categoryList;
+
+    strVar += "";
+    strVar += "            <\/ul>";
+    strVar += "            <div class=\"cart-wrpr\">";
+    strVar += "                <div class=\"cart-btn pad15\">";
+    strVar += "                    <i class=\"fa fa-shopping-cart\"><\/i>";
+    strVar += "                    <span>2<\/span>";
+    strVar += "                <\/div>";
+    strVar += "            <\/div>";
+    strVar += "        <\/div>";
+    strVar += "        <div class=\"container food-rslt-cntnr\">";
+
+    strVar += categoryMenuHtml;
+
+    strVar += "        <\/div>";
+    strVar += "    <\/div>";
+
+    //console.log(categoryList, categoryMenu);
+    $('.foodrslt-wrpr').html(strVar);
+
+    $(function () {
+        $("#tabs1, #tabs2").tabs();
+    });
 }
 
 function filterMenu(type) {
