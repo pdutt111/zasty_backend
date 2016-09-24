@@ -3,7 +3,7 @@ var config = {
     location_url: 'https://runkit.io/rahulroy9202/57de3489e057cd14001ba5e3/branches/master',
     afterLogin: 'location.html'
 };
-var user, restaurant, location, context = {};
+var user, restaurant, location, context = {}, cart = {};
 
 window.onload = function (e) {
     getUser();
@@ -134,7 +134,8 @@ function initMenu() {
             console.log(json);
             restaurant = json;
             restaurant.dishes.forEach(function (e, i) {
-                e.id = i;
+                if (!e.id)
+                    e.id = i;
                 e.text = e.identifier;
             });
             restaurant.dishes_active = restaurant.dishes.slice();
@@ -273,7 +274,7 @@ function renderMenu() {
     strVar += "            <div class=\"cart-wrpr\">";
     strVar += "                <div class=\"cart-btn pad15\">";
     strVar += "                    <i class=\"fa fa-shopping-cart\"><\/i>";
-    strVar += "                    <span>2<\/span>";
+    strVar += "                    <span class=\"js-cart-count\">"+Object.keys(cart).length+"<\/span>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
     strVar += "        <\/div>";
@@ -337,11 +338,11 @@ function filterMenu(type) {
 function knowMore(id) {
     console.log('knowMore', id, restaurant.dishes[id]);
     var d = restaurant.dishes[id];
-    var html="";
+    var html = "";
     html += "<div class=\"overlay\"><\/div>";
     html += "    <div class=\"cntnt\">";
     html += "        <div>";
-    html += "            <div class=\"lft-pane\"><\/div>";
+    html += "            <div class=\"lft-pane\" style='background-image: url(\"" + d.details.image + "\")'><\/div>";
     html += "            <div class=\"rght-pane\">";
     html += "                <div class=\"item-info\">";
     html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.identifier + "<\/h5>";
@@ -362,13 +363,13 @@ function knowMore(id) {
     html += "                        <\/div>";
     html += "                        <div class=\"navbar-info\">";
     html += "                            <div id=\"details\" class=\"details t12 pad15\">"
-                                                        + (d.details.details || '') + "<\/div>";
+        + (d.details.details || '') + "<\/div>";
     html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
-                                                        + (d.details.prep || '') + "<\/div>";
+        + (d.details.prep || '') + "<\/div>";
     html += "                            <div id=\"ingredients\" class=\"ingredients t12\">"
-                                                        + (d.details.ingredients || '') + "<\/div>";
+        + (d.details.ingredients || '') + "<\/div>";
     html += "                            <div id=\"nutrition\" class=\"nutrition t12\">"
-                                                        + (d.details.nutrition || '') + "<\/div>";
+        + (d.details.nutrition || '') + "<\/div>";
     html += "                        <\/div>";
     html += "                    <\/div>";
     html += "                <\/div>";
@@ -390,19 +391,27 @@ function knowMore(id) {
 
 function addToCart(id) {
     console.log('addToCart', id, restaurant.dishes[id]);
+    if (!cart[id])
+        cart[id] = 1;
+    else
+        cart[id]++;
     renderCart();
 }
 
 function removeFromCart(id) {
     console.log('removeFromCart', id, restaurant.dishes[id]);
+    delete cart[id];
     renderCart();
 }
 
-function chnageQuantity(id, quantity) {
+function changeQuantity(id, quantity) {
     console.log('chnageQuantity', id, quantity, restaurant.dishes[id]);
+    cart[id] = quantity;
 }
 
 function renderCart() {
+    $('.js-cart-count').html(Object.keys(cart).length);
+
 }
 
 function doLogin() {
