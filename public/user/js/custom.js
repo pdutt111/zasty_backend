@@ -130,7 +130,7 @@ function initMenu() {
         success: function (json) {
             console.log(json);
             restaurant = json;
-            restaurant.dishes_active = Object.assign({}, restaurant.dishes);
+            restaurant.dishes_active = restaurant.dishes.slice();
             renderMenu();
         },
         error: function (xhr, _status, errorThrown) {
@@ -155,11 +155,35 @@ function renderMenu() {
             }
         })
     });
+
+    var categoryMenu = [];
+    var categoryMenuHtml = '';
+    var categoryList = '';
+    categories.forEach(function (e, i) {
+        restaurant.dishes_active.forEach(function (d) {
+            if (d.details.category.indexOf(e) !== -1) {
+                if (!Array.isArray(categoryMenu[i]))
+                    categoryMenu[i] = [];
+                categoryMenu[i].push(d);
+            }
+        });
+        var categoryDishesHtml = categoryMenu[i].map(function (e) {
+            return JSON.stringify(e);
+        }).join('');
+
+        categoryMenuHtml = '<div class="food-rslt" id="sdishes">'
+            + categoryDishesHtml
+            + '<div class="clear fN"></div> </div>';
+
+        categoryList += '<li><a href="#' + e.replace(/\s+/, "") + '">' + e + '</a></li>';
+    });
+    categoryList = '<ul class="dpBlk w100 dish-menu">' + categoryList + '</ul>';
+    console.log(categoryList, categoryMenu);
 }
 
 function filterMenu(type) {
     if (type == 'all')
-        restaurant.dishes_active = Object.assign({}, restaurant.dishes);
+        restaurant.dishes_active = restaurant.dishes.slice();
     else {
         restaurant.dishes_active = restaurant.dishes.filter(function (e) {
             if (e.details.type == type)
