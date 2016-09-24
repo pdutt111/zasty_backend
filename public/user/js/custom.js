@@ -379,6 +379,7 @@ function knowMore(id) {
 
 
     $(".knowmore-wrpr").html(html);
+    $("#tabs2").tabs();
     $(".knowmore-wrpr").css('display', 'table');
     $(function () {
         $(".knowmore-close").click(function () {
