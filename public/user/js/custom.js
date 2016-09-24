@@ -140,6 +140,7 @@ function initMenu() {
             });
             restaurant.dishes_active = restaurant.dishes.slice();
             renderMenu();
+            renderCart();
 
             search.select2({
                 data: restaurant.dishes,
@@ -274,7 +275,7 @@ function renderMenu() {
     strVar += "            <div class=\"cart-wrpr\">";
     strVar += "                <div class=\"cart-btn pad15\">";
     strVar += "                    <i class=\"fa fa-shopping-cart\"><\/i>";
-    strVar += "                    <span class=\"js-cart-count\">"+Object.keys(cart).length+"<\/span>";
+    strVar += "                    <span class=\"js-cart-count\">" + Object.keys(cart).length + "<\/span>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
     strVar += "        <\/div>";
@@ -411,6 +412,48 @@ function changeQuantity(id, quantity) {
 
 function renderCart() {
     $('.js-cart-count').html(Object.keys(cart).length);
+
+    var cartHtml = "";
+    cartHtml += "<div class=\"item\">";
+    cartHtml += "<div class=\"tgreylight\">";
+    cartHtml += "<img src=\"images\/smiley.png\" alt=\"\">";
+    cartHtml += "<p class=\"t20\">Awww shucks!<\/p>";
+    cartHtml += "<p>Your cart is empty<\/p>";
+    cartHtml += "<div class=\"clear10\"><\/div>";
+    cartHtml += "<\/div>";
+    cartHtml += "<\/div>";
+
+    if (Object.keys(cart).length) {
+        cartHtml = "";
+        for (var i in cart) {
+            var d = restaurant.dishes[i];
+
+            var cartItem = "";
+            cartItem += "<div class=\"item\">";
+            cartItem += "<div class=\"lft-pane\"><\/div>";
+            cartItem += "<div class=\"rght-pane\">";
+            cartItem += "    <div class=\"item-info\">";
+            cartItem += "        <h4>" + d.identifier + "<\/h4>";
+            cartItem += "        <font class=\"dpBlk\">";
+            cartItem += "            <select class=\"fL dpInblk vab\">";
+            cartItem += "                <option>1<\/option>";
+            cartItem += "                <option>2<\/option>";
+            cartItem += "                <option>3<\/option>";
+            cartItem += "                <option>4<\/option>";
+            cartItem += "            <\/select>";
+            cartItem += "            <span class=\"fR dpInblk vab\">₹ " + d.price + "<\/span>";
+            cartItem += "            <div class=\"clear fN\"><\/div>";
+            cartItem += "        <\/font>";
+            cartItem += "        <span onclick='removeFromCart(" + d.id + ")' class=\"dpInblk close fa fa-close\"><\/span>";
+            cartItem += "    <\/div>";
+            cartItem += "<\/div>";
+            cartItem += "<\/div>";
+            cartItem += "";
+
+            cartHtml += cartItem;
+        }
+    }
+    $(".cartlist").html(cartHtml);
 
 }
 
