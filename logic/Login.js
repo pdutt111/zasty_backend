@@ -22,35 +22,117 @@ var pinTable;
 var feedbackTable=db.getfeedbackdef;
 
 var users={
+    validateTokenFB:function(req){
+        var def= q.defer();
+        request("https://graph.facebook.com/debug_token?%20input_token="+req.body.fb_token+"&access_token="+config.get("fb_access_token"),function(err,response,body){
+            var body=JSON.parse(body);
+            log.info(body);
+            if(!err){
+                if(body.data&&(!body.data.error)&&body.data.user_id){
+                    if((new Date).getTime() / 1000<Number(body.data.expires_at)&&body.data.app_id==config.get("fb_app_id")){
+                        req.body.fb_user_id=body.data.user_id;
+                        def.resolve()
+                    }else{
+                        def.reject({status: 401, message: config.get('error.unauthorized')})
+                    }
+                }else{
+                    def.reject({status: 401, message: config.get('error.unauthorized')})
+                }
+            }else{
+                def.reject({status: 500, message: config.get('error.dberror')})
+            }
+        });
+        return def.promise;
+    },
+    validateTokenGP:function(req){
+        var def= q.defer();
+        request("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="+req.body.gptoken,function(err,response,body){
+            var body=JSON.parse(body);
+            log.info(body);
+            if(!err){
+                if(body.data&&(!body.data.error)&&body.email){
+                    if((new Date).getTime() / 1000<Number(body.exp)&&body.aud==config.get("gp_app_id")){
+                        req.body.google_user_id=body.sub;
+                        def.resolve()
+                    }else{
+                        def.reject({status: 401, message: config.get('error.unauthorized')})
+                    }
+                }else{
+                    def.reject({status: 401, message: config.get('error.unauthorized')})
+                }
+            }else{
+                def.reject({status: 500, message: config.get('error.dberror')})
+            }
+        });
+        return def.promise;
+    },
     userCreate:function(req,res){
-            var def= q.defer();
-            bcrypt.genSalt(10, function(err, salt) {
-                bcrypt.hash(req.body.password, salt, function(err, hash) {
-                    // Store hash in your password DB.
+        var def= q.defer();
+        bcrypt.genSalt(10, function(err, salt) {
+            if(!req.body.password){
+                var passInterim=randomString(5,'aA#')
+            }else{
+                var passInterim=req.body.password;
+            }
+            bcrypt.hash(passInterim, salt, function(err, hash) {
+                // Store hash in your password DB.
+                if(req.body.password){
                     req.body.password=hash;
-                    req.body._id=new ObjectId();
-                    var user = new userTable(req.body);
-                    user.save(function(err,user,info){
-                        if(!err){
-                            var tokendata={
-                                _id:user._id,
-                                name:user.name,
-                                is_verified:user.is_verified,
-                                is_operator:user.is_operator,
-                                is_admin:user.is_admin
-
-                            };
-                            def.resolve(tokendata);
+                    req.body.password_interim=null;
+                }else{
+                    req.body.password=hash;
+                    req.body.password_interim=passInterim;
+                }
+                req.body._id=new ObjectId();
+                var user = new userTable(req.body);
+                user.save(function(err,user,info){
+                    if(!err){
+                        var tokendata={
+                            _id:user._id,
+                            email:user.email,
+                        };
+                        def.resolve(tokendata);
+                    }else{
+                        log.info(err);
+                        if(err.code==11000) {
+                            userTable.findOne({email:req.body.email},"email fb_user_id",function(err,user){
+                                if(!err&&user) {
+                                    if(req.body.fb_user_id==user.fb_user_id){
+                                        def.resolve(user);
+                                    }else if(req.body.google_user_id==user.google_user_id){
+                                        def.resolve(user);
+                                    }else if(req.body.password){
+                                        bcrypt.compare(req.body.password,user.password,function(err,res){
+                                            if(err){
+                                                def.reject({status: 500, message: config.get('error.dberror')});
+                                                return;
+                                            }
+                                            if(res){
+                                                def.resolve(user);
+                                            }else{
+                                                def.reject({status: 401, message: config.get('error.unauthorized')});
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        def.reject({status:401,message:config.get('error.unauthorized')});
+                                    }
+                                }else{
+                                    log.warn(err);
+                                    def.reject({status: 500, message: config.get('error.dberror')});
+                                }
+                            })
                         }else{
                             log.warn(err);
                             def.reject({status: 500, message: config.get('error.dberror')});
                         }
-                    });
+                    }
                 });
             });
+        });
 
-            return def.promise;
-        },
+        return def.promise;
+    },
     signin:function(req,res){
         var def= q.defer();
         userTable.findOne({email:req.body.email},"password name phonenumber is_res_owner is_admin").exec()

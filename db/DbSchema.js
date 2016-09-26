@@ -48,6 +48,13 @@ var userSchema = new Schema({
     password_interim: String,
     name: {type: String},
     device: {service: String, reg_id: String, active: {type: Boolean, default: true}},
+    address:[{
+        _id:false,
+        address: String,
+        area: String,
+        locality: String,
+        city: String,
+    }],
     is_res_owner: {type: Boolean, default: false},
     restaurant_name: String,
     is_admin: {type: Boolean, default: false},

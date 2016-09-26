@@ -20,24 +20,47 @@ var pinTable;
   userTable=db.getuserdef;
   pinTable=db.getpindef;
 
-router.post('/create',params({body:['email','password']},{message : config.get('error.badrequest')}),
-    function(req,res,next) {
-       usersLogic.userCreate(req,res)
-           .then(function(response){
-               req.user=response;
-               req.secret=true;
-               next();
-           })
-           .catch(function(err){
-               res.status(err.status).json(err.message);
-           }).done();
+router.post('/create', params({body: ['email']}, {message: config.get('error.badrequest')}),
+    function (req, res, next) {
+        log.info(req.body);
+        if(req.body.fb_token){
+            usersLogic.validateTokenFB(req)
+                .then(function () {
+                    next();
+                })
+                .catch(function (err) {
+                    res.status(err.status).json(err.message);
+                })
+        }else if(req.body.gp_token){
+            usersLogic.validateTokenGP(req)
+                .then(function () {
+                    next();
+                })
+                .catch(function (err) {
+                    res.status(err.status).json(err.message);
+                })
+        }else if(req.body.password){
+            next();
+        }
     },
-    function(req, res, next) {
-        usersLogic.sendToken(req,res)
-            .then(function(response){
+    function (req, res, next) {
+        usersLogic.userCreate(req, res)
+            .then(function (user) {
+                req.user = user;
+                req.secret = true;
+                next();
+            })
+            .catch(function (err) {
+                log.warn(err);
+                res.status(err.status).json(err.message);
+            }).done();
+    },
+    function (req, res, next) {
+        usersLogic.sendToken(req, res)
+            .then(function (response) {
                 res.json(response);
             })
-            .catch(function(err){
+            .catch(function (err) {
                 res.status(err.status).json(err.message);
             }).done();
     });

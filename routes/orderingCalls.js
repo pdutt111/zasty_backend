@@ -79,6 +79,13 @@ router.post('/order',
             .then(function (order) {
                 log.info(order);
                 res.json(order);
+                orderLogic.saveAddress(req)
+                    .then(function(info){
+                        log.info(info);
+                    })
+                    .catch(function(err){
+                      log.warn(err);
+                    });
             })
             .catch(function (err) {
                 res.status(err.status).json(err.message);
