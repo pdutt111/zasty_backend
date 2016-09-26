@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Merchant-panel: Login</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="css/layout.css" type="text/css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/functions.js" type="text/javascript"></script>
+    <script src="js/js.cookie.js"></script>
+    <script src="js/custom.js" type="text/javascript"></script>
+</head>
+
+<body class="bg-grey">
+<div class="login-form-wrpr">
+    <div>
+        <div class="login-form">
+            <h1 class="tcenter tgreydark">Zasty</h1>
+            <div class="bg-white">
+                <span class="dpblk tcenter"><img src="images/lock.png"></span>
+                <p class="tbigger tcenter tgreyteel">Please log in</p>
+                <div class="clear10"></div>
+                <form onsubmit="doLogin()">
+                    <div class="frm-field">
+                        <p><input type="text" class="js-login-email" placeholder="Email Id"/></p>
+                        <span class="error">Please enter valid email id.</span>
+                    </div>
+                    <div class="clear20"></div>
+                    <div class="frm-field">
+                        <p><input type="password" class="js-login-password" placeholder="Password"/></p>
+                        <span class="error">Please enter valid password.</span>
+                    </div>
+                    <div class="clear5"></div>
+                    <p class="tmicro"><a href="#">Forget Password?</a></p>
+                    <div class="clear20"></div>
+                    <div class="frm-field">
+                        <p><input type="submit" class="btn twhite textbig" value="Log In"/></p>
+                    </div>
+                </form>
+                <div class="clear5"></div>
+                <p class="tnormal tcenter tgreylight">Don't have an account? <a href="/p/signup.html">Sign Up Here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

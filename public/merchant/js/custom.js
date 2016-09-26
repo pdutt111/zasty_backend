@@ -1,21 +1,18 @@
 var config = {
     server_url: window.location.origin,
-    order_poll_interval: 45
+    order_poll_interval: 45,
+    after_logout: '/p/login.html',
+    root: '/p/'
 };
 var user, restaurant, context = {};
 var order_states = ['awaiting response', 'rejected', 'confirmed', 'prepared', 'dispatched'];
 var orderUpdateTimer;
-
 
 window.onload = function (e) {
     getUser();
     initSignupNLogin();
     initDash();
 };
-window.onerror = function () {
-    window.location.reload();
-};
-
 
 function toggleRestaurant(val) {
     console.log('toggleResturant', val);
@@ -47,16 +44,17 @@ function initDash() {
     $('#abc').click(function () {
         toggleRestaurant(this.checked);
     });
-    try{
+    try {
         document.getElementById('dateE').valueAsDate = new Date();
         document.getElementById('dateS').valueAsDate = (new Date()).setDate((new Date()).getDate() - 7);
-    }catch(e){}
+    } catch (e) {
+    }
 }
 
 function logOut() {
     console.log('logOut');
     Cookies.remove('user');
-    window.location.href = '/login.html';
+    window.location.href = config.after_logout;
 }
 
 function getUser() {
@@ -94,7 +92,7 @@ function getUser() {
             }
         });
     } else {
-        window.location.href = '/login.html';
+        window.location.href = config.after_logout;
     }
 }
 
@@ -115,7 +113,7 @@ function getRestaurant() {
                 dishRefresh();
                 orderRefresh();
                 clearTimeout(orderUpdateTimer);
-                orderUpdateTimer = setTimeout(orderRefresh, 1000 * config.order_poll_interval);
+                orderUpdateTimer = setInterval(orderRefresh, 1000 * config.order_poll_interval);
                 unpaidOrderRefresh();
                 searchTransaction();
                 $('.js-r-a').val(restaurant.location.join(','));
@@ -171,7 +169,7 @@ function doLogin() {
             if (json.token && json.expires) {
                 var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
                 Cookies.set('user', json, {expires: expire_in_days});
-                window.location.replace('/');
+                window.location.replace(config.root);
             } else {
                 $('.error').toggle(true);
             }
@@ -516,7 +514,7 @@ function compareState(a, b) {
 }
 
 var a;
-a = new Audio(config.server_url + '/audio/alertS.mp3');
+a = new Audio(config.server_url + '/p/audio/alertS.mp3');
 a.loop = true;
 function playSound() {
     $('a[rel="tab1"]').trigger("click");

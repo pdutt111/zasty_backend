@@ -120,6 +120,7 @@ var restaurantSchema = new Schema({
     name: {type: String, unique: true, dropDups: true},
     location: {type: [Number], index: "2dsphere"},
     shadowfax_store_code: {type: String, default: 'unset'},
+    quickli_store_id: {type: String, default: 'unset'},
     dishes: [{
         _id: false,
         identifier: String,
