@@ -144,11 +144,11 @@ events.emitter.on('process_delivery_queue', function (_id) {
 });
 
 setInterval(function () {
-    // events.emitter.emit("process_delivery_queue");
+    events.emitter.emit("process_delivery_queue");
 }, config.deliveryServiceInterval);
 
 setInterval(function () {
-    // events.emitter.emit("process_quickli");
+    events.emitter.emit("process_quickli");
 }, config.quickliServiceInterval);
 
 function resetNSave(doc, err) {
