@@ -36,7 +36,7 @@ var listings = {
         if (req.user.is_admin) {
             def.resolve();
         } else {
-            userTable.findOne({_id: req.user._id}, "is_res_owner restaurant", function (err, user) {
+            userTable.findOne({_id: req.user._id}, "is_res_owner restaurant_name", function (err, user) {
                 if (!err) {
                     log.info(req.params.name, user.restaurant_name);
                     if (((req.params.name) && (req.params.name == user.restaurant_name)) ||
