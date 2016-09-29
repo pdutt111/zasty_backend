@@ -44,111 +44,111 @@ function deliveryOrderCallback(response, body, order, error, service) {
 
 }
 events.emitter.on('process_delivery_queue', function (_id) {
-    var query = {
-        "status": book_at,
-        "delivery.status": "not_ready",
-        "delivery.retry_count": {
-            $lt: max_retry
-        }
-    };
-
-    if (_id) {
-        query._id = _id;
-    }
-
-    orderTable.findOneAndUpdate(query, {
-        $set: {status: 'processing_delivery_request'}
-    }, {
-        new: true,
-        sort: {created_time: -1}
-    }, function (err, order) {
-        if (err) {
-            console.log('error process_delivery_queue - ', order, err);
-        }
-        if (!err && order) {
-            restaurantTable.findOne({name: order.restaurant_assigned}, function (err, restaurant) {
-                if (err || !restaurant) {
-                    console.log('error process_delivery_queue - ', order, restaurant, err);
-                    resetNSave(order, 'restaurant not found');
-                }
-                if (restaurant) {
-
-                    // Quickli
-                    if (order.delivery.retry_count < 3) {
-                        var options = {
-                            method: 'POST',
-                            url: config.quickli.url_new_order,
-                            headers: {
-                                'content-type': 'application/x-www-form-urlencoded',
-                                'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
-                                'cache-control': 'no-cache'
-                            },
-                            form: {
-                                partner_id: '2',
-                                store_id: restaurant.quickli_store_id,
-                                app_id: config.quickli.app_id,
-                                access_key: config.quickli.access_key,
-                                pickup_from_store: 'Yes',
-                                address: 'Yes',
-                                destination_address: order.address,
-                                destination_location: [order.area, order.locality, order.city].join(' , '),
-                                destination_phone: order.customer_number,
-                                destination_lng: order.location[0],
-                                destination_ltd: order.location[1]
-                            }
-                        };
-                        log.info(options);
-                        request(options, function (error, response, body) {
-                            deliveryOrderCallback(response, body, order, error, 'quickli');
-                        });
-
-                    }
-                    // ShadowFax
-                    var payload = JSON.stringify({
-                        "store_code": restaurant.shadowfax_store_code,
-                        "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
-                        "pickup_contact_number": restaurant.contact_number,
-                        "order_details": {
-                            "client_order_id": order._id,
-                            "order_value": order.value || 300,
-                            "preparation_time": config.preparation_time,
-                            "paid": order.paid || true
-                        },
-                        "customer_details": {
-                            "name": order.customer_name,
-                            "contact_number": order.customer_number,
-                            "address_line_1": order.address,
-                            "address_line_2": order.area + order.locality,
-                            "city": order.city,
-                            "longitude": order.location[0],
-                            "latitude": order.location[1]
-                        }
-                    });
-                    return;
-                    log.info(payload);
-                    request({
-                        method: 'POST',
-                        url: config.shadowfax.url_new_order,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': config.shadowfax.token
-                        },
-                        body: payload
-                    }, function (error, response, body) {
-                        deliveryOrderCallback(response, body, order, error, 'shadowfax');
-                    });
-                }
-            });
-        }
-    });
+    // var query = {
+    //     "status": book_at,
+    //     "delivery.status": "not_ready",
+    //     "delivery.retry_count": {
+    //         $lt: max_retry
+    //     }
+    // };
+    //
+    // if (_id) {
+    //     query._id = _id;
+    // }
+    //
+    // orderTable.findOneAndUpdate(query, {
+    //     $set: {status: 'processing_delivery_request'}
+    // }, {
+    //     new: true,
+    //     sort: {created_time: -1}
+    // }, function (err, order) {
+    //     if (err) {
+    //         console.log('error process_delivery_queue - ', order, err);
+    //     }
+    //     if (!err && order) {
+    //         restaurantTable.findOne({name: order.restaurant_assigned}, function (err, restaurant) {
+    //             if (err || !restaurant) {
+    //                 console.log('error process_delivery_queue - ', order, restaurant, err);
+    //                 resetNSave(order, 'restaurant not found');
+    //             }
+    //             if (restaurant) {
+    //
+    //                 // Quickli
+    //                 if (order.delivery.retry_count < 3) {
+    //                     var options = {
+    //                         method: 'POST',
+    //                         url: config.quickli.url_new_order,
+    //                         headers: {
+    //                             'content-type': 'application/x-www-form-urlencoded',
+    //                             'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
+    //                             'cache-control': 'no-cache'
+    //                         },
+    //                         form: {
+    //                             partner_id: '2',
+    //                             store_id: restaurant.quickli_store_id,
+    //                             app_id: config.quickli.app_id,
+    //                             access_key: config.quickli.access_key,
+    //                             pickup_from_store: 'Yes',
+    //                             address: 'Yes',
+    //                             destination_address: order.address,
+    //                             destination_location: [order.area, order.locality, order.city].join(' , '),
+    //                             destination_phone: order.customer_number,
+    //                             destination_lng: order.location[0],
+    //                             destination_ltd: order.location[1]
+    //                         }
+    //                     };
+    //                     log.info(options);
+    //                     request(options, function (error, response, body) {
+    //                         deliveryOrderCallback(response, body, order, error, 'quickli');
+    //                     });
+    //
+    //                 }
+    //                 // ShadowFax
+    //                 var payload = JSON.stringify({
+    //                     "store_code": restaurant.shadowfax_store_code,
+    //                     "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
+    //                     "pickup_contact_number": restaurant.contact_number,
+    //                     "order_details": {
+    //                         "client_order_id": order._id,
+    //                         "order_value": order.value || 300,
+    //                         "preparation_time": config.preparation_time,
+    //                         "paid": order.paid || true
+    //                     },
+    //                     "customer_details": {
+    //                         "name": order.customer_name,
+    //                         "contact_number": order.customer_number,
+    //                         "address_line_1": order.address,
+    //                         "address_line_2": order.area + order.locality,
+    //                         "city": order.city,
+    //                         "longitude": order.location[0],
+    //                         "latitude": order.location[1]
+    //                     }
+    //                 });
+    //                 return;
+    //                 log.info(payload);
+    //                 request({
+    //                     method: 'POST',
+    //                     url: config.shadowfax.url_new_order,
+    //                     headers: {
+    //                         'Content-Type': 'application/json',
+    //                         'Authorization': config.shadowfax.token
+    //                     },
+    //                     body: payload
+    //                 }, function (error, response, body) {
+    //                     deliveryOrderCallback(response, body, order, error, 'shadowfax');
+    //                 });
+    //             }
+    //         });
+    //     }
+    // });
 });
 
 setInterval(function () {
-    events.emitter.emit("process_delivery_queue");
+    // events.emitter.emit("process_delivery_queue");
 }, config.deliveryServiceInterval);
 
 setInterval(function () {
-    events.emitter.emit("process_quickli");
+    // events.emitter.emit("process_quickli");
 }, config.quickliServiceInterval);
 
 function resetNSave(doc, err) {
@@ -160,7 +160,7 @@ function resetNSave(doc, err) {
     }
 
     if (doc.delivery.retry_count >= max_retry) {
-        doc.delivery.status = 'error';
+        // doc.delivery.status = 'error';
         console.log("CRITICAL ERROR- DELIVERY SERVICE ORDER FAIL for order_id- ", doc._id);
         sendAdminAlert(doc);
     }
