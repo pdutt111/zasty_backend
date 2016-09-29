@@ -317,12 +317,14 @@ var listings = {
         log.info("sending info");
         restaurantTable.findOne({name: req.params.name}, "nomnom_username nomnom_password",
             function (err, restaurant) {
+            if(restaurant.nomnom_username){
                 events.emitter.emit("fetch_nomnom",
                     {
                         username: restaurant.nomnom_username,
                         password: restaurant.nomnom_password,
                         name: req.params.name
                     });
+            }
             });
         orderTable.find({
                 restaurant_assigned: req.params.name,
