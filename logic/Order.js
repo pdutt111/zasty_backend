@@ -154,6 +154,8 @@ var orderLogic = {
 
         var order = new orderTable({
             address: req.body.address,
+            payment_mode: req.body.payment_mode,
+            payment_status: req.body.payment_mode == 'cod' ? req.body.payment_status : 'pending',
             area: req.body.area,
             locality: req.body.locality,
             city: req.body.city,
@@ -216,18 +218,18 @@ var orderLogic = {
             });
         return def.promise;
     },
-    saveAddress:function(req){
-        var def=q.defer();
-        var address={
+    saveAddress: function (req) {
+        var def = q.defer();
+        var address = {
             address: req.body.address,
             area: req.body.area,
             locality: req.body.locality,
             city: req.body.city,
         };
-        userTable.update({email:req.body.customer_email},{$addToSet:{address:address}},function(err,info){
-            if(!err) {
+        userTable.update({email: req.body.customer_email}, {$addToSet: {address: address}}, function (err, info) {
+            if (!err) {
                 def.resolve("saved address");
-            }else{
+            } else {
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
         })

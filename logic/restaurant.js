@@ -292,7 +292,7 @@ var listings = {
             },
                 "address dishes_ordered delivery customer_name created_time log " +
                 "customer_number customer_email city issue_raised issue_reason" +
-                " locality area rejection_reason status")
+                " locality area rejection_reason status payment_mode payment_status")
             .skip(Number(req.query.offset)).limit(20).sort({_id: -1})
             .exec(function (err, rows) {
                 if (!err) {
@@ -330,7 +330,7 @@ var listings = {
                 restaurant_assigned: req.params.name,
                 status: {$in: ["awaiting response", "confirmed", "prepared"]}
             },
-            "address dishes_ordered delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status")
+            "address dishes_ordered delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
             .skip(Number(req.query.offset)).sort({_id: -1})
             .exec(function (err, rows) {
                 log.info(err);
@@ -349,7 +349,7 @@ var listings = {
                 paid_status_to_restaurant: false,
                 status: {$in: ["dispatched", "DELIVERED"]}
             },
-            "address dishes_ordered delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status")
+            "address dishes_ordered delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status  payment_mode payment_status")
             .sort({_id: -1})
             .exec(function (err, rows) {
                 log.info(err);
@@ -364,7 +364,7 @@ var listings = {
     getOrder: function (req) {
         var def = q.defer();
         orderTable.findOne({_id: req.query.order_id},
-            "address delivery dishes_ordered city locality area rejection_reason status"
+            "address delivery dishes_ordered city locality area rejection_reason status  payment_mode payment_status"
             , function (err, order) {
                 if (!err) {
                     def.resolve(order);

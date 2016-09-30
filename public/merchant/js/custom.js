@@ -394,7 +394,7 @@ function renderOrderTable() {
         rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/>' + order.address_full + '</td><td>'
             + order.status + '<BR/><BR/>' + order.buttons + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
-            + total + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
+            + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
     });
     var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
 
@@ -607,7 +607,7 @@ function renderUnpaidOrderTable() {
         rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
             + order.status + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
-            + total + '</td></tr>');
+            + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status +  '</td></tr>');
     });
     var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> </tr>' + rows.join('') + '</table>';
 
