@@ -75,7 +75,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                 if (restaurant) {
 
                     // Quickli
-                    if (order.delivery.retry_count < 3) {
+                    if (order.delivery.retry_count <= 3) {
                         var options = {
                             method: 'POST',
                             url: config.quickli.url_new_order,
@@ -122,7 +122,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                             "city": order.city
                         }
                     });
-                    return;
+
                     log.info(payload);
                     request({
                         method: 'POST',
