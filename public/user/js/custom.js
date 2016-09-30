@@ -7,23 +7,33 @@ var config = {
 var user, restaurant, location, context = {}, cart = {};
 
 window.onload = function (e) {
-    getUser();
+    //getUser();
     initSignupNLogin();
     init();
 };
 
 function init() {
+    $('.js-location').html(Cookies.get('location') || '');
+    $('.js-location').val(Cookies.get('location') || '');
+
     switch (window.zasty_page) {
         case 'location':
+            getUser();
             initLocation();
             break;
         case 'menu':
+            getUser();
             initMenu();
             break;
         case 'checkout':
+            getUser('hard');
             initCheckout();
             break;
     }
+}
+
+function placeOrder(type) {
+    console.log('placeOrder', type)
 }
 
 function initLocation() {
@@ -76,49 +86,51 @@ function initSignupNLogin() {
 function logOut() {
     console.log('logOut');
     Cookies.remove('user');
-    Cookies.remove('location');
     window.location.href = '/login.html';
 }
 
-function getUser() {
+function clearState() {
+    console.log('clearState');
+    Cookies.remove('user');
+    Cookies.remove('location');
+    localStorage.removeItem('restaurant');
+    window.location.href = '/';
+}
+
+function getUser(hard) {
     console.log('getUser');
     user = Cookies.getJSON('user');
-    //if (/login|signup/.test(window.location.href || window.zasty_page === 'location')) {
-    //    return false;
-    //}
-    //if (user && user.token && (new Date(user.expires) > Date.now())) {
-    //    $.ajax({
-    //        url: config.server_url + '/api/v1/users/protected/info',
-    //        headers: {
-    //            'Authorization': user.token,
-    //            'Content-Type': 'application/json'
-    //        },
-    //        type: 'GET',
-    //        dataType: "json",
-    //        success: function (json) {
-    //            console.log(json);
-    //            if (json.email) {
-    //                user.email = json.email;
-    //                user.phonenumber = json.phonenumber || '';
-    //                user.restaurant_name = json.restaurant_name || null;
-    //                $('.js-user-email').html(user.email);
-    //
-    //                afterLogin
-    //                    ? afterLogin()
-    //                    : '';
-    //
-    //            } else {
-    //                logOut();
-    //            }
-    //        },
-    //        error: function (xhr, _status, errorThrown) {
-    //            console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
-    //            $('.js-login-error').toggle(true);
-    //        }
-    //    });
-    //} else {
-    //    window.location.href = '/login.html';
-    //}
+    if (user && user.token && (new Date(user.expires) > Date.now())) {
+        $.ajax({
+            url: config.server_url + '/api/v1/users/protected/info',
+            headers: {
+                'Authorization': user.token,
+                'Content-Type': 'application/json'
+            },
+            type: 'GET',
+            dataType: "json",
+            success: function (json) {
+                console.log(json);
+                if (json.email) {
+                    user.email = json.email;
+                    user.phonenumber = json.phonenumber || '';
+                    $('.js-user-name').html(json.name);
+                    $('.js-user-name').val(json.name);
+                    $('.js-user-email').html(json.email);
+                    $('.js-user-email').val(json.email);
+                    $('.js-user-phonenumber').html(json.phonenumber);
+                    $('.js-user-phonenumber').val(json.phonenumber);
+                }
+            },
+            error: function (xhr, _status, errorThrown) {
+                console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+                $('.js-login-error').toggle(true);
+            }
+        });
+    } else {
+        if (hard)
+            window.location.href = '/login.html';
+    }
 }
 
 function initCheckout() {
@@ -150,7 +162,7 @@ function initMenu() {
 
             var oldRes = JSON.parse(localStorage['restaurant'] || '[]');
 
-            if (JSON.stringify(oldRes) === JSON.stringify(restaurant) ) {
+            if (JSON.stringify(oldRes) !== JSON.stringify(restaurant)) {
                 Cookies.remove('restaurant');
                 Cookies.remove('cart');
             }

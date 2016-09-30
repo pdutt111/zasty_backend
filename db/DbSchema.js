@@ -32,7 +32,8 @@ var phoneValidator = [
 ];
 
 mongoose.Promise = global.Promise;
-var db = mongoose.createConnection(config.get('mongo.location'), config.get('mongo.database'));
+mongoose.connect(config.get('mongo.location'));
+var db = mongoose.connection;
 autoIncrement.initialize(db);
 
 var Schema = mongoose.Schema;

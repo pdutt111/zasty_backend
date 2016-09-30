@@ -40,10 +40,10 @@
                             <div class="tgreydark uppercase">customer information</div>
                             <div class="clear10"></div>
                             <div class="info">
-                                <p class="split"><input type="text" placeholder="First Name" class="brdrghtgrey"><input
-                                        type="text" placeholder="Last Name"></p>
-                                <p><input type="tel" placeholder="Mobile Number"></p>
-                                <p class="nobdr"><input type="email" placeholder="Email Address"></p>
+                                <p><input class="js-user-name" type="tel" placeholder="Name"></p>
+                                <p><input class="js-user-phonenumber" type="tel" placeholder="Mobile Number"></p>
+                                <p class="nobdr"><input class="js-user-email" type="email" placeholder="Email Address">
+                                </p>
                             </div>
                         </div>
                         <div class="clear20"></div>
@@ -52,8 +52,8 @@
                             <div class="clear10"></div>
                             <div class="info">
                                 <p><input type="text" placeholder="Door no., apartment no."></p>
-                                <p><input type="text" placeholder="City"></p>
-                                <p class="nobdr"><input type="tel" placeholder="Pincode"></p>
+                                <p><input class="js-location" disabled="true" type="text" value="Locality"></p>
+                                <p><input disabled="true" type="text" value="Gurgaon"></p>
                             </div>
                         </div>
                         <div class="clear20"></div>
@@ -76,14 +76,18 @@
                         </div>
                         <div class="clear10"></div>
 
-                        <div class="pm-button"><a href="https://www.payumoney.com/paybypayumoney/#/206965"><img
-                                src="https://www.payumoney.com//media/images/payby_payumoney/buttons/212.png"/></a>
+                        <div class="pm-button">
+                            <a href="javascript:void(0)" onclick="placeOrder('pay')">
+                                <img src="https://www.payumoney.com//media/images/payby_payumoney/buttons/212.png"/>
+                            </a>
                         </div>
 
                     </div>
                     <div class="clear20"></div>
                     <p>
-                        <button type="submit" class="action-btn">Place order with Cash on Delivery</button>
+                        <button type="submit" onclick="placeOrder('cod')" class="action-btn">
+                            Place order with Cash on Delivery
+                        </button>
                     </p>
                 </form>
             </div>
@@ -97,13 +101,13 @@
                         <p class="t12">Our kitchen will start preparing abc. Our kitchen will start preparing abc Our
                             kitchen will start preparing abc.</p>
                     </div>
-                    <div class="dlvry-info ontime pad15">
-                        <p class="uppercase tbold t13">This order will be delivered on time</p>
-                        <div class="clear5"></div>
-                        <p class="t12">Our kitchen will start preparing abc. Our kitchen will start preparing abc Our
-                            kitchen will start preparing abc.</p>
-                    </div>
                 </div>
+                <div class="dlvry-info ontime pad15">
+                    <p class="uppercase tbold t13">This order will be delivered in 1 hour</p>
+                    <div class="clear5"></div>
+                    <p class="t12"></p>
+                </div>
+
                 <div class="clear20"></div>
                 <p class="other-item twhite t12">Forgot something? <a href="/menu.html" class="twhite">Add another
                     item</a></p>

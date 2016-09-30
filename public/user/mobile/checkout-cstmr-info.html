@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Checkout Customer Info</title>
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link href="css/layout.css" type="text/css" rel="stylesheet">
+<link href="css/style.css" type="text/css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#111111">
+</head>
+
+<body>
+<div class="checkout-prfl-wrpr">
+	<div class="head dpTable w100 pad10">
+		<span class="fa fa-angle-left dpTblcl vam tleft"></span>
+		<font class="dpTblcl vam tcenter t18">Customer Info</font>
+		<content class="cart-btn dpTblcl vam tright">
+   			<i class="fa fa-shopping-cart"></i>
+   			<span>2</span>
+   		</content>
+	</div>
+	<div id="tabs">
+		<div class="navbar">
+            <ul>                
+                <li><a href="#login">Login</a></li>
+                <li><a href="#signup">Signup</a></li>
+                <li><a href="#guest">Guest</a></li>                             
+            </ul>            
+        </div>
+		<div class="navbar-info pad20">			
+			<div id="login" class="login-cntnt">
+				<form>				
+				    <div class="frm-field">
+				        <p><input type="text" placeholder="Email Id" /></p>
+				        <span class="error">Please enter valid email id.</span>
+				    </div>
+				    <div class="clear20"></div>
+				    <div class="frm-field">
+				        <p><input type="password" placeholder="Password" /></p>
+				        <span class="error">This field cannot be empty</span>
+				    </div>                        
+				    <div class="clear5"></div>                        
+				    <p class="t11"><a href="#" class="themecolor">Forget Password?</a></p>
+				    <p class="prcd-btn"><input type="submit" class="btn twhite textbig blak" value="Log In"></p>
+			    </form>
+			</div>
+			<div id="signup" class="signup-cntnt">
+				<form>
+					<div class="frm-field">
+					    <p><input type="text" placeholder="First Name" /></p>
+					    <span class="error">Please enter valid name.</span>
+					</div>
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="text" placeholder="Last Name" /></p>
+					    <span class="error">Please enter valid name.</span>
+					</div>
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="text" placeholder="Email Id" /></p>
+					    <span class="error">Please enter valid email id.</span>
+					</div>
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="password" placeholder="Password" /></p>
+					    <span class="error tgreylight">Minimum 8 characters, with 1 Number & 1 Capital letter</span>
+					</div>
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="tel" placeholder="Enter your Mobile Number" /></p>
+					    <span class="error">Please enter valid 10 digit Mobile Number</span>
+					</div>                                                
+					<div class="clear10"></div> 
+					<p class="t12 tgreylight"> <input type="checkbox" class="dpinblk vam"> &nbsp; <span class="dpinblk vam">I agree to the <a href="tnc.html" class="themecolor">T&Cs</a>.</span></p>
+					<p class="prcd-btn"><input type="submit" class="btn twhite textbig blak" value="Sign Up"></p>
+				</form>
+			</div>
+			<div id="guest" class="guest-cntnt">
+				<form>
+					<div class="frm-field">
+					    <p><input type="text" placeholder="First Name" /></p>
+					    <span class="error">Please enter valid name.</span>
+					</div>
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="text" placeholder="Last Name" /></p>
+					    <span class="error">Please enter valid name.</span>
+					</div>
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="text" placeholder="Email Id" /></p>
+					    <span class="error">Please enter valid email id.</span>
+					</div>					
+					<div class="clear20"></div>
+					<div class="frm-field">
+					    <p><input type="tel" placeholder="Enter your Mobile Number" /></p>
+					    <span class="error">Please enter valid 10 digit Mobile Number</span>
+					</div>  
+					<p class="prcd-btn"><input type="submit" class="btn twhite textbig blak" value="Guest Checkout"></p>
+				</form>
+			</div>			
+		</div>
+	</div>
+</div>
+<script src="js/jq-min.js" type="text/javascript"></script>
+<script src="js/jq-ui.js" type="text/javascript"></script>
+<script> $( function() {$( "#tabs" ).tabs(); } ); </script> 
+</body>
+</html>
