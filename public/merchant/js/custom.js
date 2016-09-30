@@ -386,7 +386,10 @@ function renderOrderTable() {
         }
 
         if (order.delivery && order.delivery.status !== 'not_ready') {
-            order.buttons += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
+            order.status += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
+            if (order.delivery.details.service === "shadowfax" && order.delivery.details.data.pickup_contact_number) {
+                order.status += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
+            }
         }
 
         order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
@@ -602,12 +605,15 @@ function renderUnpaidOrderTable() {
 
         if (order.delivery && order.delivery.status !== 'not_ready') {
             order.status += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
+            if (order.delivery.details.service === "shadowfax" && order.delivery.details.data.pickup_contact_number) {
+                order.status += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
+            }
         }
 
         rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
             + order.status + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
-            + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status +  '</td></tr>');
+            + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td></tr>');
     });
     var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> </tr>' + rows.join('') + '</table>';
 
