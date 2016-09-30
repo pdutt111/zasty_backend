@@ -7,6 +7,7 @@ var log = require('tracer').colorConsole(config.get('log'));
 var request=require('request');
 
 events.emitter.on('sms',function(data){
+    log.info("sending sms");
     request("https://control.msg91.com/api/sendhttp.php?" +
        "authkey="+config.get('sms.key')+"&" +
        "mobiles="+data.number+"&" +

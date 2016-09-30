@@ -327,6 +327,14 @@ var orderLogic = {
 
         userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, doc) {
             if (doc && doc.email) {
+                if(doc.phonenumber){
+                    var message = "new order\n"
+                    order.dishes_ordered.forEach(function (d) {
+                        message +=  d.qty +"-"+ d.identifier +":"+ d.price_to_pay+"\n";
+                    });
+                    log.info("sending sms");
+                    events.emitter.emit("sms",{number:doc.phonenumber,message:message})
+                }
                 email.toEmail = doc.email;
                 events.emitter.emit("mail", email);
             }
