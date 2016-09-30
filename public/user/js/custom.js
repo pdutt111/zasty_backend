@@ -21,6 +21,7 @@ function init() {
             initMenu();
             break;
         case 'checkout':
+            initCheckout();
             break;
     }
 }
@@ -120,6 +121,12 @@ function getUser() {
     //}
 }
 
+function initCheckout() {
+    restaurant = JSON.parse(localStorage['restaurant'] || '[]');
+    cart = Cookies.getJSON('cart') || {};
+    renderCart();
+}
+
 function initMenu() {
     var search = $(".js-dish-search");
     search.select2({placeholder: "search the menu"});
@@ -141,7 +148,7 @@ function initMenu() {
             });
             restaurant.dishes_active = restaurant.dishes.slice();
 
-            var oldRes = Cookies.getJSON('restaurant');
+            var oldRes = JSON.parse(localStorage['restaurant'] || '[]');
 
             if (JSON.stringify(oldRes) === JSON.stringify(restaurant) ) {
                 Cookies.remove('restaurant');
@@ -149,7 +156,7 @@ function initMenu() {
             }
 
             cart = Cookies.getJSON('cart') || {};
-            Cookies.set('restaurant', restaurant);
+            localStorage.setItem('restaurant', JSON.stringify(restaurant));
 
             renderMenu();
             renderCart();
