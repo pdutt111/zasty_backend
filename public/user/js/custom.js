@@ -3,6 +3,7 @@ var config = {
     location_url: 'https://runkit.io/rahulroy9202/57de3489e057cd14001ba5e3/branches/master',
     afterLogin: 'location.html'
 };
+
 var user, restaurant, location, context = {}, cart = {};
 
 window.onload = function (e) {
@@ -139,6 +140,17 @@ function initMenu() {
                 e.text = e.identifier;
             });
             restaurant.dishes_active = restaurant.dishes.slice();
+
+            var oldRes = Cookies.getJSON('restaurant');
+
+            if (JSON.stringify(oldRes) === JSON.stringify(restaurant) ) {
+                Cookies.remove('restaurant');
+                Cookies.remove('cart');
+            }
+
+            cart = Cookies.getJSON('cart') || {};
+            Cookies.set('restaurant', restaurant);
+
             renderMenu();
             renderCart();
 
@@ -421,6 +433,7 @@ function changeQuantity(id, quantity) {
 }
 
 function renderCart() {
+    Cookies.set('cart', cart);
     var total = 0;
 
     $('.js-cart-count').html(Object.keys(cart).length);
@@ -536,3 +549,5 @@ function doSignup() {
         }
     });
 }
+
+

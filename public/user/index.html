@@ -2,66 +2,72 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Food Ordering Site</title>
-    <script>
-        window.zasty_page = 'location';
-    </script>
+    <title>Company</title>
     <link href="css/layout.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/select2.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="js/select2.min.js"></script>
-    <script src="js/js.cookie.js"></script>
-    <script src="js/custom.js" type="text/javascript"></script>
-
+    <meta name="theme-color" content="#111111">
 </head>
 <body>
+<script>
+    window.zasty_page = 'location';
+</script>
 <section class="banner-wrpr">
     <!-- Header starts -->
     <section class="header">
-        <div class="container pad15_hrz">
-            <nav class="navigation tcenter t18">
-                <ul class="lft-menu fL tleft">
-                    <li><a class="dpInblk" href="#">Home</a></li>
-                </ul>
-                <h1 class="logo_white nomargin">
+        <div class="container pad20">
+            <nav class="navigation">
+                <a href="javascript:void()" class="hmbrg-menu fL"></a>
+                <h1 class="logo_white nomargin fR">
                     <a href="#"><img src="images/logo.png" alt="logo_name"></a>
                 </h1>
+                <div class="clear fN"></div>
+                <ul class="main-menu fL">
+                    <li><a href="javscript:void(0)" class="nopadleft">Home</a></li>
+                    <li class="tcenter"><a href="login.html" class="wbrdr brdrius">Login</a></li>
+                    <li class="tcenter"><a href="signup.html" class="wbrdr brdrius">Sign Up</a></li>
+                    <!-- <li><em>Hi <strong>abcasd@gmail.com</strong></em></li>
+                    <li><span class="dpInblk vam logout">Logout</span></li> -->
+                </ul>
                 <div class="clear fN"></div>
             </nav>
         </div>
     </section>
     <!-- header ends -->
-    <p class="tag-line"><span>Enjoy Our Food !</span></p>
-    <p class="tcenter loc">
-        <select class="js-location-select" style="width:50%">
-        </select>
-    </p>
+    <div class="container pad20">
+        <p class="tag-line"><span>Enjoy Our Food !</span></p>
+        <p class="tcenter loc">
+            <select class="js-location-select">
+            </select>
+        </p>
+    </div>
 </section>
 
 <!-- download app section -->
 <section class="dwnld-wrpr">
-    <div class="container tcenter">
+    <div class="container pad20 tcenter">
         <a href="#" target="_blank" class="dpInblk"><img src="images/mobileAssets.png" alt=""></a>
     </div>
 </section>
 <section class="dwnld-wrpr">
-    <div class="container tcenter">
+    <div class="container pad20 tcenter">
         <a href="#" target="_blank" class="dpInblk"><img src="images/mobileAssets.png" alt=""></a>
     </div>
 </section>
 <section class="dwnld-wrpr">
-    <div class="container tcenter">
+    <div class="container pad20 tcenter">
         <a href="#" target="_blank" class="dpInblk"><img src="images/mobileAssets.png" alt=""></a>
     </div>
 </section>
 
 <!-- footer -->
 <footer class="footer">
-    <div class="container">
+    <div class="container pad20_vrt">
         <div class="top-row tcenter">
             <p class="tbold t18">Premium Support</p>
             <p class="clear20"></p>
@@ -71,8 +77,8 @@
             <p>For Customer queries : Mail us at <a href="mailto:care@abc.com">care@abc.com</a></p>
             <p>For Business queries : Mail us at <a href="mailto:business@abc.com">business@abc.com</a></p>
             <p>For Marketing queries : Mail us at <a href="mailto:marketing@abc.com"> marketing@abc.com</a></p>
-            <p class="clear60"></p>
         </div>
+        <div class="clear40"></div>
         <div class="btm-footer tcenter">
             <div class="useful-links-wrpr">
                 <h4 class="t18">Policies</h4>
@@ -84,14 +90,7 @@
                     <li><a href="return-tnc">Returns and Cancelations</a></li>
                 </ul>
             </div>
-            <div class="reg">
-                <h2 class="logo_black nomargin">
-                    <a href="#" class="dpInblk"><img src="images/logo_black.png" alt="logo_name"></a>
-                </h2>
-                <div class="clear20"></div>
-                <h3 class="nomargin">ABC 2016</h3>
-                <p class="t12">All Rights Reserved</p>
-            </div>
+            <div class="clear40"></div>
             <div class="social-icons-wrpr">
                 <h4 class="t18">Social Media</h4>
                 <ul>
@@ -102,9 +101,17 @@
                     <li class="gp"><a href="#"><i class="fa fa-google-plus"></i></a></li>
                 </ul>
             </div>
-            <p class="fN clear"></p>
+            <div class="clear40"></div>
         </div>
     </div>
+    <div class="reg tcenter pad20">
+        <p class="t12">All Rights Reserved &copy;2016</p>
+    </div>
 </footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/functions.js" type="text/javascript"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/js.cookie.js"></script>
+<script src="js/custom.js" type="text/javascript"></script>
 </body>
 </html>
