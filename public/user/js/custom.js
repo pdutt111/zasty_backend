@@ -54,6 +54,11 @@ function placeOrder(type) {
         return alert('Enter Address');
     }
 
+    if (type === 'cod') {
+        payload.payment_mode = 'cod';
+        payload.payment_status = 'confirmed';
+    }
+
     console.log(payload);
 
     $.ajax({
