@@ -72,6 +72,9 @@ var pinschema = new Schema({
 
 var orderSchema = new Schema({
     address: String,
+    payment_mode: String,
+    payment_id: String,
+    payment_status: String,
     area: String,
     locality: String,
     city: String,
