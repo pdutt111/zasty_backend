@@ -385,17 +385,18 @@ function renderOrderTable() {
                 + index + ')">' + order_states[state_index + 1] + '</button>';
         }
 
+        var displayStatus = order.status;
         if (order.delivery && order.delivery.status !== 'not_ready') {
-            order.status += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
+            displayStatus += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
             if (order.delivery.details.service === "shadowfax" && order.delivery.details.data.pickup_contact_number) {
-                order.status += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
+                displayStatus += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
             }
         }
 
         order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
 
         rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/>' + order.address_full + '</td><td>'
-            + order.status + '<BR/><BR/>' + order.buttons + '</td><td>'
+            + displayStatus + '<BR/><BR/>' + order.buttons + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
             + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
     });
@@ -454,6 +455,7 @@ function changeOrderStatus(i, accept) {
     console.log('changeOrderStatus', i);
     var state = restaurant.orders[i].status;
     var _id = restaurant.orders[i]._id;
+    console.log(state, _id);
     if (order_states.indexOf(state) > 1 && order_states.indexOf(state) < order_states.length - 1) {
         var new_state = order_states[order_states.indexOf(state) + 1];
         console.log('ostate', state, 'nstate', new_state);
@@ -603,10 +605,11 @@ function renderUnpaidOrderTable() {
         order.dishes = dishes;
         order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
 
+        var displayStatus = order.status;
         if (order.delivery && order.delivery.status !== 'not_ready') {
-            order.status += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
+            displayStatus += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
             if (order.delivery.details.service === "shadowfax" && order.delivery.details.data.pickup_contact_number) {
-                order.status += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
+                displayStatus += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
             }
         }
 
