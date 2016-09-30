@@ -13,6 +13,7 @@ window.onload = function (e) {
 };
 
 function init() {
+    $('.popup-genric').toggle(false);
     $('.js-location').html(Cookies.get('location') || '');
     $('.js-location').val(Cookies.get('location') || '');
 
@@ -33,7 +34,51 @@ function init() {
 }
 
 function placeOrder(type) {
-    console.log('placeOrder', type)
+    console.log('placeOrder', type);
+
+    var dishes = {};
+    Object.keys(cart).forEach(function (key) {
+        dishes[restaurant.dishes[key].identifier] = {"qty": cart[key], "price": restaurant.dishes[key].price}
+    });
+
+    var payload = {
+        "city": "Gurgaon",
+        "area": Cookies.get('location'),
+        "address": $('.js-address').val(),
+        "locality": Cookies.get('location'),
+        "dishes_ordered": dishes,
+        "customer_name": $('.js-user-name').val(),
+        "customer_number": $('.js-user-phonenumber').val(),
+        "restaurant_name": restaurant.name
+    };
+
+    if (!payload.address) {
+        return alert('Enter Address');
+    }
+
+    console.log(payload);
+
+    $.ajax({
+        url: config.server_url + '/api/v1/order/order',
+        headers: {
+            'Authorization': user.token,
+            'Content-Type': 'application/json'
+        },
+        type: 'POST',
+        data: JSON.stringify(payload),
+        dataType: "json",
+        success: function (json) {
+            console.log(json);
+            if (json._id) {
+                $('.js-order-id').html(json._id);
+                Cookies.remove('cart');
+                $('.popup-genric').toggle(true);
+            }
+        },
+        error: function (xhr, _status, errorThrown) {
+            console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        }
+    });
 }
 
 function initLocation() {
@@ -92,6 +137,7 @@ function logOut() {
 function clearState() {
     console.log('clearState');
     Cookies.remove('user');
+    Cookies.remove('cart');
     Cookies.remove('location');
     localStorage.removeItem('restaurant');
     window.location.href = '/';

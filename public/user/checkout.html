@@ -14,7 +14,12 @@
 </head>
 
 <body id="itemlist">
-
+<div class="popup-genric">
+    <div class="cntnt">
+        <p>Your order has been placed successfully.</p>
+        <p>Order Id:<span class="js-order-id"></span></p>
+    </div>
+</div>
 <div class="sec-header">
     <div class="container pad15 tcenter posrel top-part">
         <h2 class="logo_black fL">
@@ -42,7 +47,8 @@
                             <div class="info">
                                 <p><input class="js-user-name" type="tel" placeholder="Name"></p>
                                 <p><input class="js-user-phonenumber" type="tel" placeholder="Mobile Number"></p>
-                                <p class="nobdr"><input class="js-user-email" type="email" placeholder="Email Address">
+                                <p class="nobdr"><input disabled="true" class="js-user-email" type="email"
+                                                        placeholder="Email Address">
                                 </p>
                             </div>
                         </div>
@@ -51,7 +57,7 @@
                             <div class="tgreydark uppercase">Shipping Address</div>
                             <div class="clear10"></div>
                             <div class="info">
-                                <p><input type="text" placeholder="Door no., apartment no."></p>
+                                <p><input type="text" class="js-address" placeholder="Door no., apartment no."></p>
                                 <p><input class="js-location" disabled="true" type="text" value="Locality"></p>
                                 <p><input disabled="true" type="text" value="Gurgaon"></p>
                             </div>

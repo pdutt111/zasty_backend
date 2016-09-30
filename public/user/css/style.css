@@ -224,3 +224,8 @@ body{
 body::-webkit-scrollbar, .cartlist::-webkit-scrollbar{width: .5rem;}
 body::-webkit-scrollbar-thumb, .cartlist::-webkit-scrollbar-thumb{-webkit-border-radius: 0rem; border-radius: 0rem; background: rgba(134,134,134,0.5);}
 body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #fff; box-shadow: inset 0rem 0rem 0.571rem 0rem rgba(134,134,134,0.5); border-radius: 0rem;}
+
+/*genric popup*/
+.popup-genric{background: rgba(0,0,0, .8); position: fixed; right: 0; left: 0; top: 0; bottom: 0; display: table; width: 100%; height: 100%; z-index: 3;}
+.popup-genric .cntnt{vertical-align: middle; display: table-cell; text-align: center;}
+.popup-genric .cntnt p{ display: inline-block; background: #fff; color: #111; padding: 20px;}
