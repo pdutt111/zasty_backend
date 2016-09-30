@@ -46,6 +46,7 @@ function deliveryOrderCallback(response, body, order, error, service) {
 events.emitter.on('process_delivery_queue', function (_id) {
     var query = {
         "status": book_at,
+        "delivery.enabled":true,
         "delivery.status": "not_ready",
         "delivery.retry_count": {
             $lt: max_retry
@@ -85,7 +86,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                             },
                             form: {
                                 partner_id: '2',
-                                cod: order.payment_mode == 'cod' ? order.total_price_recieved : '0',
+                                cod: order.payment_mode == 'cod' ? order.delivery_price_recieved : '0',
                                 store_id: restaurant.quickli_store_id,
                                 app_id: config.quickli.app_id,
                                 access_key: config.quickli.access_key,
@@ -109,7 +110,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         "pickup_contact_number": restaurant.contact_number,
                         "order_details": {
                             "client_order_id": order._id,
-                            "order_value": order.total_price_recieved,
+                            "order_value": order.delivery_price_recieved,
                             "paid": order.payment_mode !== 'cod',
                             "preparation_time": config.preparation_time
                         },

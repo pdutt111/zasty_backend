@@ -55,8 +55,12 @@ router.get('/servicingRestaurant',
         {message: config.get('error.badrequest')}),
     function (req, res, next) {
         orderLogic.findServicingRestaurant(req)
-            .then(function (cities) {
-                res.json(cities)
+            .then(function (restaurants) {
+                log.info(restaurants);
+                return orderLogic.combineRestaurant(req,restaurants);
+            })
+            .then(function(response){
+                res.json(response);
             })
             .catch(function (err) {
                 res.status(err.status).json(err.message);
@@ -66,18 +70,18 @@ router.post('/order',
     params({body: ['city', 'area', 'locality', 'address', 'dishes_ordered', 'restaurant_name', 'customer_name', 'customer_number']},
         {message: config.get('error.badrequest')}),
     function (req, res, next) {
-        log.info(req.body);
-        orderLogic.findActualRates(req)
+        orderLogic
+            .findRestaurantFromArea(req)
+            .then(function(restaurants){
+              return orderLogic.findActualRates(req,restaurants)
+            })
             .then(function (restaurant) {
-                log.info(restaurant);
                 return orderLogic.createDishesOrderedList(req, restaurant);
             })
             .then(function (data) {
-                log.info(data);
                 return orderLogic.saveOrder(req, data.dishes_ordered, data.restaurant);
             })
             .then(function (order) {
-                log.info(order);
                 res.json(order);
                 orderLogic.saveAddress(req)
                     .then(function(info){

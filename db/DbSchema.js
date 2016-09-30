@@ -32,7 +32,7 @@ var phoneValidator = [
 ];
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.get('mongo.location'));
+mongoose.connect(config.get('mongo.location'),config.get('mongo.database'));
 var db = mongoose.connection;
 autoIncrement.initialize(db);
 
@@ -78,6 +78,7 @@ var orderSchema = new Schema({
     area: String,
     locality: String,
     city: String,
+    full_order:{type:Boolean,default:true},
     location: {type: [Number], index: "2dsphere"},
     dishes_ordered: [{
         identifier: String,
@@ -98,6 +99,7 @@ var orderSchema = new Schema({
     customer_name: String,
     customer_email: String,
     delivery: {
+        enabled:{type:Boolean,default:true},
         details: Schema.Types.Mixed,
         retry_count: {type: Number, default: 0},
         log: [{status: String, _id: false, date: {type: Date, default: Date.now}}],
@@ -111,6 +113,8 @@ var orderSchema = new Schema({
         name: String,
         id: String
     },
+    delivery_price_recieved: Number,
+    delivery_price_to_pay: Number,
     rejection_reason: String,
     error: [{status: String, _id: false, date: {type: Date, default: Date.now}}],
     is_verified: {type: Boolean, default: false},
@@ -130,8 +134,19 @@ var restaurantSchema = new Schema({
         identifier: String,
         price: Number,
         price_to_consumer: Number,
-        availability: {type: Boolean, default: true}
+        availability: {type: Boolean, default: true},
+        details:{
+            type:String,
+            categories:[String],
+            image:String,
+            description:String,
+            details:String,
+            prep:String,
+            ingridients:String,
+            nutrition:String
+        }
     }],
+    delivery_enabled:{type:Boolean,default:true},
     open_status: {type: Boolean, default: false},
     contact_number: Number,
     contact_name: String,
@@ -150,7 +165,7 @@ var areaSchema = new Schema({
     locality: String,
     city: String,
     country: String,
-    serviced_by: String,
+    serviced_by: [String],
     created_time: {type: Date, default: Date.now},
     modified_time: {type: Date, default: Date.now}
 });

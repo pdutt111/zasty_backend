@@ -60,6 +60,7 @@ var listings = {
             if (!err) {
                 def.resolve(config.get('ok'));
             } else {
+                log.info(err);
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
         })
@@ -317,29 +318,32 @@ var listings = {
         log.info("sending info");
         restaurantTable.findOne({name: req.params.name}, "nomnom_username nomnom_password",
             function (err, restaurant) {
-            if(restaurant.nomnom_username){
-                events.emitter.emit("fetch_nomnom",
-                    {
-                        username: restaurant.nomnom_username,
-                        password: restaurant.nomnom_password,
-                        name: req.params.name
+            if(restaurant){
+                if(restaurant.nomnom_username){
+                    events.emitter.emit("fetch_nomnom",
+                        {
+                            username: restaurant.nomnom_username,
+                            password: restaurant.nomnom_password,
+                            name: req.params.name
+                        });
+                }
+                orderTable.find({
+                        restaurant_assigned: req.params.name,
+                        status: {$in: ["awaiting response", "confirmed", "prepared","processing_delivery_request"]}
+                    },
+                    "address dishes_ordered delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+                    .skip(Number(req.query.offset)).sort({_id: -1})
+                    .exec(function (err, rows) {
+                        log.info(err);
+                        if (!err) {
+                            def.resolve(rows);
+                        } else {
+                            def.reject({status: 500, message: config.get('error.dberror')});
+                        }
                     });
             }
             });
-        orderTable.find({
-                restaurant_assigned: req.params.name,
-                status: {$in: ["awaiting response", "confirmed", "prepared"]}
-            },
-            "address dishes_ordered delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
-            .skip(Number(req.query.offset)).sort({_id: -1})
-            .exec(function (err, rows) {
-                log.info(err);
-                if (!err) {
-                    def.resolve(rows);
-                } else {
-                    def.reject({status: 500, message: config.get('error.dberror')});
-                }
-            });
+
         return def.promise;
     },
     getUnpaidOrders: function (req) {
