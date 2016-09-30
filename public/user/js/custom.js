@@ -188,6 +188,18 @@ function initCheckout() {
     renderCart();
 }
 
+function goToCheckout(hard) {
+    cart = Cookies.getJSON('cart') || {};
+    if (!Object.keys(cart).length) {
+        if (hard)
+            alert('Please add items to Cart');
+        else
+            window.location = '/menu.html';
+    } else {
+        window.location = '/checkout.html';
+    }
+}
+
 function initMenu() {
     var search = $(".js-dish-search");
     search.select2({placeholder: "search the menu"});
@@ -576,7 +588,7 @@ function doLogin() {
             if (json.token && json.expires) {
                 var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
                 Cookies.set('user', json, {expires: expire_in_days - 1});
-                window.location.replace('/checkout.html');
+                goToCheckout();
             } else {
                 $('.error').toggle(true);
             }
