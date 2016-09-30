@@ -12,7 +12,7 @@ window.onload = function (e) {
 };
 
 function init() {
-    $('.popup-genric').toggle(false);
+    //$('.popup-genric').toggle(false);
     $('.js-location').html(Cookies.get('location') || '');
     $('.js-location').val(Cookies.get('location') || '');
 
@@ -68,7 +68,7 @@ function placeOrder(type) {
         success: function (json) {
             console.log(json);
             if (json._id) {
-                $('.js-order-id').html(json._id);
+                $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json._id);
                 Cookies.remove('cart');
                 $('.popup-genric').toggle(true);
             }
@@ -88,6 +88,7 @@ function initLocation() {
         type: 'GET',
         dataType: "json",
         success: function (json) {
+            $('.popup-genric').toggle(false);
             console.log(json);
             var loc = [];
             json.forEach(function (e, i) {
@@ -154,6 +155,7 @@ function getUser(hard) {
             type: 'GET',
             dataType: "json",
             success: function (json) {
+                $('.popup-genric').toggle(false);
                 console.log(json);
                 if (json.email) {
                     user.email = json.email;
@@ -165,8 +167,8 @@ function getUser(hard) {
                     $('.js-user-phonenumber').html(json.phonenumber);
                     $('.js-user-phonenumber').val(json.phonenumber);
 
-                    $('.js-user-widget').html('<li class="brdrght lh">Hi '+json.name+'</li>'
-                        +'<li class="lh"><a href="javascript:logOut()">LogOut</a></li>');
+                    $('.js-user-widget').html('<li class="brdrght lh">Hi ' + json.name + '</li>'
+                        + '<li class="lh"><a href="javascript:logOut()">LogOut</a></li>');
                 }
             },
             error: function (xhr, _status, errorThrown) {
@@ -198,6 +200,7 @@ function initMenu() {
         type: 'GET',
         dataType: "json",
         success: function (json) {
+            $('.popup-genric').toggle(false);
             console.log(json);
             restaurant = json;
             restaurant.dishes.forEach(function (e, i) {
@@ -572,7 +575,7 @@ function doLogin() {
             console.log(json);
             if (json.token && json.expires) {
                 var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
-                Cookies.set('user', json, {expires: expire_in_days});
+                Cookies.set('user', json, {expires: expire_in_days - 1});
                 window.location.replace('/checkout.html');
             } else {
                 $('.error').toggle(true);
