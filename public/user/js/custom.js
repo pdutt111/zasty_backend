@@ -7,7 +7,6 @@ var config = {
 var user, restaurant, location, context = {}, cart = {};
 
 window.onload = function (e) {
-    //getUser();
     initSignupNLogin();
     init();
 };
@@ -19,7 +18,6 @@ function init() {
 
     switch (window.zasty_page) {
         case 'location':
-            getUser();
             initLocation();
             break;
         case 'menu':
@@ -166,6 +164,9 @@ function getUser(hard) {
                     $('.js-user-email').val(json.email);
                     $('.js-user-phonenumber').html(json.phonenumber);
                     $('.js-user-phonenumber').val(json.phonenumber);
+
+                    $('.js-user-widget').html('<li class="brdrght lh">Hi '+json.name+'</li>'
+                        +'<li class="lh"><a href="javascript:logOut()">LogOut</a></li>');
                 }
             },
             error: function (xhr, _status, errorThrown) {
@@ -572,7 +573,7 @@ function doLogin() {
             if (json.token && json.expires) {
                 var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
                 Cookies.set('user', json, {expires: expire_in_days});
-                window.location.replace('/');
+                window.location.replace('/checkout.html');
             } else {
                 $('.error').toggle(true);
             }
