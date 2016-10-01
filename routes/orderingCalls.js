@@ -67,7 +67,7 @@ router.get('/servicingRestaurant',
             })
     });
 router.post('/order',
-    params({body: ['city', 'area', 'locality', 'address', 'dishes_ordered', 'restaurant_name', 'customer_name', 'customer_number']},
+    params({body: ['city', 'area', 'locality', 'address', 'dishes_ordered', 'customer_name', 'customer_number','payment_mode']},
         {message: config.get('error.badrequest')}),
     function (req, res, next) {
         orderLogic

@@ -298,6 +298,7 @@ var listings = {
                     {created_time: {$gte: start_date, $lte: end_date}},
                     {
                         $or: [
+                            {_id:req.query.search},
                             {address: regex},
                             {customer_name: regex},
                             {locality: regex},
@@ -317,6 +318,7 @@ var listings = {
                 if (!err) {
                     def.resolve(rows);
                 } else {
+                    log.info(err);
                     def.reject({status: 500, message: config.get('error.dberror')});
                 }
             })
@@ -349,7 +351,7 @@ var listings = {
                         restaurant_assigned: req.params.name,
                         status: {$in: ["awaiting response", "confirmed", "prepared","processing_delivery_request"]}
                     },
-                    "address dishes_ordered full_order delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+                    "address dishes_ordered full_order payment_mode delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
                     .skip(Number(req.query.offset)).sort({_id: -1})
                     .exec(function (err, rows) {
                         log.info(err);
@@ -371,7 +373,7 @@ var listings = {
                 paid_status_to_restaurant: false,
                 status: {$in: ["dispatched", "DELIVERED"]}
             },
-            "address dishes_ordered full_order delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+            "address dishes_ordered full_order payment_mode delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status  payment_mode payment_status")
             .sort({_id: -1})
             .exec(function (err, rows) {
                 log.info(err);

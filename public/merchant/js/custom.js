@@ -394,8 +394,11 @@ function renderOrderTable() {
         }
 
         order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
-
-        rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/>' + order.address_full + '</td><td>'
+        var order_leftover="Full Order";
+        if(!order.full_order){
+            order_leftover=" Half order";
+        }
+        rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>'+order_leftover +'</b><BR/>'+ order.address_full + '</td><td>'
             + displayStatus + '<BR/><BR/>' + order.buttons + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
             + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
@@ -443,7 +446,11 @@ function orderDetails(i) {
     context.active_order_details = restaurant.orders[i];
     var o = context.active_order_details;
     $('.js-od').toggle(true);
-    $('.js-od-id').html(o._id);
+    var order_leftover=" <b>Full order</b>";
+    if(!o.full_order){
+        order_leftover=" Half order";
+    }
+    $('.js-od-id').html(o._id+order_leftover);
     $('.js-od-date').html(o.date);
     $('.js-od-total').html(o.total);
     $('.js-od-status').html(o.status);
