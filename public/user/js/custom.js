@@ -37,7 +37,7 @@ function placeOrder(type) {
 
     var dishes = {};
     Object.keys(cart).forEach(function (key) {
-        dishes[restaurant.dishes[key].identifier] = {"qty": cart[key], "price": restaurant.dishes[key].price}
+        dishes[restaurant.dishes[key].identifier] = {"qty": cart[key], "price": restaurant.dishes[key].price_to_consumer}
     });
 
     var payload = {
@@ -358,7 +358,7 @@ function renderMenu() {
             dishVar += "                        <\/div>";
             dishVar += "                        <div class=\"clear10\"><\/div>";
             dishVar += "                        <div>";
-            dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>" + dish.price + "<\/span><\/div>";
+            dishVar += "                            <div class=\"price fL dpInblk t16\"> &#8377; <span>" + dish.price_to_consumer + "<\/span><\/div>";
             dishVar += "                            <div class=\"addtocart-btn fR dpInblk\""
                 + "onclick=addToCart(" + dish.id + ")"
                 + "><span class=\"dpInblk action-btn js-menu-id-" + dish.id + "\">" + cartButtonText + "<\/span>";
@@ -477,7 +477,7 @@ function knowMore(id) {
     html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.identifier + "<\/h5>";
     html += "                    <p class=\"tgreylight t12\">" + d.description + "<\/p>";
     html += "                    <div class=\"clear10\"><\/div>";
-    html += "                    <span class=\"dpBlk t16 \">₹ " + d.price + "<\/span>";
+    html += "                    <span class=\"dpBlk t16 \">₹ " + d.price_to_consumer + "<\/span>";
     html += "                    <div class=\"clear10\"><\/div>";
     html += "                    <font class=\"dpInblk action-btn\" onclick='addToCart(" + d.id + ")'><i class=\"fa fa-plus\"><\/i> Add to Cart<\/font>";
     html += "                    <div class=\"clear20\"><\/div>";
@@ -563,7 +563,7 @@ function renderCart() {
         cartHtml = "";
         for (var i in cart) {
             var d = restaurant.dishes[i];
-            total = total + d.price * cart[i];
+            total = total + d.price_to_consumer * cart[i];
             var selectOpt = '';
             for (var j = 1; j < (5 >= cart[i] ? 5 : cart[i]); j++) {
                 if (j == cart[i])
@@ -583,7 +583,7 @@ function renderCart() {
             cartItem += selectOpt;
 
             cartItem += "            <\/select>";
-            cartItem += "            <span class=\"fR dpInblk vab\">₹ " + d.price + "<\/span>";
+            cartItem += "            <span class=\"fR dpInblk vab\">₹ " + d.price_to_consumer + "<\/span>";
             cartItem += "            <div class=\"clear fN\"><\/div>";
             cartItem += "        <\/font>";
             cartItem += "        <span onclick='removeFromCart(" + d.id + ")' class=\"dpInblk close fa fa-close\"><\/span>";
