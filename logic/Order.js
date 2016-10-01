@@ -2,13 +2,14 @@
  * Created by pariskshitdutt on 26/07/16.
  */
 var q = require('q');
-var config = require('config');
+
 var jwt = require('jwt-simple');
 var ObjectId = require('mongoose').Types.ObjectId;
 var moment = require('moment');
 var async = require('async');
 var db = require('../db/DbSchema');
 var events = require('../events');
+var config = require('config');
 var log = require('tracer').colorConsole(config.get('log'));
 var apn = require('../notificationSenders/apnsender');
 var gcm = require('../notificationSenders/gcmsender');
@@ -131,8 +132,10 @@ var orderLogic = {
     },
     createDishesOrderedList: function (req, restaurants) {
         var def = q.defer();
+        log.info(restaurants);
         var dishes_ordered = [];
         if (Object.keys(req.body.dishes_ordered).length == 0) {
+            log.info("here bhi")
             def.reject({status: 400, message: config.get('error.badrequest')});
         }
         var completeDishList=[]
@@ -159,18 +162,19 @@ var orderLogic = {
                     log.info("here");
                     dishes_ordered.push({
                         identifier: completeDishList[i].identifier,
-                        price_recieved: req.body.dishes_ordered[completeDishList[i].identifier].price,
+                        price_recieved: completeDishList[i].price_to_consumer,
                         price_to_pay: completeDishList[i].price,
                         qty: req.body.dishes_ordered[completeDishList[i].identifier].qty,
                         res_name:completeDishList[i].res_name
                     });
                     log.info(dishes_ordered);
                 } else {
+                    log.info("here");
                     def.reject({status: 400, message: config.get('error.badrequest')});
                 }
             }
         }
-        // log.info(dishes_ordered);
+        log.info(dishes_ordered);
 
         if (dishes_ordered.length == Object.keys(req.body.dishes_ordered).length) {
             var dishesByRestaurant={};
@@ -185,6 +189,7 @@ var orderLogic = {
             // log.info(dishesByRestaurant);
             def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants});
         } else {
+            log.info("here");
             def.reject({status: 400, message: config.get('error.badrequest')});
         }
         return def.promise;
@@ -245,6 +250,7 @@ var orderLogic = {
             full_order=true;
         }
         var order_completed=restaurants.length;
+        var combined_id = Math.floor(Math.random() * 90000) + 10000;
         for(var i=0;i<restaurants.length;i++){
             log.info(dishes_ordered[restaurants[i].name]);
             if(dishes_ordered[restaurants[i].name]) {
@@ -263,12 +269,14 @@ var orderLogic = {
                     total_price_recieved += (d.price_recieved * d.qty);
                     total_price_to_pay += (d.price_to_pay * d.qty);
                 });
+
                 // log.info(total_price_recieved);
                 var order = new orderTable({
                     address: req.body.address,
                     payment_mode: req.body.payment_mode,
                     payment_status: req.body.payment_mode == 'cod' ? req.body.payment_status : 'pending',
                     area: req.body.area,
+                    combined_id:combined_id,
                     full_order: full_order,
                     coupon: req.body.coupon_code,
                     locality: req.body.locality,
@@ -302,12 +310,11 @@ var orderLogic = {
                                     })
                                 }
                             } else {
-                                def.resolve(ordersList);
-
+                                def.resolve({id:combined_id,price:delivery_price_recieved});
+                                log.info("sending mail", order._id);
+                                orderLogic.createMail(order);
                             }
                         }
-                        log.info("sending mail", order._id);
-                        orderLogic.createMail(order);
                     } else {
                         log.info(err);
                         if (order_completed == 0) {
@@ -386,7 +393,11 @@ var orderLogic = {
         if(name){
             couponTable.findOne({name:name,is_active:true},"name off",function(err,coupon){
                 if(!err){
-                    def.resolve(coupon);
+                    if(coupon){
+                        def.resolve(coupon);
+                    }else{
+                        def.resolve({});
+                    }
                 }else{
                     def.reject({status: 500, message: config.get('error.dberror')});
 
@@ -415,7 +426,6 @@ var orderLogic = {
         return def.promise;
     },
     deliveryCallback: function (req) {
-        log.info(req.params, req.body);
         var def = q.defer();
 
         orderTable.findOne({_id: req.params.order_id}, function (err, doc) {
@@ -442,6 +452,17 @@ var orderLogic = {
             }
             doc.save();
             def.resolve(doc);
+        });
+        return def.promise;
+    },
+    updatePaymentStatus:function(req){
+        var def = q.defer();
+        orderTable.update({combined_id:req.body.combined_id},{payment_status:req.body.status},{multi:true},function(err,info){
+            if(!err){
+                def.resolve(config.get('ok'));
+            }else{
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
         });
         return def.promise;
     }

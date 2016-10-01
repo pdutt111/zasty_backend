@@ -124,6 +124,17 @@ router.get('/coupon',params({query: ['code']},
                 res.status(err.status).json(err.message);
             })
 })
+router.post('/paymentstatus',params({query: ['code']},
+    {message: config.get('error.badrequest')}),function(req,res,next){
+        orderLogic.updatePaymentStatus(req)
+            .then(function(response){
+                res.json(response);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+
+});
 
 
 module.exports = router;

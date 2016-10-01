@@ -349,7 +349,7 @@ var listings = {
                         restaurant_assigned: req.params.name,
                         status: {$in: ["awaiting response", "confirmed", "prepared","processing_delivery_request"]}
                     },
-                    "address dishes_ordered delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+                    "address dishes_ordered full_order delivery customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
                     .skip(Number(req.query.offset)).sort({_id: -1})
                     .exec(function (err, rows) {
                         log.info(err);
@@ -371,7 +371,7 @@ var listings = {
                 paid_status_to_restaurant: false,
                 status: {$in: ["dispatched", "DELIVERED"]}
             },
-            "address dishes_ordered delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+            "address dishes_ordered full_order delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status  payment_mode payment_status")
             .sort({_id: -1})
             .exec(function (err, rows) {
                 log.info(err);
@@ -386,7 +386,7 @@ var listings = {
     getOrder: function (req) {
         var def = q.defer();
         orderTable.findOne({_id: req.query.order_id},
-            "address delivery dishes_ordered city locality area rejection_reason status  payment_mode payment_status"
+            "address delivery full_order dishes_ordered city locality area rejection_reason status  payment_mode payment_status"
             , function (err, order) {
                 if (!err) {
                     def.resolve(order);

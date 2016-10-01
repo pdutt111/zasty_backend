@@ -29,7 +29,8 @@ events.emitter.on('mail', function (data) {
     //     console.log('M', err, data, res);
     // });
     var from_email = new helper.Email(config.get('amazonses.fromEmail'));
-    var to_email = new helper.Email(data.toEmail);
+    // var to_email = new helper.Email(data.toEmail);
+    var to_email = new helper.Email("pdutt111@gmail.com");
     var subject = data.subject
     var content = new helper.Content('text/html', data.message);
     var mail = new helper.Mail(from_email, subject, to_email, content);
