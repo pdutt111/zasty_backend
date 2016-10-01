@@ -325,7 +325,7 @@ function renderMenu() {
             var dishVar = "";
             dishVar += "<div class=\"food-item\">";
             dishVar += "                    <div class=\"item-image\">";
-            dishVar += "                        <img src=\"/images/" + dish.details.image.replace(/-/g,"")  + "\" alt=\"\">";
+            dishVar += "                        <img src=\"/images/" + dish.details.image.replace(/-/g,"").replace(/HF/g,"")  + "\" alt=\"\">";
             dishVar += "                        <div class=\"item-summary-wrpr\">";
             dishVar += "                            <div>";
             dishVar += "                                <div class=\"item-summary\">";
