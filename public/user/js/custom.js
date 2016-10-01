@@ -74,8 +74,8 @@ function placeOrder(type) {
         dataType: "json",
         success: function (json) {
             console.log(json);
-            if (json._id) {
-                $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json._id);
+            if (json.id) {
+                $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json.id);
                 Cookies.remove('cart');
                 $('.popup-genric').toggle(true);
             }
