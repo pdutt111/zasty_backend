@@ -139,6 +139,7 @@ var restaurantSchema = new Schema({
             type:String,
             categories:[String],
             image:String,
+            sku:String,
             description:String,
             details:String,
             prep:String,

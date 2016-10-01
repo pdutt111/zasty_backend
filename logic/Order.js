@@ -44,7 +44,7 @@ var orderLogic = {
     },
     findArea: function (req) {
         var def = q.defer();
-        areaTable.find({city: req.query.city, locality: req.query.locality}).distinct('area', function (err, area) {
+        areaTable.find({city: req.query.city}).distinct('area', function (err, area) {
             if (!err) {
                 def.resolve(area);
             } else {
@@ -57,7 +57,6 @@ var orderLogic = {
         var def = q.defer();
         areaTable.findOne({
             city: req.query.city,
-            locality: req.query.locality,
             area: req.query.area,
         }, "serviced_by", function (err, area) {
             log.info(err,area);
