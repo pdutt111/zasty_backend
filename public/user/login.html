@@ -27,6 +27,31 @@
             FB.api('/me', {fields: 'email,name'}, function (response) {
                 //call user api with name email and token
                 console.log(auth, response.email, response.name, response.id);
+                var _user = {
+                    email: response.email,
+                    fb_token: auth.accessToken
+                };
+
+                $.ajax({
+                    url: config.server_url + '/api/v1/users/create',
+                    data: _user,
+                    type: 'POST',
+                    dataType: "json",
+                    success: function (json) {
+                        console.log(json);
+                        if (json.token && json.secret && json.expires) {
+                            var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
+                            Cookies.set('user', json, {expires: expire_in_days});
+                            goToCheckout();
+                        } else {
+                            $('.error').toggle(true);
+                        }
+                    },
+                    error: function (xhr, _status, errorThrown) {
+                        console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+                        $('.error').toggle(true);
+                    }
+                });
             });
         }
     }
@@ -49,7 +74,7 @@
         });
 
         FB.getLoginStatus(function (response) {
-            statusChangeCallback(response);
+            //statusChangeCallback(response);
         });
 
     };

@@ -624,7 +624,7 @@ function doSignup() {
             if (json.token && json.secret && json.expires) {
                 var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
                 Cookies.set('user', json, {expires: expire_in_days});
-                window.location.replace('/');
+                goToCheckout();
             } else {
                 $('.error').toggle(true);
             }
