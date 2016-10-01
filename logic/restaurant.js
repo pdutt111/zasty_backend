@@ -90,7 +90,7 @@ var listings = {
                 name: req.params.name,
                 is_deleted: false,
                 is_verified: true
-            }, "name dish_editable dish_add_allowed location contact_name contact_number dishes open_status is_deleted",
+            }, "name dish_editable dish_add_allowed location contact_name contact_number contact_email address bank_name bank_account_name bank_account_number ifsc dishes open_status is_deleted",
             function (err, restaurant) {
                 if (!err) {
                     def.resolve(restaurant);
