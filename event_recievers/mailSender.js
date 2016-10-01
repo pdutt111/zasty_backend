@@ -56,7 +56,7 @@ events.emitter.on('mail', function (data) {
 
 events.emitter.on('mail_admin', function (data) {
     userTable.findOne({is_admin: true}, function (err, user) {
-        if(user.email){
+        if(!err&&user&&user.email){
             events.emitter.emit("mail", {
                 subject: data.subject,
                 message: data.message,

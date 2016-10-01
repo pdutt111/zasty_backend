@@ -74,6 +74,7 @@ var orderLogic = {
     combineRestaurant:function(req,restaurants){
         var def=q.defer();
         restaurantTable.find({name:{$in:restaurants},is_deleted:false,is_verified:true},"name dishes open_status contact_name contact_number",function(err,restaurants){
+            log.info(err,restaurants);
             if(!err&&restaurants.length>0){
                 var response={};
                 response.contact_name=restaurants[0].contact_name;
@@ -97,7 +98,6 @@ var orderLogic = {
         var def = q.defer();
         areaTable.findOne({
             city: req.body.city,
-            locality: req.body.locality,
             area: req.body.area,
         }, "serviced_by", function (err, area) {
             if (!err && area) {
@@ -226,90 +226,110 @@ var orderLogic = {
                 }
             }
         }
-        if(req.body.coupon&&req.body.coupon.off){
-            delivery_price_recieved=(delivery_price_recieved*(100-req.body.coupon.off)/100);
+        log.info(req.body.coupon_code);
+        if(req.body.coupon_code&&req.body.coupon_code.off){
+            delivery_price_recieved=(delivery_price_recieved*(100-Number(req.body.coupon_code.off))/100);
         }
-        var order_completed=restaurants.length;
         var ordersList=[];
         // log.info(order_completed);
+        var full_order=false;
+
+        var _restaurants=[]
         for(var i=0;i<restaurants.length;i++){
-            if(dishes_ordered[restaurants[i].name]&&restaurants[i].open_status){
-                    if (Object.keys(dishes_ordered).length > 1) {
-                        if(i != 0){
-                            req.body.delivery_enabled=false;
+            if(dishes_ordered[restaurants[i].name]){
+                _restaurants.push(restaurants[i]);
+            }
+        }
+        restaurants=_restaurants;
+        if(restaurants.length==1){
+            full_order=true;
+        }
+        var order_completed=restaurants.length;
+        for(var i=0;i<restaurants.length;i++){
+            log.info(dishes_ordered[restaurants[i].name]);
+            if(dishes_ordered[restaurants[i].name]) {
+                if(restaurants[i].open_status){
+                if (Object.keys(dishes_ordered).length > 1) {
+                    if (i != 0) {
+                        req.body.delivery_enabled = false;
 
-                        }else{
-                            req.body.delivery_enabled=true;
-                        }
+                    } else {
+                        req.body.delivery_enabled = true;
                     }
-                    var total_price_recieved = 0;
-                    var total_price_to_pay = 0;
-                    dishes_ordered[restaurants[i].name].forEach(function (d) {
-                        total_price_recieved += (d.price_recieved * d.qty);
-                        total_price_to_pay += (d.price_to_pay * d.qty);
-                    });
-                    // log.info(total_price_recieved);
-                    var order = new orderTable({
-                        address: req.body.address,
-                        payment_mode: req.body.payment_mode,
-                        payment_status: req.body.payment_mode == 'cod' ? req.body.payment_status : 'pending',
-                        area: req.body.area,
-                        full_order:false,
-                        coupon:req.body.coupon,
-                        locality: req.body.locality,
-                        city: req.body.city,
-                        location: location,
-                        delivery: {
-                            enabled: restaurants[i].delivery_enabled && req.body.delivery_enabled
-                        },
-                        total_price_recieved: total_price_recieved,
-                        total_price_to_pay: total_price_to_pay,
-                        delivery_price_recieved: delivery_price_recieved,
-                        delivery_price_to_pay: delivery_price_to_pay,
-                        customer_name: req.body.customer_name,
-                        customer_number: req.body.customer_number,
-                        customer_email: req.body.customer_email,
-                        dishes_ordered: dishes_ordered[restaurants[i].name],
-                        restaurant_assigned: restaurants[i].name,
-                        status: status,
-                        source: source
-                    });
-                    order.save(function (err, order, info) {
-                        log.info(err);
-                        order_completed--;
-                        if (!err) {
-                            ordersList.push(order);
-                            if(order_completed==0){
-                                if(ordersList.length<restaurants.length){
-                                    def.reject({status: 500, message: config.get('error.dberror')});
-                                    for(var l=0;l<ordersList.length;l++){
-                                        orderTable.remove({_id:ordersList[l]},function(err,info){
-
-                                        })
-                                    }
-                                }else{
-                                    def.resolve(ordersList);
-
-                                }
-                            }
-                            log.info("sending mail",order._id);
-                            orderLogic.createMail(order);
-                        } else {
-                            log.info(err);
-                            if(order_completed==0){
+                }
+                var total_price_recieved = 0;
+                var total_price_to_pay = 0;
+                dishes_ordered[restaurants[i].name].forEach(function (d) {
+                    total_price_recieved += (d.price_recieved * d.qty);
+                    total_price_to_pay += (d.price_to_pay * d.qty);
+                });
+                // log.info(total_price_recieved);
+                var order = new orderTable({
+                    address: req.body.address,
+                    payment_mode: req.body.payment_mode,
+                    payment_status: req.body.payment_mode == 'cod' ? req.body.payment_status : 'pending',
+                    area: req.body.area,
+                    full_order: full_order,
+                    coupon: req.body.coupon_code,
+                    locality: req.body.locality,
+                    city: req.body.city,
+                    location: location,
+                    delivery: {
+                        enabled: restaurants[i].delivery_enabled && req.body.delivery_enabled
+                    },
+                    total_price_recieved: total_price_recieved,
+                    total_price_to_pay: total_price_to_pay,
+                    delivery_price_recieved: delivery_price_recieved,
+                    delivery_price_to_pay: delivery_price_to_pay,
+                    customer_name: req.body.customer_name,
+                    customer_number: req.body.customer_number,
+                    customer_email: req.body.customer_email,
+                    dishes_ordered: dishes_ordered[restaurants[i].name],
+                    restaurant_assigned: restaurants[i].name,
+                    status: status,
+                    source: source
+                });
+                order.save(function (err, order, info) {
+                    order_completed--;
+                    if (!err) {
+                        ordersList.push(order);
+                        if (order_completed == 0) {
+                            if (ordersList.length < restaurants.length) {
                                 def.reject({status: 500, message: config.get('error.dberror')});
-                                for(var l=0;l<ordersList.length;l++){
-                                    orderTable.remove({_id:ordersList[l]},function(err,info){
-
+                                for (var l = 0; l < ordersList.length; l++) {
+                                    log.info("removing order")
+                                    orderTable.remove({_id: ordersList[l]}, function (err, info) {
                                     })
                                 }
+                            } else {
+                                def.resolve(ordersList);
+
                             }
                         }
-                    });
+                        log.info("sending mail", order._id);
+                        orderLogic.createMail(order);
+                    } else {
+                        log.info(err);
+                        if (order_completed == 0) {
+                            def.reject({status: 500, message: config.get('error.dberror')});
+                            for (var l = 0; l < ordersList.length; l++) {
+                                orderTable.remove({_id: ordersList[l]}, function (err, info) {
+
+                                })
+                            }
+                        }
+                    }
+                });
+            }else{
+                order_completed--;
+                log.info("restaurant closed");
+                    def.reject({status: 500, message: config.get('error.dberror')});
+
+                }
 
             }else{
-                log.info("restaurant closed");
-                def.reject({status: 500, message: config.get('error.dberror')});
+                order_completed--;
+                log.info("restaurant not used");
             }
         }
 

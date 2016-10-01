@@ -73,7 +73,7 @@ router.post('/order',
         orderLogic
             .getcoupon(req,req.body.coupon)
             .then(function(code){
-                req.body.code=code;
+                req.body.coupon_code=code;
                 return orderLogic.findRestaurantFromArea(req);
             })
             .then(function(restaurants){
