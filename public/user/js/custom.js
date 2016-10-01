@@ -41,14 +41,15 @@ function placeOrder(type) {
     });
 
     var payload = {
-        "city": "Gurgaon",
+        "city": "gurgaon",
+        "locality": 'gurgaon',
         "area": Cookies.get('location'),
         "address": $('.js-address').val(),
-        "locality": Cookies.get('location'),
         "dishes_ordered": dishes,
         "customer_name": $('.js-user-name').val(),
         "customer_number": $('.js-user-phonenumber').val(),
-        "restaurant_name": restaurant.name
+        "coupon": $('.js-coupon').val(),
+        "restaurant_name": "zasty"
     };
 
     if (!payload.address) {
@@ -81,6 +82,27 @@ function placeOrder(type) {
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        }
+    });
+}
+
+function checkCoupon() {
+    var coupon = $('.js-coupon').val();
+    $.ajax({
+        url: '/api/v1/order/coupon?code=' + coupon,
+        type: 'GET',
+        dataType: "json",
+        success: function (json) {
+            if (json && json.off && !isNaN(parseFloat(json.off))) {
+                context.off = parseInt(json.off);
+                renderCart();
+            } else {
+                $('.js-coupon').val('Coupon Failed');
+            }
+        },
+        error: function (xhr, _status, errorThrown) {
+            console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+            $('.error').toggle(true);
         }
     });
 }
@@ -574,9 +596,15 @@ function renderCart() {
     }
     $(".cartlist").html(cartHtml);
 
-
     $(".js-total-price").html(total);
+    context.total = total;
+    context.final = total;
 
+    if (context.off) {
+        context.final -= (context.final * context.off / 100)
+    }
+
+    $(".js-total").html(context.final);
 }
 
 function doLogin() {
