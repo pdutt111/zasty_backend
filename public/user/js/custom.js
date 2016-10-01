@@ -118,7 +118,7 @@ function initLocation() {
         success: function (json) {
             $('.popup-genric').toggle(false);
             console.log(json);
-            var loc = [];
+            var loc = [{id: -1, text: 'Select Location'}];
             json.forEach(function (e, i) {
                 loc.push({id: i, text: e});
             });
