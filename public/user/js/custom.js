@@ -1,6 +1,7 @@
 var config = {
     server_url: window.location.origin,
-    location_url: 'https://runkit.io/rahulroy9202/57de3489e057cd14001ba5e3/branches/master',
+    location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
+    restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
 };
 
@@ -179,6 +180,8 @@ function getUser(hard) {
             error: function (xhr, _status, errorThrown) {
                 console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
                 $('.js-login-error').toggle(true);
+                if (hard)
+                    window.location.href = '/login.html';
             }
         });
     } else {
@@ -210,7 +213,7 @@ function initMenu() {
     search.select2({placeholder: "search the menu"});
     search.prop("disabled", true);
     $.ajax({
-        url: 'https://runkit.io/rahulroy9202/57e6169b900b9c13004e5083/branches/master',
+        url: config.restaurant_url + Cookies.get('location'),
         headers: {
             'Content-Type': 'application/json'
         },
@@ -267,13 +270,13 @@ function initMenu() {
 function renderMenu() {
     var categories = [];
     restaurant.dishes_active.forEach(function (e) {
-        var c = e.details.category[0];
+        var c = e.details.categories[0];
         if (categories.indexOf(c) == -1) {
             categories.push(c);
         }
     });
     restaurant.dishes_active.forEach(function (e) {
-        e.details.category.forEach(function (c) {
+        e.details.categories.forEach(function (c) {
             if (categories.indexOf(c) == -1) {
                 categories.push(c);
             }
@@ -285,7 +288,7 @@ function renderMenu() {
     var categoryList = '';
     categories.forEach(function (e, i) {
         restaurant.dishes_active.forEach(function (d) {
-            if (d.details.category.indexOf(e) !== -1) {
+            if (d.details.categories.indexOf(e) !== -1) {
                 if (!Array.isArray(categoryMenu[i]))
                     categoryMenu[i] = [];
                 categoryMenu[i].push(d);
@@ -318,12 +321,12 @@ function renderMenu() {
             dishVar += "                        <div>";
             dishVar += "                            <div class=\"veg-type fL dpInblk\">";
             dishVar += "                                <span class=\""
-                + (dish.details.type == 'veg'
+                + (dish.details.type == 'Vegetarian'
                     ? 'veg'
                     : 'non-veg')
                 + " dpInblk\"><\/span>";
             dishVar += "                                <font class=\"item-cat dpInblk tgreyteel\">"
-                + dish.details.category.join(', ') + "<\/font>";
+                + dish.details.categories.join(', ') + "<\/font>";
             dishVar += "                            <\/div>";
             dishVar += "                            <div class=\"avail-time fR dpInblk\">";
             dishVar += "                                <small><\/small>";
@@ -346,11 +349,11 @@ function renderMenu() {
             return dishVar;
         }).join('');
 
-        categoryMenuHtml += '<div class="food-rslt" id="' + e.replace(/\s+/, "") + '">'
+        categoryMenuHtml += '<div class="food-rslt" id="' + e.split(' ').join('') + '">'
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
-        categoryList += '<li><a href="#' + e.replace(/\s+/, "") + '">' + e + '</a></li>';
+        categoryList += '<li><a href="#' + e.split(' ').join('') + '">' + e + '</a></li>';
     });
 
     var strVar = "";
@@ -364,7 +367,7 @@ function renderMenu() {
     strVar += "                    <p class=\"fltr-blk\">";
     strVar += "                        <span onclick=\"filterMenu('all')\">All Dishes<\/span>";
     strVar += "                        <span onclick=\"filterMenu('egg')\">Eggetarian<\/span>";
-    strVar += "                        <span onclick=\"filterMenu('veg')\">Vegetarian<\/span>";
+    strVar += "                        <span onclick=\"filterMenu('Vegetarian')\">Vegetarian<\/span>";
     strVar += "                    <\/p>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
