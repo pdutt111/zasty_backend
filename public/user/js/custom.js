@@ -188,14 +188,14 @@ function getUser(hard) {
                 if (json.email) {
                     user.email = json.email;
                     user.phonenumber = json.phonenumber || '';
-                    $('.js-user-name').html(json.name);
-                    $('.js-user-name').val(json.name);
-                    $('.js-user-email').html(json.email);
-                    $('.js-user-email').val(json.email);
-                    $('.js-user-phonenumber').html(json.phonenumber);
-                    $('.js-user-phonenumber').val(json.phonenumber);
+                    $('.js-user-name').html(json.name || '');
+                    $('.js-user-name').val(json.name || '');
+                    $('.js-user-email').html(json.email || '');
+                    $('.js-user-email').val(json.email || '');
+                    $('.js-user-phonenumber').html(json.phonenumber || '');
+                    $('.js-user-phonenumber').val(json.phonenumber || '');
 
-                    $('.js-user-widget').html('<li class="brdrght lh">Hi ' + json.name + '</li>'
+                    $('.js-user-widget').html('<li class="brdrght lh">Hi ' + (json.name || json.email) + '</li>'
                         + '<li class="lh"><a href="javascript:logOut()">LogOut</a></li>');
                 }
             },
@@ -326,7 +326,7 @@ function renderMenu() {
             var dishVar = "";
             dishVar += "<div class=\"food-item\">";
             dishVar += "                    <div class=\"item-image\">";
-            dishVar += "                        <img src=\"/images/" + dish.details.image.replace(/-/g,"").replace(/HF/g,"")  + "\" alt=\"\">";
+            dishVar += "                        <img src=\"/images/" + dish.details.image.replace(/-/g, "").replace(/HF/g, "") + "\" alt=\"\">";
             dishVar += "                        <div class=\"item-summary-wrpr\">";
             dishVar += "                            <div>";
             dishVar += "                                <div class=\"item-summary\">";
@@ -471,7 +471,7 @@ function knowMore(id) {
     html += "<div class=\"overlay\"><\/div>";
     html += "    <div class=\"cntnt\">";
     html += "        <div>";
-    html += "            <div class=\"lft-pane\" style='background-image: url(\"" + d.details.image + "\")'><\/div>";
+    html += "            <div class=\"lft-pane\" style='background-image: url(\"" + '/images/' + d.details.image + "\")'><\/div>";
     html += "            <div class=\"rght-pane\">";
     html += "                <div class=\"item-info\">";
     html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.identifier + "<\/h5>";
@@ -574,7 +574,7 @@ function renderCart() {
 
             var cartItem = "";
             cartItem += "<div class=\"item\">";
-            cartItem += "<div class=\"lft-pane\" style='background-image: url(\"" + d.details.image + "\")'><\/div>";
+            cartItem += "<div class=\"lft-pane\" style='background-image: url(\"" + '/images/' + d.details.image + "\")'> <\/div > ";
             cartItem += "<div class=\"rght-pane\">";
             cartItem += "    <div class=\"item-info\">";
             cartItem += "        <h4>" + d.identifier + "<\/h4>";
