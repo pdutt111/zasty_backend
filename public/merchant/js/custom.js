@@ -119,6 +119,11 @@ function getRestaurant() {
                 $('.js-r-a').val(restaurant.location.join(','));
                 $('.js-r-cp').val(restaurant.contact_number);
                 $('.js-r-cn').val(restaurant.contact_name);
+                $('.js-r-contact_email').val(restaurant.contact_email);
+                $('.js-r-bank_name').val(restaurant.bank_name);
+                $('.js-r-bank_account_name').val(restaurant.bank_account_name);
+                $('.js-r-bank_account_number').val(restaurant.bank_account_number);
+                $('.js-r-ifsc').val(restaurant.ifsc);
 
                 if (!restaurant.dish_add_allowed)
                     $('.js-add-dish').html('');
@@ -394,11 +399,11 @@ function renderOrderTable() {
         }
 
         order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
-        var order_leftover="Full Order";
-        if(!order.full_order){
-            order_leftover=" Half order";
+        var order_leftover = "Full Order";
+        if (!order.full_order) {
+            order_leftover = " Half order";
         }
-        rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>'+order_leftover +'</b><BR/>'+ order.address_full + '</td><td>'
+        rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
             + displayStatus + '<BR/><BR/>' + order.buttons + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
             + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
@@ -446,11 +451,11 @@ function orderDetails(i) {
     context.active_order_details = restaurant.orders[i];
     var o = context.active_order_details;
     $('.js-od').toggle(true);
-    var order_leftover=" <b>Full order</b>";
-    if(!o.full_order){
-        order_leftover=" Half order";
+    var order_leftover = " <b>Full order</b>";
+    if (!o.full_order) {
+        order_leftover = " Half order";
     }
-    $('.js-od-id').html(o._id+order_leftover);
+    $('.js-od-id').html(o._id + order_leftover);
     $('.js-od-date').html(o.date);
     $('.js-od-total').html(o.total);
     $('.js-od-status').html(o.status);
@@ -567,7 +572,12 @@ function updateRestaurantDetails() {
     var _data = {
         location: $('.js-r-a').val().split(','),
         contact_number: $('.js-r-cp').val(),
-        contact_name: $('.js-r-cn').val()
+        contact_name: $('.js-r-cn').val(),
+        contact_email: $('.js-r-contact_email').val(),
+        bank_name: $('.js-r-bank_name').val(),
+        bank_account_name: $('.js-r-bank_account_name').val(),
+        bank_account_number: $('.js-r-bank_account_number').val(),
+        ifsc: $('.js-r-ifsc').val()
     };
     $.ajax({
         url: config.server_url + '/api/v1/res/protected/restaurant/' + user.restaurant_name + '/update',
