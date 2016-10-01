@@ -291,6 +291,7 @@ function initMenu() {
 
 function renderMenu() {
     var categories = [];
+    console.log(JSON.stringify(restaurant.dishes_active));
     restaurant.dishes_active.forEach(function (e) {
         var c = e.details.categories[0];
         if (categories.indexOf(c) == -1) {
