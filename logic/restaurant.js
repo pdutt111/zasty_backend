@@ -18,6 +18,7 @@ var bcrypt = require('bcrypt');
 var restaurantTable = db.getrestaurantdef;
 var userTable = db.getuserdef;
 var orderTable = db.getorderdef;
+var dishSchema = db.getDishSchema;
 
 
 var listings = {
@@ -117,17 +118,34 @@ var listings = {
     },
     addDishes: function (req) {
         var def = q.defer();
-        log.info(req.body.dishes);
-        restaurantTable.update({
-            name: req.params.name,
-            is_deleted: false
-        }, {$addToSet: {dishes: {$each: req.body.dishes}}}, function (err, info) {
-            log.info(err);
-            if (!err) {
-                def.resolve(config.get('ok'));
-            } else {
-                def.reject({status: 500, message: config.get('error.dberror')});
+        // restaurantTable.update({
+        //     name: req.params.name,
+        //     is_deleted: false
+        // }, {$addToSet: {dishes: req.body.dishes[0]}}, function (err, info) {
+        //     log.info(err);
+        //     if (!err) {
+        //         def.resolve(config.get('ok'));
+        //     } else {
+        //         def.reject({status: 500, message: config.get('error.dberror')});
+        //     }
+        // });
+        restaurantTable.findOne({name:req.params.name,is_deleted:false},"dishes",function(err,restaurant){
+
+            var dishes=[];
+            for(var i=0;i<req.body.dishes.length;i++){
+                dishes.push(req.body.dishes[i]);
             }
+            log.info(dishes);
+            restaurant.dishes=dishes;
+            restaurant.save(function(err,restaurant,info){
+                log.info(restaurant);
+                if (!err) {
+                    def.resolve(config.get('ok'));
+                } else {
+                    log.info(err);
+                    def.reject({status: 500, message: config.get('error.dberror')});
+                }
+            })
         });
         return def.promise;
     },

@@ -71,7 +71,11 @@ router.post('/order',
         {message: config.get('error.badrequest')}),
     function (req, res, next) {
         orderLogic
-            .findRestaurantFromArea(req)
+            .getcoupon(req,req.body.coupon)
+            .then(function(code){
+                req.body.code=code;
+                return orderLogic.findRestaurantFromArea(req);
+            })
             .then(function(restaurants){
               return orderLogic.findActualRates(req,restaurants)
             })
@@ -110,6 +114,16 @@ router.put('/deliverystatus/:order_id',
                 res.json({message:'failed to update status'});
             })
     });
+router.get('/coupon',params({query: ['code']},
+    {message: config.get('error.badrequest')}),function(req,res,next){
+        orderLogic.getcoupon(req,req.query.code)
+            .then(function(coupon){
+                res.json(coupon);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+})
 
 
 module.exports = router;

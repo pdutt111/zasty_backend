@@ -19,6 +19,7 @@ var restaurantTable = db.getrestaurantdef;
 var userTable = db.getuserdef;
 var orderTable = db.getorderdef;
 var areaTable = db.getareadef;
+var couponTable = db.getcoupondef;
 var orderLogic = {
     findCity: function (req) {
         var def = q.defer();
@@ -225,6 +226,9 @@ var orderLogic = {
                 }
             }
         }
+        if(req.body.coupon&&req.body.coupon.off){
+            delivery_price_recieved=(delivery_price_recieved*(100-req.body.coupon.off)/100);
+        }
         var order_completed=restaurants.length;
         var ordersList=[];
         // log.info(order_completed);
@@ -251,6 +255,7 @@ var orderLogic = {
                         payment_status: req.body.payment_mode == 'cod' ? req.body.payment_status : 'pending',
                         area: req.body.area,
                         full_order:false,
+                        coupon:req.body.coupon,
                         locality: req.body.locality,
                         city: req.body.city,
                         location: location,
@@ -354,6 +359,22 @@ var orderLogic = {
                     def.reject({status: 500, message: config.get('error.dberror')});
                 }
             });
+        return def.promise;
+    },
+    getcoupon:function(req,name){
+        var def=q.defer();
+        if(name){
+            couponTable.findOne({name:name,is_active:true},"name off",function(err,coupon){
+                if(!err){
+                    def.resolve(coupon);
+                }else{
+                    def.reject({status: 500, message: config.get('error.dberror')});
+
+                }
+            })
+        }else{
+            def.resolve({});
+        }
         return def.promise;
     },
     saveAddress: function (req) {

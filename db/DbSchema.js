@@ -87,6 +87,10 @@ var orderSchema = new Schema({
         qty: {type: Number, default: 1},
         _id: false
     }],
+    coupon:{
+        name:String,
+        off:Number
+    },
     total_price_recieved: Number,
     total_price_to_pay: Number,
     restaurant_assigned: String,
@@ -124,28 +128,45 @@ var orderSchema = new Schema({
 });
 orderSchema.plugin(autoIncrement.plugin, 'Order');
 
+var dishSchema=new Schema({
+    identifier: String,
+    price: Number,
+    price_to_consumer: Number,
+    availability: {type: Boolean, default: true},
+    details:{
+        type:String,
+        categories:[String],
+        image:String,
+        sku:String,
+        description:String,
+        details:String,
+        prep:String,
+        ingridients:String,
+        nutrition:String
+    }
+});
 var restaurantSchema = new Schema({
     name: {type: String, unique: true, dropDups: true},
     location: {type: [Number], index: "2dsphere"},
     shadowfax_store_code: {type: String, default: 'unset'},
     quickli_store_id: {type: String, default: 'unset'},
     dishes: [{
-        _id: false,
         identifier: String,
         price: Number,
         price_to_consumer: Number,
         availability: {type: Boolean, default: true},
-        details:{
-            type:String,
-            categories:[String],
-            image:String,
-            sku:String,
-            description:String,
-            details:String,
-            prep:String,
-            ingridients:String,
-            nutrition:String
-        }
+        // details:{
+        //     type:String,
+        //     categories:[String],
+        //     image:String,
+        //     sku:String,
+        //     description:String,
+        //     details:String,
+        //     prep:String,
+        //     ingridients:String,
+        //     nutrition:String
+        // }
+        details:Schema.Types.Mixed
     }],
     delivery_enabled:{type:Boolean,default:true},
     open_status: {type: Boolean, default: false},
@@ -170,6 +191,13 @@ var areaSchema = new Schema({
     created_time: {type: Date, default: Date.now},
     modified_time: {type: Date, default: Date.now}
 });
+var couponSchema= new Schema({
+    name:String,
+    off:Number,
+    is_active:{type:Boolean,default:true},
+    created_time: {type: Date, default: Date.now},
+    modified_time: {type: Date, default: Date.now}
+});
 var alertSchema = new Schema({
     priority: Number,
     in_area: String,
@@ -190,14 +218,17 @@ var pindef = db.model('pins', pinschema);
 var orderdef = db.model('orders', orderSchema);
 var restaurantdef = db.model('restaurants', restaurantSchema);
 var areadef = db.model('areas', areaSchema);
+var coupondef = db.model('coupons', couponSchema);
 var alertdef = db.model('alerts', alertSchema);
 
 exports.getpindef = pindef;
 exports.getuserdef = userdef;
 exports.getorderdef = orderdef;
+exports.getcoupondef= coupondef;
 exports.getrestaurantdef = restaurantdef;
 exports.getareadef = areadef;
 exports.getalertdef = alertdef;
+exports.getDishSchema = dishSchema;
 
 events.emitter.emit("db_data");
 
