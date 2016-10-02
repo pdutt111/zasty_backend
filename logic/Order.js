@@ -9,6 +9,7 @@ var moment = require('moment');
 var async = require('async');
 var db = require('../db/DbSchema');
 var events = require('../events');
+var crypto2 = require('crypto');
 var config = require('config');
 var log = require('tracer').colorConsole(config.get('log'));
 var apn = require('../notificationSenders/apnsender');
@@ -310,7 +311,37 @@ var orderLogic = {
                                     })
                                 }
                             } else {
-                                def.resolve({id:combined_id,price:delivery_price_recieved});
+
+                                //payu
+                                console.log('/getShaKey');
+                                var shasum = crypto2.createHash('sha512');
+                                var txnid = '#txnid' + combined_id;
+                                var dataSequence = config.payu.key
+                                    + '|' + txnid
+                                    + '|' + parseFloat(parseFloat(delivery_price_recieved).toFixed(2))
+                                    + '|' + 'food'
+                                    + '|' + req.body.customer_name
+                                    + '|' + req.body.customer_email
+                                    + '|||||||||||'
+                                    + config.payu.salt;
+                                var resultKey = shasum.update(dataSequence).digest('hex');
+                                console.log(dataSequence);
+                                console.log(resultKey);
+
+                                def.resolve({
+                                    id:combined_id,
+                                    key:config.payu.key,
+                                    hash:resultKey,
+                                    txnid: txnid,
+                                    firstname: req.body.customer_name,
+                                    email: req.body.customer_email,
+                                    phone: req.body.customer_number,
+                                    payu_url:config.payu.url,
+                                    surl:'http://requestb.in/1aihfl51',
+                                    furl:'http://requestb.in/1aihfl51',
+                                    price:parseFloat(parseFloat(delivery_price_recieved).toFixed(2))
+                                });
+
                                 log.info("sending mail", order._id);
                                 orderLogic.createMail(order);
                             }

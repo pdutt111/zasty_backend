@@ -37,7 +37,10 @@ function placeOrder(type) {
 
     var dishes = {};
     Object.keys(cart).forEach(function (key) {
-        dishes[restaurant.dishes[key].identifier] = {"qty": cart[key], "price": restaurant.dishes[key].price_to_consumer}
+        dishes[restaurant.dishes[key].identifier] = {
+            "qty": cart[key],
+            "price": restaurant.dishes[key].price_to_consumer
+        }
     });
 
     var payload = {
@@ -47,6 +50,7 @@ function placeOrder(type) {
         "address": $('.js-address').val(),
         "dishes_ordered": dishes,
         "customer_name": $('.js-user-name').val(),
+        "customer_email": $('.js-user-email').val(),
         "customer_number": $('.js-user-phonenumber').val(),
         "coupon": $('.js-coupon').val(),
         "restaurant_name": "zasty"
@@ -59,6 +63,9 @@ function placeOrder(type) {
     if (type === 'cod') {
         payload.payment_mode = 'cod';
         payload.payment_status = 'confirmed';
+    } else {
+        payload.payment_mode = 'payu';
+        payload.payment_status = 'pending';
     }
 
     console.log(payload);
@@ -74,16 +81,41 @@ function placeOrder(type) {
         dataType: "json",
         success: function (json) {
             console.log(json);
-            if (json.id) {
+            if (json.id && payload.payment_mode == 'cod') {
                 $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json.id);
-                Cookies.remove('cart');
+                //Cookies.remove('cart');
                 $('.popup-genric').toggle(true);
+            } else {
+
+                $('.js-order-id').html('Your payment is being processed. Order ID: ' + json.id);
+                $('.popup-genric').toggle(true);
+
+                payU(json);
+
             }
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
         }
     });
+}
+
+function payU(order) {
+    var form = document.getElementById("payuForm");
+    console.log(order);
+
+    form.elements["key"].value = order.key;
+    form.elements["hash"].value = order.hash;
+    form.elements["txnid"].value = order.txnid;
+    form.elements["firstname"].value = order.firstname;
+    form.elements["email"].value = order.email;
+    form.elements["phone"].value = order.phone;
+    form.elements["furl"].value = order.furl;
+    form.elements["surl"].value = order.surl;
+    form.elements["amount"].value = parseFloat(parseFloat(order.price).toFixed(2));
+
+    //form.action = order.payu_url;
+    //form.submit();
 }
 
 function checkCoupon() {
