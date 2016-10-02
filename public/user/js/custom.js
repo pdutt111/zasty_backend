@@ -168,6 +168,9 @@ function initLocation(alt) {
             select.on("select2:select", function (e) {
                 console.log("change", e.params.data.text);
                 Cookies.set('location', e.params.data.text);
+                if (alt) {
+                    Cookies.remove('cart');
+                }
                 window.location = '/menu.html';
             });
         },
@@ -195,7 +198,7 @@ function initSignupNLogin() {
 function logOut() {
     console.log('logOut');
     Cookies.remove('user');
-    //window.location.href = '/login.html';
+    window.location.href = '/';
 }
 
 function clearState() {
@@ -275,6 +278,8 @@ function initMenu() {
     var search = $(".js-dish-search");
     search.select2({placeholder: "Search Menu"});
     search.prop("disabled", true);
+    if (!Cookies.get('location'))
+        window.location = '/';
     $.ajax({
         url: config.restaurant_url + Cookies.get('location'),
         headers: {
@@ -309,7 +314,7 @@ function initMenu() {
 
             search.select2({
                 data: [{id: -1, text: 'Search Menu'}].concat(restaurant.dishes),
-                placeholder: "search the menu",
+                placeholder: 'Search Menu',
                 allowClear: true
             });
             search.prop("disabled", false);
@@ -563,8 +568,8 @@ function addToCart(id) {
     console.log('addToCart', id, restaurant.dishes[id]);
     if (!cart[id])
         cart[id] = 1;
-    else
-        cart[id] = cart[id] + 1;
+    //else
+    //    cart[id] = cart[id] + 1;
     renderCart();
     // creates jump to first tab.
     //renderMenu();
@@ -606,7 +611,7 @@ function renderCart() {
             var d = restaurant.dishes[i];
             total = total + d.price_to_consumer * cart[i];
             var selectOpt = '';
-            for (var j = 1; j < (5 >= cart[i] ? 5 : cart[i]); j++) {
+            for (var j = 1; j < (6 >= cart[i] ? 6 : cart[i]); j++) {
                 if (j == cart[i])
                     selectOpt += '<option selected="selected">' + j + '<\/option>';
                 else
