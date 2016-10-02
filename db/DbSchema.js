@@ -32,7 +32,7 @@ var phoneValidator = [
 ];
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.get('mongo.location'),config.get('mongo.database'));
+mongoose.connect(config.get('mongo.location'));
 var db = mongoose.connection;
 autoIncrement.initialize(db);
 
@@ -68,6 +68,13 @@ var pinschema = new Schema({
     phonenumber: {type: String},
     pin: Number,
     used: {type: Boolean, default: false}
+});
+
+var paymentschema = new Schema({
+    params: Schema.Types.Mixed,
+    body: Schema.Types.Mixed,
+    order_id: {type: String, required: true},
+    status: {type: String, required: true}
 });
 
 var orderSchema = new Schema({
@@ -223,6 +230,7 @@ db.on('error', function (err) {
  */
 var userdef = db.model('users', userSchema);
 var pindef = db.model('pins', pinschema);
+var paymentdef = db.model('payments', paymentschema);
 var orderdef = db.model('orders', orderSchema);
 var restaurantdef = db.model('restaurants', restaurantSchema);
 var areadef = db.model('areas', areaSchema);
@@ -230,6 +238,7 @@ var coupondef = db.model('coupons', couponSchema);
 var alertdef = db.model('alerts', alertSchema);
 
 exports.getpindef = pindef;
+exports.getpaymentdef = paymentdef;
 exports.getuserdef = userdef;
 exports.getorderdef = orderdef;
 exports.getcoupondef= coupondef;

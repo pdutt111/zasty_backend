@@ -486,6 +486,36 @@ var orderLogic = {
         });
         return def.promise;
     },
+    paymentCallback: function (req) {
+        var def = q.defer();
+
+        orderTable.findOne({_id: req.params.order_id}, function (err, doc) {
+            if (err || !doc) {
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
+
+            doc.delivery.log.push({status: JSON.stringify(req.body)});
+
+            if (req.body.order_status == 'DELIVERED') {
+                doc.status = req.body.order_status;
+            }
+
+            doc.delivery.status = req.body.order_status;
+
+            if (parseInt(req.body.cancel_reason) > -1) {
+                doc.status = 'DELIVERY_ERROR';
+                var text = "order delivery service issue for order id-" + doc._id + ' r- ' + JSON.stringify(req.body);
+                events.emitter.emit("mail_admin", {
+                    subject: "Order Delivery Issue",
+                    message: text,
+                    plaintext: text
+                });
+            }
+            doc.save();
+            def.resolve(doc);
+        });
+        return def.promise;
+    },
     updatePaymentStatus:function(req){
         var def = q.defer();
         orderTable.update({combined_id:req.body.combined_id},{payment_status:req.body.status},{multi:true},function(err,info){
