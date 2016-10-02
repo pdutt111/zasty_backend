@@ -1,7 +1,7 @@
 var config = {
-    server_url: 'http://zasty.co:3000',
-    location_url: 'http://zasty.co:3000/api/v1/order/area?city=gurgaon&locality=gurgaon',
-    restaurant_url: 'http://zasty.co:3000/api/v1/order/servicingRestaurant?city=gurgaon&area=',
+    server_url: document.origin,
+    location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
+    restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
 };
 
@@ -19,11 +19,13 @@ function init() {
 
     switch (window.zasty_page) {
         case 'location':
+            getUser();
             initLocation();
             break;
         case 'menu':
             getUser();
             initMenu();
+            initLocation('alt');
             break;
         case 'checkout':
             getUser('hard');
@@ -139,7 +141,7 @@ function checkCoupon() {
     });
 }
 
-function initLocation() {
+function initLocation(alt) {
     var select = $(".js-location-select");
     select.select2({});
     select.prop("disabled", true);
@@ -148,9 +150,12 @@ function initLocation() {
         type: 'GET',
         dataType: "json",
         success: function (json) {
-            $('.popup-genric').toggle(false);
             console.log(json);
-            var loc = [{id: -1, text: 'Select Location'}];
+            if (!alt) {
+                var loc = [{id: -1, text: 'Select Location'}];
+                $('.popup-genric').toggle(false);
+            } else
+                var loc = [{id: -1, text: 'Location : ' + Cookies.get('location')}];
             json.forEach(function (e, i) {
                 loc.push({id: i, text: e});
             });
@@ -190,7 +195,7 @@ function initSignupNLogin() {
 function logOut() {
     console.log('logOut');
     Cookies.remove('user');
-    window.location.href = '/login.html';
+    //window.location.href = '/login.html';
 }
 
 function clearState() {
@@ -215,9 +220,13 @@ function getUser(hard) {
             type: 'GET',
             dataType: "json",
             success: function (json) {
-                $('.popup-genric').toggle(false);
                 console.log(json);
                 if (json.email) {
+
+                    if (hard) {
+                        $('.popup-genric').toggle(false);
+                    }
+
                     user.email = json.email;
                     user.phonenumber = json.phonenumber || '';
                     $('.js-user-name').html(json.name || '');
@@ -264,7 +273,7 @@ function goToCheckout(hard) {
 
 function initMenu() {
     var search = $(".js-dish-search");
-    search.select2({placeholder: "search the menu"});
+    search.select2({placeholder: "Search Menu"});
     search.prop("disabled", true);
     $.ajax({
         url: config.restaurant_url + Cookies.get('location'),
@@ -274,7 +283,7 @@ function initMenu() {
         type: 'GET',
         dataType: "json",
         success: function (json) {
-            $('.popup-genric').toggle(false);
+
             console.log(json);
             restaurant = json;
             restaurant.dishes.forEach(function (e, i) {
@@ -296,21 +305,20 @@ function initMenu() {
 
             renderMenu();
             renderCart();
+            $('.popup-genric').toggle(false);
 
             search.select2({
-                data: restaurant.dishes,
+                data: [{id: -1, text: 'Search Menu'}].concat(restaurant.dishes),
                 placeholder: "search the menu",
                 allowClear: true
             });
             search.prop("disabled", false);
-            search.select2().select2("val", {text: 'search the menu'});
 
             search.on("select2:select", function (e) {
-
                 console.log("change", e.params.data.id);
                 restaurant.dishes_active = [restaurant.dishes[e.params.data.id]];
                 renderMenu();
-                search.select2().select2("val", {text: 'search the menu'});
+                search.select2().select2("val", {text: 'Search Menu'});
             });
 
         },
@@ -409,7 +417,7 @@ function renderMenu() {
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
-        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/'+e.split(' ').join('')+'".jpg" alt="">' + e + '</a></li>';
+        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/' + e.split(' ').join('') + '".jpg" alt="">' + e + '</a></li>';
     });
 
     var strVar = "";
