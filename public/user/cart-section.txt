@@ -1,0 +1,55 @@
+<!-- cart section -->
+<div class="cartslide-wrpr pop-cntnt">
+	<div class="overlay"></div>
+	<div class="cntnt fill">
+		<div class="head">
+			<p class="dpTblcl vam">Your Cart</p>
+			<span class="fa fa-angle-right rightslide"></span>
+		</div>
+		<div class="cartlist">			
+			<div class="item">
+				<div class="lft-pane"></div>
+				<div class="rght-pane">
+					<div class="item-info">
+						<h4>Roasted Veggies & Cheese Quesadillas</h4>
+						<font class="dpBlk">
+							<select class="fL dpInblk vab">
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4	</option>
+							</select>
+							<span class="fR dpInblk vab">? 100</span>
+							<div class="clear fN"></div>
+						</font>
+						<span class="dpInblk close fa fa-close"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cartlist-empty">
+			<div class="tgreylight">
+				<img src="images/smiley.png" alt="">
+				<p class="t20">Awww shucks!</p>
+				<p>Your cart is empty</p>
+				<div class="clear10"></div>
+				<p><a href="" class="dpInblk brws-btn">Browse Food</a></p>
+			</div>
+		</div>
+		<div class="cart-footer">
+			<div class="promobox nopad">
+			<form>
+				<input type="text" placeholder="Enter Promo Code" class="fL dpInblk vam">
+				<button type="submit" class="fR dpInblk vam">Apply</button>
+				<div class="clear fN"></div>
+			</form>
+			</div>
+			<div class="totalamnt tgreydark t16">
+				<span class="fL dpInblk vam">Total</span>
+				<font class="fR dpInblk vam">? 1200</font>
+				<div class="clear fN"></div>
+			</div>
+			<p class="checkout"><input type="button" value="Checkout"></p>
+		</div>
+	</div>
+</div>
