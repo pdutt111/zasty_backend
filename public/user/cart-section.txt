@@ -53,3 +53,9 @@
 		</div>
 	</div>
 </div>
+
+
+info
+1. need to add login class loc-bar when customer is in login state
+2. need to add cartlist-empty div and when cart is empty, add empty class at div with class cntnt
+3. need to add class active on filter span tag on selected filter
