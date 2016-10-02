@@ -1,5 +1,6 @@
 var config = {
     server_url: document.origin,
+//    server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -57,6 +58,15 @@ function placeOrder(type) {
         "coupon": $('.js-coupon').val(),
         "restaurant_name": "zasty"
     };
+
+    for (var i in payload) {
+        if (!payload[i] && i !== 'coupon')
+            return alert('Incomplete Details');
+        if (i === 'customer_number' && (payload[i].length < 10 || isNaN(parseInt(payload[i]))))
+            return alert('Incorrect Phone Number');
+        if (i === 'customer_name' && payload[i].length < 4)
+            return alert('Incomplete Name');
+    }
 
     if (!payload.address) {
         return alert('Enter Address');
@@ -122,7 +132,7 @@ function payU(order) {
 function checkCoupon() {
     var coupon = $('.js-coupon').val();
     $.ajax({
-        url: '/api/v1/order/coupon?code=' + coupon,
+        url: config.server_url + '/api/v1/order/coupon?code=' + coupon,
         type: 'GET',
         dataType: "json",
         success: function (json) {
@@ -145,7 +155,7 @@ function initLocation(alt) {
     select.select2({});
     select.prop("disabled", true);
     $.ajax({
-        url: config.location_url,
+        url: config.server_url + config.location_url,
         type: 'GET',
         dataType: "json",
         success: function (json) {
@@ -280,7 +290,7 @@ function initMenu() {
     if (!Cookies.get('location'))
         window.location = '/';
     $.ajax({
-        url: config.restaurant_url + Cookies.get('location'),
+        url: config.server_url + config.restaurant_url + Cookies.get('location'),
         headers: {
             'Content-Type': 'application/json'
         },
