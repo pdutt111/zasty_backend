@@ -404,11 +404,12 @@ function renderMenu() {
             return dishVar;
         }).join('');
 
-        categoryMenuHtml += '<div class="food-rslt" id="' + e.split(' ').join('') + '">'
+        categoryMenuHtml +=
+            '<div class="food-rslt" id="' + e.split(' ').join('') + '">'
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
-        categoryList += '<li><a href="#' + e.split(' ').join('') + '">' + e + '</a></li>';
+        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/'+e.split(' ').join('')+'".jpg" alt="">' + e + '</a></li>';
     });
 
     var strVar = "";
