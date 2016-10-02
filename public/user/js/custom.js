@@ -164,7 +164,7 @@ function initLocation(alt) {
                 var loc = [{id: -1, text: 'Select Location'}];
                 $('.popup-genric').toggle(false);
             } else
-                var loc = [{id: -1, text: 'Location : ' + Cookies.get('location')}];
+                var loc = [{id: -1, text: Cookies.get('location')}];
             json.forEach(function (e, i) {
                 loc.push({id: i, text: e});
             });
@@ -431,7 +431,7 @@ function renderMenu() {
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
-        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/' + e.split(' ').join('') + '".jpg" alt="">' + e + '</a></li>';
+        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/' + e.split(' ').join('') + '.jpg" alt="">' + "<span>" + e + "<\/span>" + '</a></li>';
     });
 
     var strVar = "";
@@ -552,7 +552,7 @@ function knowMore(id) {
         + (d.details.prep || '') + "<\/div>";
     html += "                            <div id=\"ingredients\" class=\"ingredients t12\">"
         + (d.details.ingredients || '') + "<\/div>";
-    html += "                            <div id=\"nutrition\" class=\"nutrition t12\">"
+    html += "                            <div id=\"nutrition\" class=\"nutrition pad15 t12\">"
         + (d.details.nutrition || '') + "<\/div>";
     html += "                        <\/div>";
     html += "                    <\/div>";
