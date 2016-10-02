@@ -1,7 +1,7 @@
 var config = {
-    server_url: window.location.origin,
-    location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
-    restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
+    server_url: 'http://zasty.co:3000',
+    location_url: 'http://zasty.co:3000/api/v1/order/area?city=gurgaon&locality=gurgaon',
+    restaurant_url: 'http://zasty.co:3000/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
 };
 
