@@ -83,9 +83,9 @@ function placeOrder(type) {
         dataType: "json",
         success: function (json) {
             console.log(json);
+            Cookies.remove('cart');
             if (json.id && payload.payment_mode == 'cod') {
                 $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json.id);
-                //Cookies.remove('cart');
                 $('.popup-genric').toggle(true);
             } else {
 
@@ -93,7 +93,6 @@ function placeOrder(type) {
                 $('.popup-genric').toggle(true);
 
                 payU(json);
-
             }
         },
         error: function (xhr, _status, errorThrown) {
