@@ -115,7 +115,7 @@ function payU(order) {
     form.elements["amount"].value = parseFloat(parseFloat(order.price).toFixed(2));
 
     //form.action = order.payu_url;
-    //form.submit();
+    form.submit();
 }
 
 function checkCoupon() {
