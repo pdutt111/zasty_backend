@@ -417,7 +417,7 @@ function renderMenu() {
     strVar += "        <div class=\"container tcenter posrel cat-type\">";
     strVar += "            <div class=\"fltr-wrpr\">";
     strVar += "                <div class=\"fltr-btn pad15\">";
-    strVar += "                    <i class=\"fa fa-filter\"><\/i>";
+    strVar += "                    <i><img src=\"images\/filter-ico.png\" alt=\"\"><\/i>";
     strVar += "                <\/div>";
     strVar += "                <div class=\"foodcat-wrpr tleft\">";
     strVar += "                    <p class=\"fltr-blk\">";
@@ -435,7 +435,7 @@ function renderMenu() {
     strVar += "            <\/ul>";
     strVar += "            <div class=\"cart-wrpr\">";
     strVar += "                <div class=\"cart-btn pad15\">";
-    strVar += "                    <i class=\"fa fa-shopping-cart\"><\/i>";
+    strVar += "                    <i><img src=\"images\/cart-ico.png\" alt=\"\"><\/i>";
     strVar += "                    <span class=\"js-cart-count\">" + Object.keys(cart).length + "<\/span>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";

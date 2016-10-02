@@ -96,11 +96,12 @@ body{
 .foodrslt-wrpr .cat-type .dish-menu li:hover a, .foodrslt-wrpr .cat-type .dish-menu li.ui-state-active a{ box-shadow: inset 0 -3px 0px 0 #111; background: #f7f7f7;}
 .cart-wrpr{right: 0px; border-left: 1px solid #e7e9e9;}
 .fltr-wrpr{left: 0px; border-right: 1px solid #e7e9e9;}
-.cart-wrpr, .fltr-wrpr{ position: absolute; top: 0; height: 70px; display: inline-block; cursor: pointer; background: #f7f7f7;}
+.cart-wrpr, .fltr-wrpr{ position: absolute; top: 20px; height: 70px; display: inline-block; cursor: pointer; background: #f7f7f7;}
 .fltr-btn{display: inline-block; padding-right: 15px;}
 .cart-btn{ display: inline-block; padding-left: 15px;}
 .cart-btn i, .fltr-btn i{font-size: 40px; display: inline-block; vertical-align: middle; color: #505050}
-.cart-btn span{ font-size: 16px; display: inline-block; vertical-align: middle; margin-left: 7px;}
+.cart-btn i img{}
+.cart-btn span{ font-size: 16px; display: inline-block; vertical-align: middle; margin-left: 7px; margin-bottom: 7px;}
 
 /*food result*/
 .foodrslt-wrpr{ width: 100%; background: #fff;}
