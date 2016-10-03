@@ -26,7 +26,7 @@
             var auth = response.authResponse;
             FB.api('/me', {fields: 'email,name'}, function (response) {
                 //call user api with name email and token
-                console.log(auth, response.email, response.name, response.id);
+                console.log('x', auth, response.email, response.name, response.id);
                 var _user = {
                     email: response.email,
                     fb_token: auth.accessToken
@@ -56,7 +56,7 @@
         } else {
             // The person is not logged into Facebook, so we're not sure if
             // they are logged into this app or not.
-            FB.login();
+            FB.login(checkLoginState, {scope: 'email,user_likes'});
         }
     }
 
@@ -122,8 +122,9 @@
                 <div class="t16 tcenter tgreyteel">OR</div>
                 <div class="clear10"></div>
                 <div class="fb-login-btn">
-                    <button  target="_top" onclick="checkLoginState();"><img src="images/fb-icon.png" class="dpInblk vam"
-                                                                         alt=""> <span class="dpInblk vam">Log In</span>
+                    <button target="_top" onclick="checkLoginState();"><img src="images/fb-icon.png" class="dpInblk vam"
+                                                                            alt=""> <span
+                            class="dpInblk vam">Log In</span>
                     </button>
                 </div>
                 <!-- fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
