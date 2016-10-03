@@ -607,7 +607,7 @@ function renderCart() {
     var total = 0;
     var c = Object.keys(cart).length;
     $('.js-cart-count').html(c);
-
+    $(".js-dang2").removeClass("empty");
     if (!c) {
         $(".js-dang2").addClass("empty");
         return;
