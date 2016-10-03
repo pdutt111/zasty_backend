@@ -248,6 +248,9 @@ function getUser(hard) {
                     $('.js-user-phonenumber').html(json.phonenumber || '');
                     $('.js-user-phonenumber').val(json.phonenumber || '');
 
+                    $( ".js-dang" ).addClass( "login" );
+
+
                     $('.js-user-widget').html('<li class="brdrght lh">Hi ' + (json.name || json.email) + '</li>'
                         + '<li class="lh"><a href="javascript:logOut()">LogOut</a></li>');
                 }
