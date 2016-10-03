@@ -16,12 +16,17 @@
 <div class="login-form-wrpr">
     <div>
         <div class="login-form">
-            <h1 class="tcenter tgreydark">Zasty</h1>
+            <h1 class="tcenter logo_black"><a href="/" class="dpInblk"><img src="images/logo.png" alt="Zasty"></a></h1>
             <div class="bg-white">
-                <span class="dpblk tcenter"><img src="images/lock.png"></span>
+                <span class="dpBlk tcenter"><img src="images/lock.png"></span>
                 <p class="tbigger tcenter tgreyteel">Please Sign Up</p>
                 <div class="clear10"></div>
                 <form onsubmit="doSignup()">
+                    <div class="frm-field">
+                        <p><input type="text" class="js-signup-name" placeholder="Name"/></p>
+                        <span class="error">Please enter your name.</span>
+                    </div>
+                    <div class="clear20"></div>
                     <div class="frm-field">
                         <p><input type="text" class="js-signup-email" placeholder="Email Id"/></p>
                         <span class="error">Please enter valid email id.</span>
@@ -29,7 +34,7 @@
                     <div class="clear20"></div>
                     <div class="frm-field">
                         <p><input type="password" class="js-signup-password" placeholder="Password"/></p>
-                        <span class="noterror tgreylight">Minimum 8 characters, with 1 Number & 1 Capital letter</span>
+                        <span class="infotext tgreylight">Minimum 8 characters, with 1 Number & 1 Capital letter</span>
                     </div>
                     <div class="clear20"></div>
                     <div class="frm-field">
@@ -38,14 +43,14 @@
                     </div>
                     <div class="clear10"></div>
                     <p class="tnormal tgreylight"><input type="checkbox" class="dpinblk vam js-tnc-chkbox"> &nbsp; <span
-                            class="dpinblk vam">I agree to the <a href="">T&Cs</a>.</span></p>
+                            class="dpinblk vam">I agree to the <a href="" class="themecolor">T&Cs</a>.</span></p>
                     <div class="clear20"></div>
                     <div class="frm-field">
-                        <p><input type="submit" class="btn twhite textbig js-signup-btn" value="Sign Up"/></p>
+                        <p><input type="submit" class="btn twhite textbig blugrey js-signup-btn" value="Sign Up"/></p>
                     </div>
                 </form>
                 <div class="clear5"></div>
-                <p class="tnormal tcenter tgreylight">Already have an account ? <a href="login.html">Log In Here</a></p>
+                <p class="tnormal tcenter tgreylight">Already have an account ? <a href="login.html" class="themecolor">Log In Here</a></p>
             </div>
         </div>
     </div>

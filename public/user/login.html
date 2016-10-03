@@ -53,6 +53,10 @@
                     }
                 });
             });
+        } else {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            FB.login();
         }
     }
 
@@ -92,9 +96,9 @@
 <div class="login-form-wrpr">
     <div>
         <div class="login-form">
-            <h1 class="tcenter tgreydark">Zasty</h1>
+            <h1 class="tcenter logo_black"><a href="/" class="dpInblk"><img src="images/logo.png" alt="Zasty"></a></h1>
             <div class="bg-white">
-                <span class="dpblk tcenter"><img src="images/lock.png"></span>
+                <span class="dpBlk tcenter"><img src="images/lock.png"></span>
                 <p class="tbigger tcenter tgreyteel">Please log in</p>
                 <div class="clear10"></div>
                 <form onsubmit="doLogin()">
@@ -108,16 +112,25 @@
                         <span class="error">Please enter valid password.</span>
                     </div>
                     <div class="clear5"></div>
-                    <p class="tmicro"><a href="#">Forget Password?</a></p>
+                    <p class="tmicro"><a href="#" class="themecolor">Forget Password?</a></p>
                     <div class="clear20"></div>
                     <div class="frm-field">
-                        <p><input type="submit" class="btn  textbig" value="Log In"/></p>
+                        <p><input type="submit" class="btn twhite textbig blugrey" value="Log In"/></p>
                     </div>
                 </form>
-                <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-                </fb:login-button>
+                <div class="clear10"></div>
+                <div class="t16 tcenter tgreyteel">OR</div>
+                <div class="clear10"></div>
+                <div class="fb-login-btn">
+                    <button  target="_top" onclick="checkLoginState();"><img src="images/fb-icon.png" class="dpInblk vam"
+                                                                         alt=""> <span class="dpInblk vam">Log In</span>
+                    </button>
+                </div>
+                <!-- fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                </fb:login-button>  -->
                 <div class="clear5"></div>
-                <p class="tnormal tcenter tgreylight">Don't have an account? <a href="signup.html">Sign Up Here</a></p>
+                <p class="tnormal tcenter tgreylight">Don't have an account? <a href="signup.html" class="themecolor">Sign
+                    Up Here</a></p>
             </div>
         </div>
     </div>

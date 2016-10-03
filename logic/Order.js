@@ -9,6 +9,7 @@ var moment = require('moment');
 var async = require('async');
 var db = require('../db/DbSchema');
 var events = require('../events');
+var crypto2 = require('crypto');
 var config = require('config');
 var log = require('tracer').colorConsole(config.get('log'));
 var apn = require('../notificationSenders/apnsender');
@@ -310,7 +311,37 @@ var orderLogic = {
                                     })
                                 }
                             } else {
-                                def.resolve({id:combined_id,price:delivery_price_recieved});
+
+                                //payu
+                                console.log('/getShaKey');
+                                var shasum = crypto2.createHash('sha512');
+                                var txnid = '#txnid' + combined_id;
+                                var dataSequence = config.payu.key
+                                    + '|' + txnid
+                                    + '|' + parseFloat(parseFloat(delivery_price_recieved).toFixed(2))
+                                    + '|' + 'food'
+                                    + '|' + req.body.customer_name
+                                    + '|' + req.body.customer_email
+                                    + '|||||||||||'
+                                    + config.payu.salt;
+                                var resultKey = shasum.update(dataSequence).digest('hex');
+                                console.log(dataSequence);
+                                console.log(resultKey);
+
+                                def.resolve({
+                                    id:combined_id,
+                                    key:config.payu.key,
+                                    hash:resultKey,
+                                    txnid: txnid,
+                                    firstname: req.body.customer_name,
+                                    email: req.body.customer_email,
+                                    phone: req.body.customer_number,
+                                    payu_url:config.payu.url,
+                                    surl:'http://requestb.in/1aihfl51',
+                                    furl:'http://requestb.in/1aihfl51',
+                                    price:parseFloat(parseFloat(delivery_price_recieved).toFixed(2))
+                                });
+
                                 log.info("sending mail", order._id);
                                 orderLogic.createMail(order);
                             }
@@ -426,6 +457,36 @@ var orderLogic = {
         return def.promise;
     },
     deliveryCallback: function (req) {
+        var def = q.defer();
+
+        orderTable.findOne({_id: req.params.order_id}, function (err, doc) {
+            if (err || !doc) {
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
+
+            doc.delivery.log.push({status: JSON.stringify(req.body)});
+
+            if (req.body.order_status == 'DELIVERED') {
+                doc.status = req.body.order_status;
+            }
+
+            doc.delivery.status = req.body.order_status;
+
+            if (parseInt(req.body.cancel_reason) > -1) {
+                doc.status = 'DELIVERY_ERROR';
+                var text = "order delivery service issue for order id-" + doc._id + ' r- ' + JSON.stringify(req.body);
+                events.emitter.emit("mail_admin", {
+                    subject: "Order Delivery Issue",
+                    message: text,
+                    plaintext: text
+                });
+            }
+            doc.save();
+            def.resolve(doc);
+        });
+        return def.promise;
+    },
+    paymentCallback: function (req) {
         var def = q.defer();
 
         orderTable.findOne({_id: req.params.order_id}, function (err, doc) {

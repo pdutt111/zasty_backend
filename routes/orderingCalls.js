@@ -57,9 +57,9 @@ router.get('/servicingRestaurant',
         orderLogic.findServicingRestaurant(req)
             .then(function (restaurants) {
                 log.info(restaurants);
-                return orderLogic.combineRestaurant(req,restaurants);
+                return orderLogic.combineRestaurant(req, restaurants);
             })
-            .then(function(response){
+            .then(function (response) {
                 res.json(response);
             })
             .catch(function (err) {
@@ -67,17 +67,17 @@ router.get('/servicingRestaurant',
             })
     });
 router.post('/order',
-    params({body: ['city', 'area', 'locality', 'address', 'dishes_ordered', 'customer_name', 'customer_number','payment_mode']},
+    params({body: ['city', 'area', 'locality', 'address', 'dishes_ordered', 'customer_name', 'customer_number', 'payment_mode']},
         {message: config.get('error.badrequest')}),
     function (req, res, next) {
         orderLogic
-            .getcoupon(req,req.body.coupon)
-            .then(function(code){
-                req.body.coupon_code=code;
+            .getcoupon(req, req.body.coupon)
+            .then(function (code) {
+                req.body.coupon_code = code;
                 return orderLogic.findRestaurantFromArea(req);
             })
-            .then(function(restaurants){
-              return orderLogic.findActualRates(req,restaurants)
+            .then(function (restaurants) {
+                return orderLogic.findActualRates(req, restaurants)
             })
             .then(function (restaurant) {
                 return orderLogic.createDishesOrderedList(req, restaurant);
@@ -88,11 +88,11 @@ router.post('/order',
             .then(function (order) {
                 res.json(order);
                 orderLogic.saveAddress(req)
-                    .then(function(info){
+                    .then(function (info) {
                         log.info(info);
                     })
-                    .catch(function(err){
-                      log.warn(err);
+                    .catch(function (err) {
+                        log.warn(err);
                     });
             })
             .catch(function (err) {
@@ -107,32 +107,49 @@ router.put('/deliverystatus/:order_id',
         orderLogic.deliveryCallback(req)
             .then(function (order) {
                 log.info(order);
-                res.json({message:'done successfully'});
+                res.json({message: 'done successfully'});
             })
             .catch(function (err) {
                 log.info(err);
-                res.json({message:'failed to update status'});
+                res.json({message: 'failed to update status'});
             })
     });
-router.get('/coupon',params({query: ['code']},
-    {message: config.get('error.badrequest')}),function(req,res,next){
-        orderLogic.getcoupon(req,req.query.code)
-            .then(function(coupon){
-                res.json(coupon);
+router.post('/paymentstatus/:status/:order_id',
+    params({body: []},
+        {message: config.get('error.badrequest')}),
+    function (req, res, next) {
+        log.info('paymentstatus', req.body, req.params);
+        orderLogic.paymentCallback(req)
+            .then(function (order) {
+                log.info(order);
+                res.send('Thank You. \nPayment Successful. \nOrder ID: ' + req.params.order_id);
             })
-            .catch(function(err){
-                res.status(err.status).json(err.message);
+            .catch(function (err) {
+                log.info(err);
+                res.send('Sorry. Payment Failed. \n'
+                    + 'Our Representative will get in touch with you shortly. \nOrder ID: '
+                    + req.params.order_id);
             })
+    });
+router.get('/coupon', params({query: ['code']},
+    {message: config.get('error.badrequest')}), function (req, res, next) {
+    orderLogic.getcoupon(req, req.query.code)
+        .then(function (coupon) {
+            res.json(coupon);
+        })
+        .catch(function (err) {
+            res.status(err.status).json(err.message);
+        })
 })
-router.post('/paymentstatus',params({query: ['code']},
-    {message: config.get('error.badrequest')}),function(req,res,next){
-        orderLogic.updatePaymentStatus(req)
-            .then(function(response){
-                res.json(response);
-            })
-            .catch(function(err){
-                res.status(err.status).json(err.message);
-            })
+router.post('/paymentstatus', params({query: ['code']},
+    {message: config.get('error.badrequest')}), function (req, res, next) {
+    orderLogic.updatePaymentStatus(req)
+        .then(function (response) {
+            res.json(response);
+        })
+        .catch(function (err) {
+            res.status(err.status).json(err.message);
+        })
 
 });
 

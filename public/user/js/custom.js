@@ -1,5 +1,6 @@
 var config = {
-    server_url: window.location.origin,
+    server_url: document.origin,
+    server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -19,11 +20,13 @@ function init() {
 
     switch (window.zasty_page) {
         case 'location':
+            getUser();
             initLocation();
             break;
         case 'menu':
             getUser();
             initMenu();
+            initLocation('alt');
             break;
         case 'checkout':
             getUser('hard');
@@ -37,7 +40,10 @@ function placeOrder(type) {
 
     var dishes = {};
     Object.keys(cart).forEach(function (key) {
-        dishes[restaurant.dishes[key].identifier] = {"qty": cart[key], "price": restaurant.dishes[key].price_to_consumer}
+        dishes[restaurant.dishes[key].identifier] = {
+            "qty": cart[key],
+            "price": restaurant.dishes[key].price_to_consumer
+        }
     });
 
     var payload = {
@@ -47,10 +53,20 @@ function placeOrder(type) {
         "address": $('.js-address').val(),
         "dishes_ordered": dishes,
         "customer_name": $('.js-user-name').val(),
+        "customer_email": $('.js-user-email').val(),
         "customer_number": $('.js-user-phonenumber').val(),
         "coupon": $('.js-coupon').val(),
         "restaurant_name": "zasty"
     };
+
+    for (var i in payload) {
+        if (!payload[i] && i !== 'coupon')
+            return alert('Incomplete Details');
+        if (i === 'customer_number' && (payload[i].length < 10 || isNaN(parseInt(payload[i]))))
+            return alert('Incorrect Phone Number');
+        if (i === 'customer_name' && payload[i].length < 4)
+            return alert('Incomplete Name');
+    }
 
     if (!payload.address) {
         return alert('Enter Address');
@@ -59,6 +75,9 @@ function placeOrder(type) {
     if (type === 'cod') {
         payload.payment_mode = 'cod';
         payload.payment_status = 'confirmed';
+    } else {
+        payload.payment_mode = 'payu';
+        payload.payment_status = 'pending';
     }
 
     console.log(payload);
@@ -74,10 +93,16 @@ function placeOrder(type) {
         dataType: "json",
         success: function (json) {
             console.log(json);
-            if (json.id) {
+            Cookies.remove('cart');
+            if (json.id && payload.payment_mode == 'cod') {
                 $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json.id);
-                Cookies.remove('cart');
                 $('.popup-genric').toggle(true);
+            } else {
+
+                $('.js-order-id').html('Your payment is being processed. Order ID: ' + json.id);
+                $('.popup-genric').toggle(true);
+
+                payU(json);
             }
         },
         error: function (xhr, _status, errorThrown) {
@@ -86,10 +111,28 @@ function placeOrder(type) {
     });
 }
 
+function payU(order) {
+    var form = document.getElementById("payuForm");
+    console.log(order);
+
+    form.elements["key"].value = order.key;
+    form.elements["hash"].value = order.hash;
+    form.elements["txnid"].value = order.txnid;
+    form.elements["firstname"].value = order.firstname;
+    form.elements["email"].value = order.email;
+    form.elements["phone"].value = order.phone;
+    form.elements["furl"].value = order.furl;
+    form.elements["surl"].value = order.surl;
+    form.elements["amount"].value = parseFloat(parseFloat(order.price).toFixed(2));
+
+    form.action = order.payu_url;
+    form.submit();
+}
+
 function checkCoupon() {
     var coupon = $('.js-coupon').val();
     $.ajax({
-        url: '/api/v1/order/coupon?code=' + coupon,
+        url: config.server_url + '/api/v1/order/coupon?code=' + coupon,
         type: 'GET',
         dataType: "json",
         success: function (json) {
@@ -107,18 +150,21 @@ function checkCoupon() {
     });
 }
 
-function initLocation() {
+function initLocation(alt) {
     var select = $(".js-location-select");
     select.select2({});
     select.prop("disabled", true);
     $.ajax({
-        url: config.location_url,
+        url: config.server_url + config.location_url,
         type: 'GET',
         dataType: "json",
         success: function (json) {
-            $('.popup-genric').toggle(false);
             console.log(json);
-            var loc = [{id: -1, text: 'Select Location'}];
+            if (!alt) {
+                var loc = [{id: -1, text: 'Select Location'}];
+                $('.popup-genric').toggle(false);
+            } else
+                var loc = [{id: -1, text: Cookies.get('location')}];
             json.forEach(function (e, i) {
                 loc.push({id: i, text: e});
             });
@@ -131,6 +177,9 @@ function initLocation() {
             select.on("select2:select", function (e) {
                 console.log("change", e.params.data.text);
                 Cookies.set('location', e.params.data.text);
+                if (alt) {
+                    Cookies.remove('cart');
+                }
                 window.location = '/menu.html';
             });
         },
@@ -158,7 +207,7 @@ function initSignupNLogin() {
 function logOut() {
     console.log('logOut');
     Cookies.remove('user');
-    window.location.href = '/login.html';
+    window.location.href = '/';
 }
 
 function clearState() {
@@ -183,9 +232,13 @@ function getUser(hard) {
             type: 'GET',
             dataType: "json",
             success: function (json) {
-                $('.popup-genric').toggle(false);
                 console.log(json);
                 if (json.email) {
+
+                    if (hard) {
+                        $('.popup-genric').toggle(false);
+                    }
+
                     user.email = json.email;
                     user.phonenumber = json.phonenumber || '';
                     $('.js-user-name').html(json.name || '');
@@ -194,6 +247,9 @@ function getUser(hard) {
                     $('.js-user-email').val(json.email || '');
                     $('.js-user-phonenumber').html(json.phonenumber || '');
                     $('.js-user-phonenumber').val(json.phonenumber || '');
+
+                    $(".js-dang").addClass("login");
+
 
                     $('.js-user-widget').html('<li class="brdrght lh">Hi ' + (json.name || json.email) + '</li>'
                         + '<li class="lh"><a href="javascript:logOut()">LogOut</a></li>');
@@ -232,23 +288,26 @@ function goToCheckout(hard) {
 
 function initMenu() {
     var search = $(".js-dish-search");
-    search.select2({placeholder: "search the menu"});
+    search.select2({placeholder: "Search Menu"});
     search.prop("disabled", true);
+    if (!Cookies.get('location'))
+        window.location = '/';
     $.ajax({
-        url: config.restaurant_url + Cookies.get('location'),
+        url: config.server_url + config.restaurant_url + Cookies.get('location'),
         headers: {
             'Content-Type': 'application/json'
         },
         type: 'GET',
         dataType: "json",
         success: function (json) {
-            $('.popup-genric').toggle(false);
+
             console.log(json);
             restaurant = json;
             restaurant.dishes.forEach(function (e, i) {
                 if (!e.id)
                     e.id = i;
                 e.text = e.identifier;
+                e.details.image = e.details.image.replace(/-/g, "").replace(/HF/g, "")
             });
             restaurant.dishes_active = restaurant.dishes.slice();
 
@@ -264,21 +323,20 @@ function initMenu() {
 
             renderMenu();
             renderCart();
+            $('.popup-genric').toggle(false);
 
             search.select2({
-                data: restaurant.dishes,
-                placeholder: "search the menu",
+                data: [{id: -1, text: 'Search Menu'}].concat(restaurant.dishes),
+                placeholder: 'Search Menu',
                 allowClear: true
             });
             search.prop("disabled", false);
-            search.select2().select2("val", {text: 'search the menu'});
 
             search.on("select2:select", function (e) {
-
                 console.log("change", e.params.data.id);
                 restaurant.dishes_active = [restaurant.dishes[e.params.data.id]];
                 renderMenu();
-                search.select2().select2("val", {text: 'search the menu'});
+                search.select2().select2("val", {text: 'Search Menu'});
             });
 
         },
@@ -372,11 +430,12 @@ function renderMenu() {
             return dishVar;
         }).join('');
 
-        categoryMenuHtml += '<div class="food-rslt" id="' + e.split(' ').join('') + '">'
+        categoryMenuHtml +=
+            '<div class="food-rslt" id="' + e.split(' ').join('') + '">'
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
-        categoryList += '<li><a href="#' + e.split(' ').join('') + '">' + e + '</a></li>';
+        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/' + e.toLowerCase().split(' ').join('') + '.jpg" alt="">' + "<span>" + e + "<\/span>" + '</a></li>';
     });
 
     var strVar = "";
@@ -384,13 +443,13 @@ function renderMenu() {
     strVar += "        <div class=\"container tcenter posrel cat-type\">";
     strVar += "            <div class=\"fltr-wrpr\">";
     strVar += "                <div class=\"fltr-btn pad15\">";
-    strVar += "                    <i class=\"fa fa-filter\"><\/i>";
+    strVar += "                    <i><img src=\"images\/filter-ico.png\" alt=\"\"><\/i>";
     strVar += "                <\/div>";
     strVar += "                <div class=\"foodcat-wrpr tleft\">";
     strVar += "                    <p class=\"fltr-blk\">";
     strVar += "                        <span onclick=\"filterMenu('all')\">All Dishes<\/span>";
-    strVar += "                        <span onclick=\"filterMenu('egg')\">Eggetarian<\/span>";
     strVar += "                        <span onclick=\"filterMenu('Vegetarian')\">Vegetarian<\/span>";
+    strVar += "                        <span onclick=\"filterMenu('Non-Vegetarian')\">Non-Vegetarian<\/span>";
     strVar += "                    <\/p>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
@@ -402,7 +461,7 @@ function renderMenu() {
     strVar += "            <\/ul>";
     strVar += "            <div class=\"cart-wrpr\">";
     strVar += "                <div class=\"cart-btn pad15\">";
-    strVar += "                    <i class=\"fa fa-shopping-cart\"><\/i>";
+    strVar += "                    <i><img src=\"images\/cart-ico.png\" alt=\"\"><\/i>";
     strVar += "                    <span class=\"js-cart-count\">" + Object.keys(cart).length + "<\/span>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
@@ -485,19 +544,19 @@ function knowMore(id) {
     html += "                        <div class=\"navbar\">";
     html += "                            <ul>";
     html += "                                <li><a href=\"#details\">details<\/a><\/li>";
-    html += "                                <li><a href=\"#prep\">prep<\/a><\/li>";
+    //html += "                                <li><a href=\"#prep\">prep<\/a><\/li>";
     html += "                                <li><a href=\"#ingredients\">ingredients<\/a><\/li>";
-    html += "                                <li><a href=\"#nutrition\">nutrition<\/a><\/li>";
+    //html += "                                <li><a href=\"#nutrition\">nutrition<\/a><\/li>";
     html += "                            <\/ul>";
     html += "                        <\/div>";
     html += "                        <div class=\"navbar-info\">";
     html += "                            <div id=\"details\" class=\"details t12 pad15\">"
         + (d.details.details || '') + "<\/div>";
-    html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
+    //html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
         + (d.details.prep || '') + "<\/div>";
     html += "                            <div id=\"ingredients\" class=\"ingredients t12\">"
         + (d.details.ingredients || '') + "<\/div>";
-    html += "                            <div id=\"nutrition\" class=\"nutrition t12\">"
+    //html += "                            <div id=\"nutrition\" class=\"nutrition pad15 t12\">"
         + (d.details.nutrition || '') + "<\/div>";
     html += "                        <\/div>";
     html += "                    <\/div>";
@@ -522,8 +581,8 @@ function addToCart(id) {
     console.log('addToCart', id, restaurant.dishes[id]);
     if (!cart[id])
         cart[id] = 1;
-    else
-        cart[id] = cart[id] + 1;
+    //else
+    //    cart[id] = cart[id] + 1;
     renderCart();
     // creates jump to first tab.
     //renderMenu();
@@ -547,17 +606,14 @@ function changeQuantity(id, quantity) {
 function renderCart() {
     Cookies.set('cart', cart);
     var total = 0;
-
-    $('.js-cart-count').html(Object.keys(cart).length);
+    var c = Object.keys(cart).length;
+    $('.js-cart-count').html(c);
+    $(".js-dang2").removeClass("empty");
+    if (!c) {
+        $(".js-dang2").addClass("empty");
+        return;
+    }
     var cartHtml = "";
-    cartHtml += "<div class=\"item\">";
-    cartHtml += "<div class=\"tgreylight\">";
-    cartHtml += "<img src=\"images\/smiley.png\" alt=\"\">";
-    cartHtml += "<p class=\"t20\">Awww shucks!<\/p>";
-    cartHtml += "<p>Your cart is empty<\/p>";
-    cartHtml += "<div class=\"clear10\"><\/div>";
-    cartHtml += "<\/div>";
-    cartHtml += "<\/div>";
 
     if (Object.keys(cart).length) {
         cartHtml = "";
@@ -565,7 +621,7 @@ function renderCart() {
             var d = restaurant.dishes[i];
             total = total + d.price_to_consumer * cart[i];
             var selectOpt = '';
-            for (var j = 1; j < (5 >= cart[i] ? 5 : cart[i]); j++) {
+            for (var j = 1; j < (6 >= cart[i] ? 6 : cart[i]); j++) {
                 if (j == cart[i])
                     selectOpt += '<option selected="selected">' + j + '<\/option>';
                 else
@@ -642,6 +698,7 @@ function doSignup() {
     event.preventDefault();
     var _user = {
         email: $('.js-signup-email').val(),
+        name: $('.js-signup-name').val(),
         password: $('.js-signup-password').val(),
         phonenumber: $('.js-signup-phonenumber').val()
     };
