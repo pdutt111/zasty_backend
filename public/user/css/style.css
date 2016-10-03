@@ -13,7 +13,7 @@ body{
 .login-form h1{ font-size: 32px;}
 
 /*banner section*/
-.banner-wrpr{background: url(../images/landingBanner.jpg) no-repeat scroll center top; height: 684px; width: 100%;}
+.banner-wrpr{background: url(../images/landingBanner.jpg) no-repeat scroll center top; height: 100vh; width: 100%;}
 .navigation{ padding-top: 40px;}
 .navigation ul{display: table; position: relative;}
 .navigation ul li{ display: table-cell; vertical-align: middle; padding: 5px 10px; color: #fff; cursor: pointer;}
@@ -24,8 +24,7 @@ body{
 .rgt-menu li:last-child{ padding-right: 0;}
 .rgt-menu .logout{border: 1px solid #fff; padding: 10px 15px; margin-left: 10px; border-radius: 4px;}
 .rgt-menu .logout:hover{background: #111; color: #fff !important;}
-.tag-line{font-family: 'Dancing Script', cursive; font-size: 55px; color: #fff; text-align: center; margin-top: 150px;}
-.tag-line span{transform: rotate(-4deg); display: inline-block;}
+.tag-line{font-size: 40px; color: #fff; text-align: center; margin-top: 150px; text-transform: uppercase;}
 
 /*select location*/
 .loc select + span{display: inline-block; width: 400px !important; margin-top: 50px; border: 0; cursor: pointer;-webkit-appearance: none; -moz-appearance: none; appearance: none; background: url("../images/down-arrow.png") no-repeat 97% #fff; text-align: left;}
@@ -94,7 +93,7 @@ body{
 .dish-menu {margin: 0 auto; display: table; padding: 20px 0 10px; height: 100%; } 
 .dish-menu li {list-style-type: none; display: inline-block; vertical-align: top; padding: 0px 15px; text-transform: uppercase; outline: none; text-align: center; min-width: 110px;} 
 .dish-menu li a{color: #3f3f3f;}
-.dish-menu li.ui-state-active img {transform: scale(1.3); box-shadow: 0 0 26px 3px rgba(0,0,0,.4);} 
+.dish-menu li.ui-state-active img {transform: scale(1.3);} 
 .dish-menu li img {display: block; margin: 0 auto 12px; border: 2px solid #fbb000; border-radius: 50%; width: 50px; height: 50px; max-height: 50px; transition: all .7s ease-in-out; } 
 .dish-menu li.ui-state-active span {display: block; } 
 .dish-menu li span {font-size: 14px; width: 100%; color: #3f3f3f; text-transform: uppercase; font-weight: bold; white-space: nowrap; vertical-align: middle; outline: none; display: none; transition: all .7s ease-in-out; }
@@ -215,6 +214,7 @@ body{
 .checkout-wrpr .cartlist .item{padding: 5px 0;}
 .checkout-wrpr .cartlist .item:first-child{padding-top: 0;}
 .cstmr-info .address input{ padding: 15px; border: 0; width: 100%; border-radius: 4px;}
+.cstmr-info .address input[disabled]{background: #fff; color: #dadada;}
 .cstmr-info .address p{border-bottom: 1px solid #dadada;}
 .cstmr-info .address p.split{display: table; width: 100%;}
 .cstmr-info .address p.split input{display: table-cell; width: 50%;}
@@ -229,7 +229,7 @@ body{
 .ordr-smmry .other-item{background: #00c194; padding: 10px;}
 .ordr-smmry .other-item a{text-decoration: underline;}
 .payment-block .navbar ul li a{padding: 15px 20px; text-transform: capitalize;}
-.cstmr-info .action-btn{ border: 0; padding: 10px 25px;}
+.cstmr-info .action-btn{ border: 0; padding-left: 25px; padding-right: 25px;}
 .payment-block .expiry select{ border: 0; width: 100%; padding: 15px;}
 .payment-block .expiry p:first-child select{border-right: 1px solid #dadada;}
 
@@ -289,4 +289,4 @@ body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #f
 .popup-genric .cntnt p{ display: inline-block; background: #fff; color: #111; padding: 20px;}
 
 .fb-login-btn{width: 100%; background: #3b5998;}
-.fb-login-btn button{width: 100%; background: none; border: 0; color: #fff; text-align: center; font-size: 16px; padding: 5px 0;}
+.fb-login-btn button{width: 100%; background: none; border: 0; color: #fff; text-align: center; font-size: 16px; padding: 5px 0; cursor: pointer;}
