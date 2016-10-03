@@ -698,6 +698,7 @@ function doSignup() {
     event.preventDefault();
     var _user = {
         email: $('.js-signup-email').val(),
+        name: $('.js-signup-name').val(),
         password: $('.js-signup-password').val(),
         phonenumber: $('.js-signup-phonenumber').val()
     };
