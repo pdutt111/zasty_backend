@@ -1,6 +1,6 @@
 var config = {
     server_url: document.origin,
-//    server_url: 'http://zasty.co:3000',
+    server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -448,8 +448,8 @@ function renderMenu() {
     strVar += "                <div class=\"foodcat-wrpr tleft\">";
     strVar += "                    <p class=\"fltr-blk\">";
     strVar += "                        <span onclick=\"filterMenu('all')\">All Dishes<\/span>";
-    strVar += "                        <span onclick=\"filterMenu('egg')\">Eggetarian<\/span>";
     strVar += "                        <span onclick=\"filterMenu('Vegetarian')\">Vegetarian<\/span>";
+    strVar += "                        <span onclick=\"filterMenu('Non-Vegetarian')\">Non-Vegetarian<\/span>";
     strVar += "                    <\/p>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
