@@ -248,7 +248,7 @@ function getUser(hard) {
                     $('.js-user-phonenumber').html(json.phonenumber || '');
                     $('.js-user-phonenumber').val(json.phonenumber || '');
 
-                    $( ".js-dang" ).addClass( "login" );
+                    $(".js-dang").addClass("login");
 
 
                     $('.js-user-widget').html('<li class="brdrght lh">Hi ' + (json.name || json.email) + '</li>'
@@ -605,17 +605,14 @@ function changeQuantity(id, quantity) {
 function renderCart() {
     Cookies.set('cart', cart);
     var total = 0;
+    var c = Object.keys(cart).length;
+    $('.js-cart-count').html(c);
 
-    $('.js-cart-count').html(Object.keys(cart).length);
+    if (!c) {
+        $(".js-dang2").addClass("empty");
+        return;
+    }
     var cartHtml = "";
-    cartHtml += "<div class=\"item\">";
-    cartHtml += "<div class=\"tgreylight\">";
-    cartHtml += "<img src=\"images\/smiley.png\" alt=\"\">";
-    cartHtml += "<p class=\"t20\">Awww shucks!<\/p>";
-    cartHtml += "<p>Your cart is empty<\/p>";
-    cartHtml += "<div class=\"clear10\"><\/div>";
-    cartHtml += "<\/div>";
-    cartHtml += "<\/div>";
 
     if (Object.keys(cart).length) {
         cartHtml = "";
