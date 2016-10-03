@@ -307,6 +307,7 @@ function initMenu() {
                 if (!e.id)
                     e.id = i;
                 e.text = e.identifier;
+                e.details.image = e.details.image.replace(/-/g, "").replace(/HF/g, "")
             });
             restaurant.dishes_active = restaurant.dishes.slice();
 
