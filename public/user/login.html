@@ -53,6 +53,10 @@
                     }
                 });
             });
+        } else {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            FB.login();
         }
     }
 
@@ -91,7 +95,7 @@
 </script>
 <div class="login-form-wrpr">
     <div>
-        <div class="login-form">            
+        <div class="login-form">
             <h1 class="tcenter logo_black"><a href="/" class="dpInblk"><img src="images/logo.png" alt="Zasty"></a></h1>
             <div class="bg-white">
                 <span class="dpBlk tcenter"><img src="images/lock.png"></span>
@@ -116,12 +120,17 @@
                 </form>
                 <div class="clear10"></div>
                 <div class="t16 tcenter tgreyteel">OR</div>
-                <div class="clear10"></div>  
-                <div class="fb-login-btn"><button><img src="images/fb-icon.png" class="dpInblk vam" alt=""> <span class="dpInblk vam">Log In</span></button></div>          
+                <div class="clear10"></div>
+                <div class="fb-login-btn">
+                    <button  target="_top" onclick="checkLoginState();"><img src="images/fb-icon.png" class="dpInblk vam"
+                                                                         alt=""> <span class="dpInblk vam">Log In</span>
+                    </button>
+                </div>
                 <!-- fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-                </fb:login-button>  -->               
+                </fb:login-button>  -->
                 <div class="clear5"></div>
-                <p class="tnormal tcenter tgreylight">Don't have an account? <a href="signup.html" class="themecolor">Sign Up Here</a></p>
+                <p class="tnormal tcenter tgreylight">Don't have an account? <a href="signup.html" class="themecolor">Sign
+                    Up Here</a></p>
             </div>
         </div>
     </div>
