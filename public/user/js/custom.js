@@ -1,6 +1,6 @@
 var config = {
     server_url: document.origin,
-//    server_url: 'http://zasty.co:3000',
+    server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -544,19 +544,19 @@ function knowMore(id) {
     html += "                        <div class=\"navbar\">";
     html += "                            <ul>";
     html += "                                <li><a href=\"#details\">details<\/a><\/li>";
-    html += "                                <li><a href=\"#prep\">prep<\/a><\/li>";
+    //html += "                                <li><a href=\"#prep\">prep<\/a><\/li>";
     html += "                                <li><a href=\"#ingredients\">ingredients<\/a><\/li>";
-    html += "                                <li><a href=\"#nutrition\">nutrition<\/a><\/li>";
+    //html += "                                <li><a href=\"#nutrition\">nutrition<\/a><\/li>";
     html += "                            <\/ul>";
     html += "                        <\/div>";
     html += "                        <div class=\"navbar-info\">";
     html += "                            <div id=\"details\" class=\"details t12 pad15\">"
         + (d.details.details || '') + "<\/div>";
-    html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
+    //html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
         + (d.details.prep || '') + "<\/div>";
     html += "                            <div id=\"ingredients\" class=\"ingredients t12\">"
         + (d.details.ingredients || '') + "<\/div>";
-    html += "                            <div id=\"nutrition\" class=\"nutrition pad15 t12\">"
+    //html += "                            <div id=\"nutrition\" class=\"nutrition pad15 t12\">"
         + (d.details.nutrition || '') + "<\/div>";
     html += "                        <\/div>";
     html += "                    <\/div>";
