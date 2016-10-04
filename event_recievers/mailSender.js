@@ -4,7 +4,11 @@
 var config = require('config');
 var events = require('../events');
 var ses = require('node-ses')
-    , client = ses.createClient({key: config.get('amazonses.key'), secret: config.get('amazonses.secret'),amazon:"https://email.us-west-2.amazonaws.com"});
+    , client = ses.createClient({
+    key: config.get('amazonses.key'),
+    secret: config.get('amazonses.secret'),
+    amazon: "https://email.us-west-2.amazonaws.com"
+});
 var helper = require('sendgrid').mail;
 var db = require('../db/DbSchema');
 var userTable = db.getuserdef;
@@ -19,6 +23,7 @@ var j = schedule.scheduleJob('0 3 * * *', function () {
 
 // Give SES the details and let it construct the message for you.
 events.emitter.on('mail', function (data) {
+    console.log("send mail", data);
     // client.sendEmail({
     //     to: "pdutt111@gmail.com",
     //     from: "ashit@zasty.co",
@@ -31,7 +36,7 @@ events.emitter.on('mail', function (data) {
     var from_email = new helper.Email(config.get('amazonses.fromEmail'));
     var to_email = new helper.Email(data.toEmail);
     // var to_email = new helper.Email("pdutt111@gmail.com");
-    var subject = data.subject
+    var subject = data.subject;
     var content = new helper.Content('text/html', data.message);
     var mail = new helper.Mail(from_email, subject, to_email, content);
 
@@ -39,11 +44,11 @@ events.emitter.on('mail', function (data) {
     var request = sg.emptyRequest({
         method: 'POST',
         path: '/v3/mail/send',
-        body: mail.toJSON(),
+        body: mail.toJSON()
     });
 
-    sg.API(request, function(error, response) {
-        console.log("sent mail");
+    sg.API(request, function (error, response) {
+        console.log("sent mail", error, response);
     });
 });
 
@@ -57,7 +62,7 @@ events.emitter.on('mail', function (data) {
 
 events.emitter.on('mail_admin', function (data) {
     userTable.findOne({is_admin: true}, function (err, user) {
-        if(!err&&user&&user.email){
+        if (!err && user && user.email) {
             events.emitter.emit("mail", {
                 subject: data.subject,
                 message: data.message,

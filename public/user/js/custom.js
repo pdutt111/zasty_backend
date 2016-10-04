@@ -1,6 +1,6 @@
 var config = {
     server_url: document.origin,
-    server_url: 'http://zasty.co:3000',
+//    server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -94,12 +94,24 @@ function placeOrder(type) {
         success: function (json) {
             console.log(json);
             Cookies.remove('cart');
+            cart = {};
+
+            window.setTimeout(function () {
+                //$('.popup-genric').toggle(false);
+            }, 1000 * 5);
+
             if (json.id && payload.payment_mode == 'cod') {
-                $('.js-order-id').html('Your order has been placed successfully. Order ID: ' + json.id);
+                $('.js-order-id').html(
+                    'Thank You. Your order has been placed successfully. Order ID: ' + json.id
+                    + '<BR>Order details have been emailed to you.<BR>'
+                );
                 $('.popup-genric').toggle(true);
             } else {
+                $('.js-order-id').html(
+                    'Your payment is being processed. Order ID: ' + json.id
+                    + '<BR>Thank You. Order details have been emailed to you.<BR>'
+                );
 
-                $('.js-order-id').html('Your payment is being processed. Order ID: ' + json.id);
                 $('.popup-genric').toggle(true);
 
                 payU(json);
@@ -514,7 +526,7 @@ function renderMenu() {
     $('#Vegetarian').removeClass('active');
     $('#Non-Vegetarian').removeClass('active');
 
-    $('#'+(context.type||'all')).addClass('active');
+    $('#' + (context.type || 'all')).addClass('active');
 }
 
 function filterMenu(type) {
@@ -562,11 +574,11 @@ function knowMore(id) {
     html += "                            <div id=\"details\" class=\"details t12 pad15\">"
         + (d.details.details || '') + "<\/div>";
     //html += "                            <div id=\"prep\" class=\"prep pad15 t12\">"
-        + (d.details.prep || '') + "<\/div>";
+    +(d.details.prep || '') + "<\/div>";
     html += "                            <div id=\"ingredients\" class=\"ingredients t12\">"
         + (d.details.ingredients || '') + "<\/div>";
     //html += "                            <div id=\"nutrition\" class=\"nutrition pad15 t12\">"
-        + (d.details.nutrition || '') + "<\/div>";
+    +(d.details.nutrition || '') + "<\/div>";
     html += "                        <\/div>";
     html += "                    <\/div>";
     html += "                <\/div>";
@@ -616,6 +628,7 @@ function renderCart() {
     Cookies.set('cart', cart);
     var total = 0;
     var c = Object.keys(cart).length;
+    console.log('c', c);
     $('.js-cart-count').html(c);
     $(".js-dang2").removeClass("empty").addClass('fill');
     if (!c) {

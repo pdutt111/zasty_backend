@@ -380,14 +380,32 @@ var orderLogic = {
     },
     createMail: function (order) {
 
+        var customerEmail = "<p>Your Zasty Order has been placed.</p><br>"
+            + "<br>Order Id: <b>" + order.combined_id
+            + '</b></p><br><br><br>';
+        order.dishes_ordered.forEach(function (d) {
+            customerEmail += "<p>Qty:" + d.qty + " - Dish:" + d.identifier + "<p><br>";
+        });
+        customerEmail += '<br/><br/>Total Price: ' + order.total_price_recieved;
+        customerEmail += '<br/><br/>Thank You for ordering from Zasty.';
+
+        var email = {
+            subject: "Zasty Order - ID - " + order.combined_id,
+            message: customerEmail,
+            plaintext: customerEmail
+        };
+
+        email.toEmail = order.customer_email;
+        events.emitter.emit("mail", email);
+
         var message = "<b>new order</b> id- " + order._id + '<br>';
         order.dishes_ordered.forEach(function (d) {
-            message += "<p>" + d.qty + " - " + d.identifier + "                                           " + d.price_to_pay + "<p><br>";
+            message += "<p>qty: " + d.qty + " - Dish: " + d.identifier + " - Price: " + d.price_to_pay + "<p><br>";
         });
         message += '\ntotal price to restaurant: ' + order.total_price_to_pay;
 
-        var email = {
-            subject: "New Order" + order._id,
+        email = {
+            subject: "New Order ID - " + order._id,
             message: message,
             plaintext: message
         };
@@ -407,8 +425,8 @@ var orderLogic = {
             }
         });
 
-        email.message += '\ntotal price: ' + order.total_price_recieved;
-        email.plaintext += '\ntotal price: ' + order.total_price_recieved;
+        email.message += '<br>total price: ' + order.total_price_recieved;
+        email.plaintext += '<br>total price: ' + order.total_price_recieved;
 
         events.emitter.emit("mail_admin", email);
     },
