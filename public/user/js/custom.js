@@ -447,9 +447,9 @@ function renderMenu() {
     strVar += "                <\/div>";
     strVar += "                <div class=\"foodcat-wrpr tleft\">";
     strVar += "                    <p class=\"fltr-blk\">";
-    strVar += "                        <span onclick=\"filterMenu('all')\">All Dishes<\/span>";
-    strVar += "                        <span onclick=\"filterMenu('Vegetarian')\">Vegetarian<\/span>";
-    strVar += "                        <span onclick=\"filterMenu('Non-Vegetarian')\">Non-Vegetarian<\/span>";
+    strVar += "                        <span id=\"all\" onclick=\"filterMenu('all')\">All Dishes<\/span>";
+    strVar += "                        <span id=\"Vegetarian\" onclick=\"filterMenu('Vegetarian')\">Vegetarian<\/span>";
+    strVar += "                        <span id=\"Non-Vegetarian\" onclick=\"filterMenu('Non-Vegetarian')\">Non-Vegetarian<\/span>";
     strVar += "                    <\/p>";
     strVar += "                <\/div>";
     strVar += "            <\/div>";
@@ -509,9 +509,18 @@ function renderMenu() {
             return false;
         });
     });
+
+    $('#all').removeClass('active');
+    $('#Vegetarian').removeClass('active');
+    $('#Non-Vegetarian').removeClass('active');
+
+    $('#'+(context.type||'all')).addClass('active');
 }
 
 function filterMenu(type) {
+    context.type = type;
+
+
     if (type == 'all')
         restaurant.dishes_active = restaurant.dishes.slice();
     else {
@@ -608,9 +617,9 @@ function renderCart() {
     var total = 0;
     var c = Object.keys(cart).length;
     $('.js-cart-count').html(c);
-    $(".js-dang2").removeClass("empty");
+    $(".js-dang2").removeClass("empty").addClass('fill');
     if (!c) {
-        $(".js-dang2").addClass("empty");
+        $(".js-dang2").addClass("empty").removeClass('fill');
         return;
     }
     var cartHtml = "";
