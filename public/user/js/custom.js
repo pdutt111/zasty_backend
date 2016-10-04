@@ -102,14 +102,14 @@ function placeOrder(type) {
 
             if (json.id && payload.payment_mode == 'cod') {
                 $('.js-order-id').html(
-                    'Thank You. Your order has been placed successfully. Order ID: ' + json.id
-                    + '<BR>Order details have been emailed to you.<BR>'
+                    'Your order has been placed successfully. Order ID: ' + json.id
+                    + '<BR>Order details have been emailed to you.<BR>Thank You.'
                 );
                 $('.popup-genric').toggle(true);
             } else {
                 $('.js-order-id').html(
                     'Your payment is being processed. Order ID: ' + json.id
-                    + '<BR>Thank You. Order details have been emailed to you.<BR>'
+                    + '<BR>Order details will be emailed to you.<BR>Thank You.'
                 );
 
                 $('.popup-genric').toggle(true);

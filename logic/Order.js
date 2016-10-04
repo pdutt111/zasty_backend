@@ -220,9 +220,9 @@ var orderLogic = {
             source.id = req.body.source.id;
         }
         var status = "awaiting response"
-        if (req.body.status) {
-            status = req.body.status;
-        }
+        //if (req.body.status) {
+        //    status = req.body.status;
+        //}
         // log.info(source);
 
         var delivery_price_recieved = 0;
@@ -300,7 +300,7 @@ var orderLogic = {
                         customer_email: req.body.customer_email,
                         dishes_ordered: dishes_ordered[restaurants[i].name],
                         restaurant_assigned: restaurants[i].name,
-                        status: status,
+                        status: req.body.payment_mode == 'cod' ? status : 'pending payment',
                         source: source
                     });
                     order.save(function (err, order, info) {
@@ -348,7 +348,8 @@ var orderLogic = {
                                     });
 
                                     log.info("sending mail", order._id);
-                                    orderLogic.createMail(order);
+                                    if (req.body.payment_mode == 'cod')
+                                        orderLogic.createMail(order);
                                 }
                             }
                         } else {
@@ -528,6 +529,7 @@ var orderLogic = {
                     {combined_id: req.params.order_id},
                     {
                         payment_status: req.body.status,
+                        status: "awaiting response",
                         payment_mihpayid: req.body.mihpayid,
                         payment_id: req.body.txnid
                     },
@@ -535,6 +537,12 @@ var orderLogic = {
                     function (err, info) {
                         if (!err) {
                             def.resolve(doc);
+                            //send email after finsing orders
+                            orderTable.find({combined_id: req.params.order_id}, {}, function (err, docs) {
+                                docs.forEach(function (order) {
+                                    orderLogic.createMail(order);
+                                })
+                            });
                         } else {
                             def.reject();
                         }
@@ -550,7 +558,7 @@ var orderLogic = {
                     plaintext: text
                 };
                 events.emitter.emit("mail_admin", email);
-
+                def.reject();
             }
         });
         return def.promise;
