@@ -500,27 +500,43 @@ var orderLogic = {
             body: req.body
         });
         pay.save(function (err, doc) {
+            console.log(pay);
             if (err) {
                 console.log(err, pay);
-                def.reject();
+                return def.reject();
             }
-            console.log(pay);
-            def.resolve(doc);
-        });
-        return def.promise;
-    },
-    updatePaymentStatus: function (req) {
-        var def = q.defer();
-        orderTable.update({combined_id: req.body.combined_id}, {payment_status: req.body.status}, {multi: true}, function (err, info) {
-            if (!err) {
-                def.resolve(config.get('ok'));
+            if (req.params.status === 'success') {
+                orderTable.update(
+                    {combined_id: req.params.order_id},
+                    {
+                        payment_status: req.body.status,
+                        payment_mihpayid: req.body.mihpayid,
+                        payment_id: req.body.txnid
+                    },
+                    {multi: true},
+                    function (err, info) {
+                        if (!err) {
+                            def.resolve(doc);
+                        } else {
+                            def.reject();
+                        }
+                    });
             } else {
-                def.reject({status: 500, message: config.get('error.dberror')});
+
+                var text = "Order Payment Fail -" + "\n" + JSON.stringify(req.body, null, '\t')
+                    + "\n" + JSON.stringify(req.params, null, '\t');
+
+                var email = {
+                    subject: "Payu Payment Failed for Combined Order ID: " + req.params.order_id,
+                    message: text,
+                    plaintext: text
+                };
+                events.emitter.emit("mail_admin", email);
+
             }
         });
         return def.promise;
     }
-
 };
 
 module.exports = orderLogic;
