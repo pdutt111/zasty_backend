@@ -287,7 +287,7 @@ body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #f
 .popup-genric .cntnt{vertical-align: middle; display: table-cell; text-align: center;}
 .popup-genric .cntnt > p{ display: inline-block; background: #fff; color: #111; padding: 20px;}
 
-.forgt-pwd, .otp-lyr{background: rgba(0,0,0, .9); display: none;}
+.forgt-pwd, .otp-lyr, .loader-wrap{background: rgba(0,0,0, .9); display: none;}
 .forgt-pwd .login-form, .otp-lyr .login-form{margin: 0 auto; position: relative;}
 .otp-lyr .frm-field.split p + p{width: 30%}
 .forgt-pwd .login-form .close, .otp-lyr .login-form .close{position: absolute; right: 10px; top: 10px; color: #404040; font-size:22px; cursor: pointer;}
