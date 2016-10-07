@@ -44,6 +44,7 @@ input, a {outline: none; }
 .pad15{padding: 15px;}
 .pad15_vrt{padding-right: 15px !important; padding-left: 15px !important;}
 .pad15_hrz{padding-top: 15px; padding-bottom: 15px;}
+.pad20{padding: 20px;}
 
 .nomarginleft {margin-left: 0px !important;}
 .nomarginright {margin-right: 0px !important;}

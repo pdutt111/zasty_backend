@@ -88,8 +88,7 @@ body{
 .sec-header a:hover{color: #111}
 .sec-header .rgt-menu li.brdrght {border-right: 1px solid #666; padding-right: 10px;}
 .sec-header .rgt-menu .logout{border: 1px solid #111; color: #111;}
-.foodrslt-wrpr .cat-type{box-shadow: 0 1px 4px 0 rgba(0,0,0,.3);}
-.foodrslt-wrpr .cat-type.sticky{position: fixed; left: 0; top: 0; z-index: 2;}
+.foodrslt-wrpr .cat-type{box-shadow: 0 1px 4px 0 rgba(0,0,0,.3);  background: #fff}
 .dish-menu {margin: 0 auto; display: table; padding: 20px 0 10px; height: 100%; } 
 .dish-menu li {list-style-type: none; display: inline-block; vertical-align: top; padding: 0px 15px; text-transform: uppercase; outline: none; text-align: center; min-width: 110px;} 
 .dish-menu li a{color: #3f3f3f;}
@@ -108,7 +107,7 @@ body{
 
 /*food result*/
 .foodrslt-wrpr{ width: 100%; background: #fff;}
-.food-rslt-cntnr{padding: 70px 0;}
+.food-rslt-cntnr{padding: 70px 0; margin-top: 190px;}
 .foodcat-wrpr{position: absolute;left: 0; top: 72px; background: #f7f7f7; min-width: 200px; border-radius: 4px; z-index: 2; display: none;}
 .foodcat-wrpr .fltr-blk{}
 .fltr-blk span{ display: block; padding: 10px 5px 10px 30px; position: relative; cursor: pointer;color: #515a60; min-width: 140px;}
@@ -286,7 +285,14 @@ body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #f
 /*genric popup*/
 .popup-genric{background: rgba(0,0,0, .8); position: fixed; right: 0; left: 0; top: 0; bottom: 0; display: table; width: 100%; height: 100%; z-index: 3;}
 .popup-genric .cntnt{vertical-align: middle; display: table-cell; text-align: center;}
-.popup-genric .cntnt p{ display: inline-block; background: #fff; color: #111; padding: 20px;}
+.popup-genric .cntnt > p{ display: inline-block; background: #fff; color: #111; padding: 20px;}
+
+.forgt-pwd, .otp-lyr{background: rgba(0,0,0, .9); display: none;}
+.forgt-pwd .login-form, .otp-lyr .login-form{margin: 0 auto; position: relative;}
+.otp-lyr .frm-field.split p + p{width: 30%}
+.forgt-pwd .login-form .close, .otp-lyr .login-form .close{position: absolute; right: 10px; top: 10px; color: #404040; font-size:22px; cursor: pointer;}
+.sec-header.sticky{ position: fixed; top: 0; left: 0; right: 0;}
+.cat-type.sticky{ position: fixed; top: 81px; left: 0; right: 0; z-index: 1;}
 
 .fb-login-btn{width: 100%; background: #3b5998;}
 .fb-login-btn button{width: 100%; background: none; border: 0; color: #fff; text-align: center; font-size: 16px; padding: 5px 0; cursor: pointer;}
