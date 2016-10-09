@@ -92,7 +92,7 @@ body{
 .dish-menu {margin: 0 auto; display: table; padding: 20px 0 10px; height: 100%; } 
 .dish-menu li {list-style-type: none; display: inline-block; vertical-align: top; padding: 0px 15px; text-transform: uppercase; outline: none; text-align: center; min-width: 110px;} 
 .dish-menu li a{color: #3f3f3f;}
-.dish-menu li.ui-state-active img {transform: scale(1.3);} 
+.dish-menu li.ui-state-active img {transform: scale(1.3);}
 .dish-menu li img {display: block; margin: 0 auto 12px; border: 2px solid #fbb000; border-radius: 50%; width: 50px; height: 50px; max-height: 50px; transition: all .7s ease-in-out; } 
 .dish-menu li.ui-state-active span {display: block; } 
 .dish-menu li span {font-size: 14px; width: 100%; color: #3f3f3f; text-transform: uppercase; font-weight: bold; white-space: nowrap; vertical-align: middle; outline: none; display: none; transition: all .7s ease-in-out; }
@@ -289,6 +289,8 @@ body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #f
 
 .forgt-pwd, .otp-lyr, .loader-wrap{background: rgba(0,0,0, .9); display: none;}
 .forgt-pwd .login-form, .otp-lyr .login-form{margin: 0 auto; position: relative;}
+.forgt-pwd-full{background: rgba(0,0,0, .9); display: block;}
+.forgt-pwd-full{margin: 0 auto; position: relative;}
 .otp-lyr .frm-field.split p + p{width: 30%}
 .forgt-pwd .login-form .close, .otp-lyr .login-form .close{position: absolute; right: 10px; top: 10px; color: #404040; font-size:22px; cursor: pointer;}
 .sec-header.sticky{ position: fixed; top: 0; left: 0; right: 0;}
@@ -296,3 +298,7 @@ body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #f
 
 .fb-login-btn{width: 100%; background: #3b5998;}
 .fb-login-btn button{width: 100%; background: none; border: 0; color: #fff; text-align: center; font-size: 16px; padding: 5px 0; cursor: pointer;}
+
+.select2-selection__choice {
+	display: none; !important
+}

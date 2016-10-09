@@ -81,7 +81,6 @@ var orderLogic = {
             is_deleted: false,
             is_verified: true
         }, "name dishes open_status contact_name contact_number", function (err, restaurants) {
-            log.info(err, restaurants);
             if (!err && restaurants.length > 0) {
                 var response = {};
                 response.contact_name = restaurants[0].contact_name;
@@ -93,7 +92,6 @@ var orderLogic = {
                         response.dishes.push(restaurants[i].dishes[j]);
                     }
                 }
-                log.info(response.dishes);
                 def.resolve(response);
             } else {
                 def.reject({status: 500, message: config.get('error.dberror')});
@@ -241,6 +239,7 @@ var orderLogic = {
         if (req.body.coupon_code && req.body.coupon_code.off) {
             delivery_price_recieved = (delivery_price_recieved * (100 - Number(req.body.coupon_code.off)) / 100);
         }
+        delivery_price_recieved = Math.round(delivery_price_recieved * (115) / 100);
         var ordersList = [];
         // log.info(order_completed);
         var full_order = false;
@@ -420,6 +419,7 @@ var orderLogic = {
                     });
                     log.info("sending sms");
                     events.emitter.emit("sms", {number: doc.phonenumber, message: message})
+                    events.emitter.emit("sms", {number: order.customer_number, message: message})
                 }
                 email.toEmail = doc.email;
                 events.emitter.emit("mail", email);

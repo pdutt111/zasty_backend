@@ -14,6 +14,7 @@ var apn=require('../notificationSenders/apnsender');
 var gcm=require('../notificationSenders/gcmsender');
 var crypto=require('../authentication/crypto');
 var bcrypt = require('bcrypt');
+var request= require('request');
 
 var userTable;
 var pinTable;
@@ -31,7 +32,15 @@ var users={
                 if(body.data&&(!body.data.error)&&body.data.user_id){
                     if((new Date).getTime() / 1000<Number(body.data.expires_at)&&body.data.app_id==config.get("fb_app_id")){
                         req.body.fb_user_id=body.data.user_id;
-                        def.resolve()
+                        request("https://graph.facebook.com/v2.8/"+req.body.fb_user_id+"?access_token="+req.body.fb_token+"&fields=email,name",function(err,response,body){
+                            var body=JSON.parse(body);
+                            log.info(body);
+                            if(req.body.email==body.email){
+                                req.body.name=body.name;
+                                def.resolve()
+                            }
+                            def.reject({status: 401, message: config.get('error.unauthorized')})
+                        })
                     }else{
                         def.reject({status: 401, message: config.get('error.unauthorized')})
                     }
@@ -69,6 +78,8 @@ var users={
     userCreate:function(req,res){
         var def= q.defer();
         bcrypt.genSalt(10, function(err, salt) {
+            var token_validity_code=randomString(20,'aA#!');
+            req.body.token_validity_code=token_validity_code;
             if(!req.body.password){
                 var passInterim=randomString(5,'aA#')
             }else{
@@ -95,7 +106,7 @@ var users={
                     }else{
                         log.info(err);
                         if(err.code==11000) {
-                            userTable.findOne({email:req.body.email},"email fb_user_id",function(err,user){
+                            userTable.findOne({email:req.body.email},"email token_validity_code fb_user_id password",function(err,user){
                                 if(!err&&user) {
                                     if(req.body.fb_user_id==user.fb_user_id){
                                         def.resolve(user);
@@ -135,7 +146,7 @@ var users={
     },
     signin:function(req,res){
         var def= q.defer();
-        userTable.findOne({email:req.body.email},"password name phonenumber is_res_owner is_admin").exec()
+        userTable.findOne({email:req.body.email},"password name phonenumber token_validity_code is_res_owner is_admin").exec()
             .then(function(user){
                 log.info(user);
                 bcrypt.compare(req.body.password,user.password,function(err,res){
@@ -166,9 +177,8 @@ var users={
         return def.promise;
     },
     sendToken:function(req,res){
-        log.info(req.secret);
+        log.info(req.secret,req.user);
         var def= q.defer();
-        delete req.user.is_operator;
         delete req.user.password;
         var expires = new Date(moment().add(config.get('token.expiry'), 'days').valueOf()).toISOString();
         var token_data={
@@ -223,6 +233,67 @@ var users={
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
         });
+        return def.promise;
+    },
+    forgot:function(req,res){
+        var def=q.defer();
+        var forgot_code=randomString(20,'aA#');
+        userTable.update({email:req.body.email},{$set:{token_validity_code:forgot_code}},function(err,info){
+            if(!err){
+                userTable.findOne({email:req.body.email},function(err,user){
+                    if(!err&&user){
+                        log.info(user,forgot_code);
+
+                        events.emitter.emit('mail',{
+                            subject:"Zasty Forgot Password",
+                            toEmail:req.body.email,
+                            message:"To reset Password Please <a href='"+config.get('server_url')+"/forgot.html?code="+forgot_code+"'>click here</a>",
+                            altText: "To reset Please click here "+config.get('server_url')+"/forgot.html?code="+forgot_code
+                        });
+                        def.resolve();
+                    }else{
+                        def.reject({status: 500, message: config.get('error.dberror')});
+                    }
+                })
+
+            }else{
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
+        })
+        return def.promise;
+    },
+    resetPassword:function(req,res){
+        var def=q.defer();
+            bcrypt.genSalt(10, function(err, salt) {
+                if(!err){
+                    bcrypt.hash(req.body.password, salt, function(err, hash) {
+                        if(!err){
+                            userTable.findOne({token_validity_code:req.body.code},"email token_validity_code fb_user_id password",function(err,user){
+                                if(!err){
+                                    user.password=hash;
+                                    user.token_validity_code=randomString(20,'aA#');
+                                    user.save(function(err,user,info){
+                                        if(!err){
+                                            log.info(user);
+                                            def.resolve(user);
+                                        }else{
+                                            def.reject({status: 500, message: config.get('error.dberror')});
+                                        }
+                                    })
+                                }else{
+                                    def.reject({status: 500, message: config.get('error.dberror')});
+
+                                }
+                            })
+                        }else{
+                            def.reject({status: 500, message: config.get('error.dberror')});
+                        }
+
+                    });
+                }else{
+                    def.reject({status: 500, message: config.get('error.dberror')});
+                }
+            });
         return def.promise;
     }
 };

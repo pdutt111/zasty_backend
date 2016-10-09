@@ -24,6 +24,7 @@ $(document).ready(function () {
     $(".rightslide").click(function () {
         $(".cartslide-wrpr").css('display', 'none');
     });
+    alertify.defaults.glossary.title="Zasty";
 })
 $(".cartslide-wrpr .cntnt").click(function (e) {
     e.stopPropagation();

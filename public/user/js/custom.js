@@ -1,6 +1,6 @@
 var config = {
     server_url: document.origin,
-    server_url: 'http://zasty.co:3000',
+    // server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -61,15 +61,15 @@ function placeOrder(type) {
 
     for (var i in payload) {
         if (!payload[i] && i !== 'coupon')
-            return alert('Incomplete Details');
+            return alertify.alert('Incomplete Details');
         if (i === 'customer_number' && (payload[i].length < 10 || isNaN(parseInt(payload[i]))))
-            return alert('Incorrect Phone Number');
+            return alertify.alert('Incorrect Phone Number');
         if (i === 'customer_name' && payload[i].length < 4)
-            return alert('Incomplete Name');
+            return alertify.alert('Incomplete Name');
     }
 
     if (!payload.address) {
-        return alert('Enter Address');
+        return alertify.alert('Enter Address');
     }
 
     if (type === 'cod') {
@@ -152,7 +152,7 @@ function checkCoupon() {
                 context.off = parseInt(json.off);
                 renderCart();
             } else {
-                $('.js-coupon').val('Coupon Failed');
+                alertify.alert("Coupon Failed");
             }
         },
         error: function (xhr, _status, errorThrown) {
@@ -164,7 +164,7 @@ function checkCoupon() {
 
 function initLocation(alt) {
     var select = $(".js-location-select");
-    select.select2({});
+    select.select2({maximumSelectionSize: 1,placeholder:"Select Location"});
     select.prop("disabled", true);
     $.ajax({
         url: config.server_url + config.location_url,
@@ -175,14 +175,23 @@ function initLocation(alt) {
             if (!alt) {
                 var loc = [{id: -1, text: 'Select Location'}];
                 $('.popup-genric').toggle(false);
-            } else
+            } else{
                 var loc = [{id: -1, text: Cookies.get('location')}];
+            }
+
             json.forEach(function (e, i) {
                 loc.push({id: i, text: e});
             });
+            var placeholder="Search Location";
 
+            if(window.location.pathname=="/menu.html"){
+                placeholder=Cookies.get('location');
+            }
             select.select2({
-                data: loc
+                data: loc,
+                placeholder:placeholder,
+                maximumSelectionSize: 1,
+                allowClear: true
             });
 
             select.prop("disabled", false);
@@ -290,7 +299,7 @@ function goToCheckout(hard) {
     cart = Cookies.getJSON('cart') || {};
     if (!Object.keys(cart).length) {
         if (hard)
-            alert('Please add items to Cart');
+            alertify.alert('Please add items to Cart');
         else
             window.location = '/menu.html';
     } else {
@@ -300,7 +309,9 @@ function goToCheckout(hard) {
 
 function initMenu() {
     var search = $(".js-dish-search");
-    search.select2({placeholder: "Search Menu"});
+    search.select2({placeholder: "Search Menu",
+        maximumSelectionSize: 1,
+        allowClear: true});
     search.prop("disabled", true);
     if (!Cookies.get('location'))
         window.location = '/';
@@ -338,8 +349,9 @@ function initMenu() {
             $('.popup-genric').toggle(false);
 
             search.select2({
-                data: [{id: -1, text: 'Search Menu'}].concat(restaurant.dishes),
+                data: restaurant.dishes,
                 placeholder: 'Search Menu',
+                maximumSelectionSize: 1,
                 allowClear: true
             });
             search.prop("disabled", false);
@@ -348,7 +360,16 @@ function initMenu() {
                 console.log("change", e.params.data.id);
                 restaurant.dishes_active = [restaurant.dishes[e.params.data.id]];
                 renderMenu();
-                search.select2().select2("val", {text: 'Search Menu'});
+                // search.select2().select2("val", {text: restaurant.dishes_active});
+                console.log(restaurant.dishes_active[0].identifier);
+                // search.select2({placeholder:restaurant.dishes_active[0].identifier});
+                search.select2({
+                    data: restaurant.dishes,
+                    placeholder: restaurant.dishes_active[0].identifier,
+                    maximumSelectionSize: 1,
+                    allowClear: true
+                });
+                search.val('').trigger('change')
             });
 
         },
@@ -361,7 +382,6 @@ function initMenu() {
 
 function renderMenu() {
     var categories = [];
-    console.log(JSON.stringify(restaurant.dishes_active));
     restaurant.dishes_active.forEach(function (e) {
         var c = e.details.categories[0];
         if (categories.indexOf(c) == -1) {
@@ -396,7 +416,7 @@ function renderMenu() {
             var dishVar = "";
             dishVar += "<div class=\"food-item\">";
             dishVar += "                    <div class=\"item-image\">";
-            dishVar += "                        <img src=\"/images/" + dish.details.image.replace(/-/g, "").replace(/HF/g, "") + "\" alt=\"\">";
+            dishVar += "                        <img src=\"/images/" + dish.details.image.replace(/-/g, "").replace(/HF/g, "") + "\" alt=\"\" onerror='this.src=\"/images/ZOVR02.png\"'>";
             dishVar += "                        <div class=\"item-summary-wrpr\">";
             dishVar += "                            <div>";
             dishVar += "                                <div class=\"item-summary\">";
@@ -678,11 +698,11 @@ function renderCart() {
     $(".js-total-price").html(total);
     context.total = total;
     context.final = total;
-
     if (context.off) {
         context.final -= (context.final * context.off / 100)
     }
-
+    $(".js-total-tax").html(Math.round(context.final * 15 / 100));
+        context.final += Math.round(context.final * 15 / 100)
     $(".js-total").html(context.final);
 }
 

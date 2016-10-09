@@ -134,6 +134,38 @@ router.post('/protected/device',params({body:['service','reg_id'],headers:['auth
             res.status(err.status).json(err.message);
         })
 });
+router.post('/forgot',params({body:['email']},{message : config.get('error.badrequest')}),function(req,res,next){
+    usersLogic.forgot(req,res)
+        .then(function(){
+            res.json(config.get('ok'));
+        })
+        .catch(function(err){
+            res.status(err.status).json(err.message);
+        })
+});
+router.post('/reset/password',params({body:['code','password']},{message : config.get('error.badrequest')}),
+    function(req,res,next){
+    usersLogic.resetPassword(req,res)
+        .then(function(user){
+            log.info(user);
+            req.user=user;
+            req.secret=false;
+            next();
+        })
+        .catch(function(err){
+            res.status(err.status).json(err.message);
+        })
+    },
+    function(req,res,next){
+        log.info(req.user);
+        usersLogic.sendToken(req,res)
+            .then(function(response){
+                res.json(response);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            }).done();
+    });
 router.get('/protected/info',params({headers:['authorization']},{message : config.get('error.badrequest')}),function(req,res,next){
     req.user=req.user.toObject();
     delete req.user.password;

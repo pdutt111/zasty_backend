@@ -46,7 +46,7 @@ var userSchema = new Schema({
     email: {type: String, validate: emailValidator, unique: true, dropDups: true},
     phonenumber: {type: String, validate: phoneValidator},
     password: {type: String},
-    password_interim: String,
+    token_validity_code:String,
     name: {type: String},
     device: {service: String, reg_id: String, active: {type: Boolean, default: true}},
     address:[{

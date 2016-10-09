@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="css/layout.css" type="text/css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <script src="//cdn.jsdelivr.net/alertifyjs/1.8.0/alertify.min.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.8.0/css/alertify.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.8.0/css/themes/default.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        var queryDict = {}
+        window.location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
+        var code=queryDict.code;
+        console.log(code);
+        $("#code").val(code);
+    })
+
+    function changepassword(){
+        var form_data={};
+        $("#forgot_password").serializeArray().map(function(x){form_data[x.name] = x.value;});
+        console.log(form_data);
+        $.ajax({
+            url: config.server_url + '/api/v1/users/reset/password',
+            data: form_data,
+            type: 'POST',
+            dataType: "json",
+            success: function (json) {
+                console.log(json);
+                if (json.token && json.expires) {
+                    var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
+                    Cookies.set('user', json, {expires: expire_in_days - 1});
+                    window.location = '/login.html'
+                } else {
+                    $('.error').toggle(true);
+                }
+            },
+            error: function (xhr, _status, errorThrown) {
+                alertify.alert("Unable to change password wrong or expired link");
+                console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+//                $('.error').toggle(true);
+            }
+        });
+    }
+</script>
+<div class="forgt-pwd-full">
+    <div class="cntnt">
+        <div class="login-form bg-white pad20">
+            <h3 class="t16 tgreyteel">Recover Password</h3>
+            <span class="clear10"></span>
+            <form onsubmit="changepassword()" id="forgot_password">
+                <input type="hidden" value="" name="code" id="code">
+                <div class="clear20"></div>
+                <div class="frm-field">
+                    <p><input type="password" class="js-login-password" placeholder="New Password"/></p>
+                    <span class="error">Please enter valid password.</span>
+                </div>
+                <div class="clear20"></div>
+                <div class="frm-field">
+                    <p><input type="password" class="js-login-password" placeholder="Confirm Password" name="password"/></p>
+                    <span class="error">Please enter valid password.</span>
+                </div>
+                <div class="clear40"></div>
+                <div class="frm-field">
+                    <p><input type="submit" class="btn twhite textbig blugrey" value="Reset Password"/></p>
+                </div>
+            </form>
+            <span class="dpInblk close fa fa-close"></span>
+        </div>
+    </div>
+</div>
+<script src="js/functions.js" type="text/javascript"></script>
+<script src="js/js.cookie.js"></script>
+<script src="js/custom.js" type="text/javascript"></script>
+</body>
+</html>
