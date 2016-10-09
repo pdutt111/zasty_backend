@@ -289,8 +289,9 @@ body::-webkit-scrollbar-track, .cartlist::-webkit-scrollbar-track{background: #f
 
 .forgt-pwd, .otp-lyr, .loader-wrap{background: rgba(0,0,0, .9); display: none;}
 .forgt-pwd .login-form, .otp-lyr .login-form{margin: 0 auto; position: relative;}
-.forgt-pwd-full{background: rgba(0,0,0, .9); display: block;}
-.forgt-pwd-full{margin: 0 auto; position: relative;}
+.forgt-pwd-full{width: 100%; display: table;}
+.forgt-pwd-full.popup-genric{background: #fff;}
+.forgt-pwd-full .login-form{ margin: 0 auto; border: 1px solid #dcdcdc;}
 .otp-lyr .frm-field.split p + p{width: 30%}
 .forgt-pwd .login-form .close, .otp-lyr .login-form .close{position: absolute; right: 10px; top: 10px; color: #404040; font-size:22px; cursor: pointer;}
 .sec-header.sticky{ position: fixed; top: 0; left: 0; right: 0;}
