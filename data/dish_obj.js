@@ -28,7 +28,7 @@ converter.on("end_parsed", function (jsonArray) {
             description: jsonArray[i].desc,
             details: jsonArray[i].desc,
             prep: jsonArray[i].desc,
-            ingridients: jsonArray[i].desc,
+            ingredients: jsonArray[i].Ingredients.replace(new RegExp('\n', 'g'),"</br>"),
             nutrition: jsonArray[i].desc
         }
         }

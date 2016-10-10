@@ -1,6 +1,6 @@
 var config = {
     server_url: document.origin,
-    server_url: 'http://zasty.co:3000',
+    // server_url: 'http://zasty.co:3000',
     location_url: '/api/v1/order/area?city=gurgaon&locality=gurgaon',
     restaurant_url: '/api/v1/order/servicingRestaurant?city=gurgaon&area=',
     afterLogin: 'location.html'
@@ -34,9 +34,44 @@ function init() {
             break;
     }
 }
+function resend(){
+    if($('.js-user-phonenumber').val()==""){
+        alertify.alert('please enter phonenumber');
+        return;
+    }
+    $.ajax({
+        url: config.server_url + '/api/v1/order/protected/phonenumber/code',
+        headers: {
+            'Authorization': user.token,
+            'Content-Type': 'application/json'
+        },
+        type: 'POST',
+        data: JSON.stringify({phonenumber:$('.js-user-phonenumber').val()}),
+        dataType: "json",
+        success: function (json) {
+            $(".otp-lyr").css('display','table');
+            placeOrderType=type;
+        },
+        error: function (xhr, _status, errorThrown) {
+            alertify.alert("Error Occurred");
+            console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+        }
+    });
+    return;
+}
+var confirm_code;
+var placeOrderType
+function setCode(){
+    if($('#confirm_code').val()!=""){
+        confirm_code=$('#confirm_code').val();
+        $(".otp-lyr").css('display','none');
+        placeOrder(placeOrderType);
 
+    }else{
+        alertify.alert("please enter pin");
+    }
+}
 function placeOrder(type) {
-    console.log('placeOrder', type);
 
     var dishes = {};
     Object.keys(cart).forEach(function (key) {
@@ -58,10 +93,11 @@ function placeOrder(type) {
         "coupon": $('.js-coupon').val(),
         "restaurant_name": "zasty"
     };
-
     for (var i in payload) {
-        if (!payload[i] && i !== 'coupon')
+        if (!payload[i] && i !== 'coupon'){
+            console.log(i);
             return alertify.alert('Incomplete Details');
+        }
         if (i === 'customer_number' && (payload[i].length < 10 || isNaN(parseInt(payload[i]))))
             return alertify.alert('Incorrect Phone Number');
         if (i === 'customer_name' && payload[i].length < 4)
@@ -79,7 +115,35 @@ function placeOrder(type) {
         payload.payment_mode = 'payu';
         payload.payment_status = 'pending';
     }
-
+    if(!confirm_code){
+        if($('.js-user-phonenumber').val()==""){
+            alertify.alert('please enter phonenumber');
+            return;
+        }
+        $.ajax({
+            url: config.server_url + '/api/v1/order/protected/phonenumber/code',
+            headers: {
+                'Authorization': user.token,
+                'Content-Type': 'application/json'
+            },
+            type: 'POST',
+            data: JSON.stringify({phonenumber:$('.js-user-phonenumber').val()}),
+            dataType: "json",
+            success: function (json) {
+                $(".otp-lyr").css('display','table');
+                placeOrderType=type;
+            },
+            error: function (xhr, _status, errorThrown) {
+                alertify.alert("Error Occurred");
+                console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+            }
+        });
+        return;
+    }
+    payload.code=confirm_code;
+    placeOrderType=null;
+    confirm_code=null;
+    console.log('placeOrder', type);
     console.log(payload);
 
     $.ajax({
@@ -93,32 +157,33 @@ function placeOrder(type) {
         dataType: "json",
         success: function (json) {
             console.log(json);
-            Cookies.remove('cart');
-            cart = {};
-
+            // Cookies.remove('cart');
+            // cart = {};
             window.setTimeout(function () {
                 //$('.popup-genric').toggle(false);
             }, 1000 * 5);
 
             if (json.id && payload.payment_mode == 'cod') {
-                $('.js-order-id').html(
-                    'Your order has been placed successfully. Order ID: ' + json.id
-                    + '<BR>Order details have been emailed to you.<BR>Thank You.'
-                );
-                $('.popup-genric').toggle(true);
+                window.location='/track.html?orderid='+json.id
+                // $('.js-order-id').html(
+                //     'Your order has been placed successfully. Order ID: ' + json.id
+                //     + '<BR>Order details have been emailed to you.<BR>Thank You.'
+                // );
+                // $('.popup').toggle(true);
             } else {
                 $('.js-order-id').html(
                     'Your payment is being processed. Order ID: ' + json.id
                     + '<BR>Order details will be emailed to you.<BR>Thank You.'
                 );
 
-                $('.popup-genric').toggle(true);
+                $('.popup').toggle(true);
 
                 payU(json);
             }
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+            alertify.alert("Wrong pin entered");
         }
     });
 }

@@ -25,6 +25,8 @@ var auth=function(req,res,next){
                                 log.info(decoded,user);
                                 if(decoded.user.token_validity_code==user.token_validity_code){
                                     def.resolve(user);
+                                }else{
+                                    def.reject({status:401,message:config.get('error.webtoken.unknown')})
                                 }
                             }else{
                                 def.reject({status:401,message:config.get('error.webtoken.unknown')})

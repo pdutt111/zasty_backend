@@ -167,9 +167,11 @@ router.post('/reset/password',params({body:['code','password']},{message : confi
             }).done();
     });
 router.get('/protected/info',params({headers:['authorization']},{message : config.get('error.badrequest')}),function(req,res,next){
-    req.user=req.user.toObject();
-    delete req.user.password;
-    delete req.user._id;
-    res.json(req.user);
+    if(req.user){
+        req.user=req.user.toObject();
+        delete req.user._id;
+        delete req.user.password;
+        res.json(req.user);
+    }
 });
 module.exports = router;

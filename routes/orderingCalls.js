@@ -70,8 +70,10 @@ router.post('/order',
     params({body: ['city', 'area', 'locality', 'address', 'dishes_ordered', 'customer_name', 'customer_number', 'payment_mode']},
         {message: config.get('error.badrequest')}),
     function (req, res, next) {
-        orderLogic
-            .getcoupon(req, req.body.coupon)
+        orderLogic.checkCode(req)
+            .then(function(){
+                return orderLogic.getcoupon(req, req.body.coupon)
+            })
             .then(function (code) {
                 req.body.coupon_code = code;
                 return orderLogic.findRestaurantFromArea(req);
@@ -99,6 +101,16 @@ router.post('/order',
                 res.status(err.status).json(err.message);
             })
     });
+router.post('/protected/phonenumber/code',params({body: ['phonenumber']},
+    {message: config.get('error.badrequest')}),function(req,res){
+        orderLogic.confirmCode(req)
+            .then(function(response){
+                res.json(response);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+})
 router.put('/deliverystatus/:order_id',
     params({body: ['sfx_order_id', 'client_order_id', 'order_status']},
         {message: config.get('error.badrequest')}),
@@ -122,13 +134,15 @@ router.post('/paymentstatus/:status/:order_id',
         orderLogic.paymentCallback(req)
             .then(function (order) {
                 log.info(order);
-                res.send('Thank You. \nPayment Successful. \nOrder ID: ' + req.params.order_id);
+                res.redirect(301,config.get('server_url')+'/track.html?orderid='+req.params.order_id);
+                // res.send('Thank You. \nPayment Successful. \nOrder ID: ' + req.params.order_id);
             })
             .catch(function (err) {
                 log.info(err);
-                res.send('Sorry. Payment Failed. \n'
-                    + 'Our Representative will get in touch with you shortly. \nOrder ID: '
-                    + req.params.order_id);
+                res.redirect(301,config.get('server_url')+'/checkout.html?status=failed');
+                // res.send('Sorry. Payment Failed. \n'
+                //     + 'Our Representative will get in touch with you shortly. \nOrder ID: '
+                //     + req.params.order_id);
             })
     });
 router.get('/coupon', params({query: ['code']},
@@ -141,5 +155,18 @@ router.get('/coupon', params({query: ['code']},
             res.status(err.status).json(err.message);
         })
 });
+router.get('/details',params({query: ['id']},
+    {message: config.get('error.badrequest')}),function(req,res){
+        orderLogic.getorderDetails(req)
+            .then(function (orders) {
+                return orderLogic.getcombinedstatus(req,orders);
+            })
+            .then(function(details){
+                res.json(details);
+            })
+            .catch(function(err){
+                res.status(err.status).json(err.message);
+            })
+})
 
 module.exports = router;

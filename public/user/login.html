@@ -97,7 +97,7 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
     function forgetpass(){
-        $(".forgt-pwd").toggle(true);
+        $(".forgt-pwd").css('display','table');
     }
     function sendResetCode(){
         var form_data={}
@@ -110,15 +110,19 @@
             dataType: "json",
             success: function (json) {
                 console.log(json);
-                $(".forgt-pwd").toggle(false);
+                alertify.alert("Password reset link sent to your email");
+                $(".forgt-pwd").css('display','none');
             },
             error: function (xhr, _status, errorThrown) {
                 console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
                 alertify.alert("No User Found");
-                $(".forgt-pwd").toggle(false);
+                $(".forgt-pwd").css('display','none');
 //                $(".forgt-pwd").toggle(true);
             }
         });
+    }
+    function hide(){
+        $(".forgt-pwd").css('display','none');
     }
 </script>
 <div class="login-form-wrpr">
@@ -181,7 +185,7 @@
                     <p><input type="submit" class="btn twhite textbig blugrey" value="Send Email"/></p>
                 </div>
             </form>                                                                    
-            <span class="dpInblk close fa fa-close"></span>
+            <span class="dpInblk close fa fa-close" onclick="hide();"></span>
         </div>        
     </div>
 </div>

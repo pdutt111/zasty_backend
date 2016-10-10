@@ -16,6 +16,7 @@ var apn = require('../notificationSenders/apnsender');
 var gcm = require('../notificationSenders/gcmsender');
 var crypto = require('../authentication/crypto');
 var bcrypt = require('bcrypt');
+var ejs = require('ejs');
 
 var restaurantTable = db.getrestaurantdef;
 var userTable = db.getuserdef;
@@ -97,6 +98,23 @@ var orderLogic = {
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
         });
+        return def.promise;
+    },
+    confirmCode:function(req){
+        var def=q.defer();
+        var random=randomString(6,"#");
+        if(req.body.phonenumber.slice(0,3)=="+91"){
+            req.body.phonenumber=req.body.phonenumber.slice(3);
+        }
+        userTable.update({_id:req.user._id},{$set:{pin:random,phonenumber:req.body.phonenumber}},
+        function(err,info){
+            if(!err){
+                def.resolve(config.get('ok'));
+                events.emitter.emit("sms", {number: req.body.phonenumber, message: random+" is your zasty confirmation code"});
+            }else{
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
+        })
         return def.promise;
     },
     findRestaurantFromArea: function (req) {
@@ -347,8 +365,14 @@ var orderLogic = {
                                     });
 
                                     log.info("sending mail", order._id);
-                                    if (req.body.payment_mode == 'cod')
+                                    if (req.body.payment_mode == 'cod'){
+                                        var dishes=[];
+                                        for(var name in req.body.dishes_ordered){
+                                            dishes.push({identifier:name,qty:req.body.dishes_ordered[name].qty,price_recieved:req.body.dishes_ordered[name].price});
+                                        }
+                                        order.dishes_ordered=dishes
                                         orderLogic.createMail(order);
+                                    }
                                 }
                             }
                         } else {
@@ -379,57 +403,52 @@ var orderLogic = {
         return def.promise;
     },
     createMail: function (order) {
+        order.track_link=config.get('server_url')+"/track.html?orderid="+order.combined_id;
+        ejs.renderFile('./public/user/email_template.html', {order:order}, function(err, str){
+            // str => Rendered HTML string
+            log.info(err,str);
+            var email = {
+                subject: "Zasty Order - ID - " + order.combined_id,
+                message: str,
+                plaintext: str
+            };
 
-        var customerEmail = "<p>Your Zasty Order has been placed.</p><br>"
-            + "<br>Order Id: <b>" + order.combined_id
-            + '</b></p><br><br><br>';
-        order.dishes_ordered.forEach(function (d) {
-            customerEmail += "<p>Qty:" + d.qty + " - Dish:" + d.identifier + "<p><br>";
-        });
-        customerEmail += '<br/><br/>Total Price: ' + order.total_price_recieved;
-        customerEmail += '<br/><br/>Thank You for ordering from Zasty.';
+            email.toEmail = order.customer_email;
+            events.emitter.emit("mail", email);
 
-        var email = {
-            subject: "Zasty Order - ID - " + order.combined_id,
-            message: customerEmail,
-            plaintext: customerEmail
-        };
+            var message = "<b>new order</b> id- " + order._id + '<br>';
+            order.dishes_ordered.forEach(function (d) {
+                message += "<p>qty: " + d.qty + " - Dish: " + d.identifier + " - Price: " + d.price_to_pay + "<p><br>";
+            });
+            message += '\ntotal price to restaurant: ' + order.total_price_to_pay;
 
-        email.toEmail = order.customer_email;
-        events.emitter.emit("mail", email);
+            email = {
+                subject: "New Order ID - " + order._id,
+                message: message,
+                plaintext: message
+            };
 
-        var message = "<b>new order</b> id- " + order._id + '<br>';
-        order.dishes_ordered.forEach(function (d) {
-            message += "<p>qty: " + d.qty + " - Dish: " + d.identifier + " - Price: " + d.price_to_pay + "<p><br>";
-        });
-        message += '\ntotal price to restaurant: ' + order.total_price_to_pay;
-
-        email = {
-            subject: "New Order ID - " + order._id,
-            message: message,
-            plaintext: message
-        };
-
-        userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, doc) {
-            if (doc && doc.email) {
-                if (doc.phonenumber) {
-                    var message = "new order\n"
-                    order.dishes_ordered.forEach(function (d) {
-                        message += d.qty + "-" + d.identifier + ":" + d.price_to_pay + "\n";
-                    });
-                    log.info("sending sms");
-                    events.emitter.emit("sms", {number: doc.phonenumber, message: message})
-                    events.emitter.emit("sms", {number: order.customer_number, message: message})
+            userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, doc) {
+                if (doc && doc.email) {
+                    if (doc.phonenumber) {
+                        var message = "new order\n"
+                        order.dishes_ordered.forEach(function (d) {
+                            message += d.qty + "-" + d.identifier + ":" + d.price_to_pay + "\n";
+                        });
+                        log.info("sending sms");
+                        events.emitter.emit("sms", {number: doc.phonenumber, message: message})
+                        events.emitter.emit("sms", {number: order.customer_number, message: message})
+                    }
+                    email.toEmail = doc.email;
+                    events.emitter.emit("mail", email);
                 }
-                email.toEmail = doc.email;
-                events.emitter.emit("mail", email);
-            }
+            });
+
+            email.message += '<br>total price: ' + order.total_price_recieved;
+            email.plaintext += '<br>total price: ' + order.total_price_recieved;
+
+            events.emitter.emit("mail_admin", email);
         });
-
-        email.message += '<br>total price: ' + order.total_price_recieved;
-        email.plaintext += '<br>total price: ' + order.total_price_recieved;
-
-        events.emitter.emit("mail_admin", email);
     },
     deleteOrder: function (req) {
         var def = q.defer();
@@ -461,6 +480,22 @@ var orderLogic = {
         } else {
             def.resolve({});
         }
+        return def.promise;
+    },
+    checkCode:function(req){
+        var def=q.defer();
+        userTable.findOne({email:req.body.customer_email},"pin",function(err,user){
+           if(!err&&user){
+               log.info(user,req.body);
+               if(user.pin==req.body.code){
+                   def.resolve();
+               }else{
+                   def.reject({status: 400, message: config.get('error.badrequest')});
+               }
+           } else{
+               def.reject({status: 500, message: config.get('error.dberror')});
+           }
+        });
         return def.promise;
     },
     saveAddress: function (req) {
@@ -538,10 +573,16 @@ var orderLogic = {
                         if (!err) {
                             def.resolve(doc);
                             //send email after finsing orders
-                            orderTable.find({combined_id: req.params.order_id}, {}, function (err, docs) {
+                            orderTable.find({combined_id: req.params.order_id}, function (err, docs) {
+                                var dishes=[]
                                 docs.forEach(function (order) {
-                                    orderLogic.createMail(order);
-                                })
+                                    for(var i=0;i<order.dishes_ordered.length;i++){
+                                        dishes.push(order.dishes_ordered[i]);
+                                    }
+                                });
+                                log.info(dishes);
+                                docs[0].dishes_ordered=dishes;
+                                orderLogic.createMail(docs[0]);
                             });
                         } else {
                             def.reject();
@@ -562,7 +603,72 @@ var orderLogic = {
             }
         });
         return def.promise;
+    },
+    getorderDetails:function(req){
+        var def=q.defer();
+        orderTable.find({combined_id:req.query.id},function(err,orders){
+            if(!err&&orders!=[]){
+                def.resolve(orders);
+            }else{
+                def.reject({status: 500, message: config.get('error.dberror')});
+            }
+        })
+        return def.promise;
+    },
+    getcombinedstatus:function(req,orders){
+        var def=q.defer();
+        var details={
+            dishes:[],
+            off:Number,
+            total:String,
+            status:String,
+            address:String,
+            area: String,
+            locality: String,
+            city: String,
+        };
+        var dishes=[];
+        var status=6;
+        for(var i=0;i<orders.length;i++){
+            if(orders[i].status=="awaiting response"&&status>1){
+               status=1;
+            }else if(orders[i].status=="confirmed"&&status>2){
+                status=2;
+            }else if(orders[i].status=="prepared"&&status>3){
+                status=3;
+            }else if(orders[i].status=="dispatched"&&status>1){
+                status=4;
+            }else if(orders[i].status=="DELIVERED"&&status>1){
+                status=5;
+            }
+            for(var j=0;j<orders[i].dishes_ordered.length;j++){
+                dishes.push({name:orders[i].dishes_ordered[j].identifier,price:orders[i].dishes_ordered[j].price_recieved,qty:orders[i].dishes_ordered[j].qty})
+            }
+            details.off=orders[i].coupon.off;
+            details.mode=orders[i].payment_mode;
+            details.address=orders[i].address;
+            details.area=orders[i].area;
+            details.locality=orders[i].locality;
+            details.city=orders[i].city;
+            details.total=orders[i].delivery_price_recieved;
+            details.delivery_person_alloted=orders[i].delivery_person_alloted;
+            details.delivery_person_contact=orders[i].delivery_person_contact;
+        }
+        details.dishes=dishes;
+        details.status=status;
+        def.resolve(details);
+        return def.promise;
     }
 };
 
+function randomString(length, chars) {
+    var mask = '';
+    if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+    if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (chars.indexOf('#') > -1) mask += '0123456789';
+    if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+    var result = '';
+    for (var i = length; i > 0; --i) result += mask[Math.round(Math.random() * (mask.length - 1))];
+    return result;
+}
 module.exports = orderLogic;

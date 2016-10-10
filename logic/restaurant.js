@@ -510,7 +510,7 @@ var listings = {
                 }, function (err, info) {
                     if (!err) {
                         def.resolve(config.get("ok"));
-                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status restaurant_assigned customer_number", function (err, order) {
+                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status customer_email restaurant_assigned customer_number", function (err, order) {
                             if (!err) {
                                 if (order.status == "prepared") {
                                     events.emitter.emit("process_delivery_queue", order._id);

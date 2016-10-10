@@ -20,7 +20,6 @@ var userTable;
 var pinTable;
     userTable=db.getuserdef;
     pinTable=db.getpindef;
-var feedbackTable=db.getfeedbackdef;
 
 var users={
     validateTokenFB:function(req){
@@ -146,7 +145,7 @@ var users={
     },
     signin:function(req,res){
         var def= q.defer();
-        userTable.findOne({email:req.body.email},"password name phonenumber token_validity_code is_res_owner is_admin").exec()
+        userTable.findOne({email:req.body.email},"password name phonenumber token_validity_code").exec()
             .then(function(user){
                 log.info(user);
                 bcrypt.compare(req.body.password,user.password,function(err,res){

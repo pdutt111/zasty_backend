@@ -167,7 +167,7 @@ body{
 .fill .promobox button:hover{ color: #fff; background-color: #46b992;}
 .cartslide-wrpr .cart-footer{display: block; width: 100%; color: #fff; box-sizing: border-box; text-align: center; position: absolute; bottom: 0; left: 0; background: #fff;}
 .cartslide-wrpr .fill .cart-footer .checkout input{background: #111;}
-.cartslide-wrpr .fill .cart-footer .checkout input, .cartslide-wrpr .empty .cart-footer .checkout input{ border: 0; -webkit-appearance:none; -moz-appearance:none; appearance:none; text-transform: uppercase; color: #fff; font-size: 20px; display: block; vertical-align: middle; width: 100%; height: 3.5rem;}
+.cartslide-wrpr .fill .cart-footer .checkout input, .cartslide-wrpr .empty .cart-footer .checkout input{ border: 0; -webkit-appearance:none; -moz-appearance:none; cursor: pointer; appearance:none; text-transform: uppercase; color: #fff; font-size: 20px; display: block; vertical-align: middle; width: 100%; height: 3.5rem;}
 .cartslide-wrpr .empty .cart-footer .checkout{ background: #f7f7f7;}
 .empty .cartlist, .empty .promobox, .empty .totalamnt{display: none;}
 

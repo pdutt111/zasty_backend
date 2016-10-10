@@ -41,14 +41,16 @@ converter.on("end_parsed", function (jsonArray) {
                         restaurant_dishes[item]=[];
                     }
                     if(jsonArray[i][item]!=""&&jsonArray[i][item]!="-"){
+                        console.log(item,dish.identifier,jsonArray[i][item]);
                         dish.price=jsonArray[i][item];
-                        restaurant_dishes[item].push(dish);
+                        restaurant_dishes[item].push(JSON.parse(JSON.stringify(dish)));
                     }
                 }
 
 
             }
         }
+        console.log(restaurant_dishes["Z0101Z8ICFT"]);
         for(var item in restaurant_dishes){
             restaurantTable.update({name:item},{$set:{dishes:restaurant_dishes[item]}},function(err,info){
                 console.log(err,info);
