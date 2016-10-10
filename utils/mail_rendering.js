@@ -14,7 +14,7 @@ var data={order:{
     area:"blah",
     city:"blah"
 }}
-ejs.renderFile('./public/user/email_template.html', data, function(err, str){
+ejs.renderFile('./public/user/order_placed_user.html', data, function(err, str){
     // str => Rendered HTML string
 
     console.log(err,str);

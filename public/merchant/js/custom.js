@@ -398,15 +398,15 @@ function renderOrderTable() {
             }
         }
 
-        order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
+        order.status = order.status + (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '');
         var order_leftover = "Full Order";
         if (!order.full_order) {
             order_leftover = " Half order";
         }
         rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
-            + displayStatus + '<BR/><BR/>' + order.buttons + '</td><td>'
-            + order.date + '</td><td>' + dishes + '</td><td>'
-            + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
+            + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
+            + order.date + '</td><td>' + dishes + '</td><td><b style="color: red">price to recieve : '+order.delivery_price_recieved+"</b><br>"
+            + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
     });
     var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
 
@@ -434,6 +434,9 @@ function orderRefresh() {
             if (Array.isArray(json)) {
                 restaurant.orders = json.sort(compareState);
                 renderOrderTable();
+                if(context.active_order){
+                    orderDetails(context.active_order);
+                }
             }
             self.orderRefreshing = false;
         },
@@ -465,7 +468,7 @@ function orderDetails(i) {
 
 function changeOrderStatus(i, accept) {
     console.log('changeOrderStatus', i);
-    var state = restaurant.orders[i].status;
+    var state = restaurant.orders[i].status.split("<")[0];
     var _id = restaurant.orders[i]._id;
     console.log(state, _id);
     if (order_states.indexOf(state) > 1 && order_states.indexOf(state) < order_states.length - 1) {
@@ -625,7 +628,7 @@ function renderUnpaidOrderTable() {
         }
         order.total = total;
         order.dishes = dishes;
-        order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
+        order.status = order.status + (order.issue_raised ? '</BR>Issue:<b style="color: red">' + order.issue_reason +"</b>": '');
 
         var displayStatus = order.status;
         if (order.delivery && order.delivery.status !== 'not_ready') {
@@ -755,7 +758,7 @@ function renderSearchTable() {
         }
         order.total = total;
         order.dishes = dishes;
-        order.status = order.status + (order.issue_raised ? '</BR>Issue:' + order.issue_reason : '');
+        order.status = order.status + (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '');
 
         rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
             + order.status + '</td><td>'

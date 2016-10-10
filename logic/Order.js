@@ -76,6 +76,7 @@ var orderLogic = {
         return def.promise;
     },
     combineRestaurant: function (req, restaurants) {
+        log.info(restaurants);
         var def = q.defer();
         restaurantTable.find({
             name: {$in: restaurants},
@@ -90,7 +91,9 @@ var orderLogic = {
 
                 for (var i = 0; i < restaurants.length; i++) {
                     for (var j = 0; j < restaurants[i].dishes.length; j++) {
-                        response.dishes.push(restaurants[i].dishes[j]);
+                        if(restaurants[i].dishes[j].availability){
+                            response.dishes.push(restaurants[i].dishes[j]);
+                        }
                     }
                 }
                 def.resolve(response);
@@ -364,7 +367,6 @@ var orderLogic = {
                                         price: parseFloat(parseFloat(delivery_price_recieved).toFixed(2))
                                     });
 
-                                    log.info("sending mail", order._id);
                                     if (req.body.payment_mode == 'cod'){
                                         var dishes=[];
                                         for(var name in req.body.dishes_ordered){
@@ -372,6 +374,10 @@ var orderLogic = {
                                         }
                                         order.dishes_ordered=dishes
                                         orderLogic.createMail(order);
+                                        orderLogic.createAdminMail(order);
+                                        ordersList.forEach(function(order){
+                                            orderLogic.createRestaurantMail(order);
+                                        })
                                     }
                                 }
                             }
@@ -404,7 +410,7 @@ var orderLogic = {
     },
     createMail: function (order) {
         order.track_link=config.get('server_url')+"/track.html?orderid="+order.combined_id;
-        ejs.renderFile('./public/user/email_template.html', {order:order}, function(err, str){
+        ejs.renderFile('./public/user/email_templates/order_placed_user.html', {order:order}, function(err, str){
             // str => Rendered HTML string
             log.info(err,str);
             var email = {
@@ -415,39 +421,63 @@ var orderLogic = {
 
             email.toEmail = order.customer_email;
             events.emitter.emit("mail", email);
-
-            var message = "<b>new order</b> id- " + order._id + '<br>';
-            order.dishes_ordered.forEach(function (d) {
-                message += "<p>qty: " + d.qty + " - Dish: " + d.identifier + " - Price: " + d.price_to_pay + "<p><br>";
-            });
-            message += '\ntotal price to restaurant: ' + order.total_price_to_pay;
-
-            email = {
+            events.emitter.emit("sms", {number: order.customer_number, message: "Dear "+order.customer_name+" , we have successfully recieved your order. " +
+            "Your Order "+order.combined_id+" will be delivered shortly. Thanks for using ZASTY!"})
+        });
+    },
+    createRestaurantMail:function(order){
+        ejs.renderFile('./public/user/email_templates/order_placed_kp.html', {order:order}, function(err, str){
+            var email = {
                 subject: "New Order ID - " + order._id,
-                message: message,
-                plaintext: message
+                message: str,
+                plaintext: str
             };
-
             userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, doc) {
                 if (doc && doc.email) {
                     if (doc.phonenumber) {
-                        var message = "new order\n"
+                        var dish_names=""
                         order.dishes_ordered.forEach(function (d) {
-                            message += d.qty + "-" + d.identifier + ":" + d.price_to_pay + "\n";
+                            dish_names += d.qty + "-" + d.identifier+" ";
                         });
+                        var message = "you have received a new order "+order._id+" from ZASTY. " +
+                            "Prepare "+dish_names+" Order will be picked up in 20 minutes.";
+                        if(order.payment_mode=="cod"){
+                            message +=". collect cash "+order.delivery_price_recieved;
+                        }
                         log.info("sending sms");
                         events.emitter.emit("sms", {number: doc.phonenumber, message: message})
-                        events.emitter.emit("sms", {number: order.customer_number, message: message})
                     }
                     email.toEmail = doc.email;
                     events.emitter.emit("mail", email);
                 }
             });
-
-            email.message += '<br>total price: ' + order.total_price_recieved;
-            email.plaintext += '<br>total price: ' + order.total_price_recieved;
-
+        });
+    },
+    createAdminMail:function(order){
+        ejs.renderFile('./public/user/email_templates/order_placed_admin.html', {order:order}, function(err, str){
+            var email = {
+                subject: "New Order ID - " + order._id,
+                message: str,
+                plaintext: str
+            };
             events.emitter.emit("mail_admin", email);
+            userTable.findOne({is_admin: true}, function (err, doc) {
+                if (doc) {
+                    if (doc.phonenumber) {
+                        var dish_names=""
+                        order.dishes_ordered.forEach(function (d) {
+                            dish_names += d.qty + "-" + d.identifier+" ";
+                        });
+                        var message = "you have received a new order from "+order.customer_name+" "+order.address+", "+order.area+", "+order.city+" " +
+                            "with order number "+order.combined_id+". Items "+dish_names+". Total order value "+order.delivery_price_recieved+" .";
+                        if(order.payment_mode=="cod"){
+                            message +=". collect cash "+order.delivery_price_recieved;
+                        }
+                        log.info("sending sms");
+                        events.emitter.emit("sms", {number: doc.phonenumber, message: message})
+                    }
+                }
+            });
         });
     },
     deleteOrder: function (req) {
@@ -574,15 +604,19 @@ var orderLogic = {
                             def.resolve(doc);
                             //send email after finsing orders
                             orderTable.find({combined_id: req.params.order_id}, function (err, docs) {
-                                var dishes=[]
-                                docs.forEach(function (order) {
-                                    for(var i=0;i<order.dishes_ordered.length;i++){
-                                        dishes.push(order.dishes_ordered[i]);
-                                    }
-                                });
-                                log.info(dishes);
-                                docs[0].dishes_ordered=dishes;
-                                orderLogic.createMail(docs[0]);
+                                if(!err&&docs!=[]){
+                                    var dishes=[]
+                                    docs.forEach(function (order) {
+                                        orderLogic.createRestaurantMail(order);
+                                        for(var i=0;i<order.dishes_ordered.length;i++){
+                                            dishes.push(order.dishes_ordered[i]);
+                                        }
+                                    });
+                                    log.info(dishes);
+                                    docs[0].dishes_ordered=dishes;
+                                    orderLogic.createMail(docs[0]);
+                                    orderLogic.createAdminMail(docs[0]);
+                                }
                             });
                         } else {
                             def.reject();
