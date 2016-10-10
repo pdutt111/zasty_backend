@@ -373,7 +373,10 @@ var listings = {
                 paid_status_to_restaurant: false,
                 status: {$in: ["dispatched", "DELIVERED"]}
             },
-            "address dishes_ordered full_order payment_mode delivery customer_name customer_number log created_time customer_email issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+            "address dishes_ordered full_order payment_mode delivery_price_recieved" +
+            " delivery customer_name customer_number log created_time customer_email" +
+            " issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status" +
+            "  payment_mode payment_status")
             .sort({_id: -1})
             .exec(function (err, rows) {
                 log.info(err);

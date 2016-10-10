@@ -602,9 +602,14 @@ function updateRestaurantDetails() {
 function renderUnpaidOrderTable() {
     var rows = [];
     var grand_total = 0;
+    var grand_total_cod = 0;
+    var online_count=0;
+    var cod_count=0;
+    var grand_total_online = 0;
+    var price_recieved_from_cod = 0;
+    var balance=0;
     restaurant.unpaid_orders.forEach(function (order, index) {
         var total = 0, dishes = '', dishes_html = '';
-
         order.dishes_ordered.forEach(function (e) {
             dishes = dishes + e.identifier + ' x ' + e.qty + '<BR/>';
             total = total + (e.price_to_pay * e.qty);
@@ -629,17 +634,35 @@ function renderUnpaidOrderTable() {
                 displayStatus += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
             }
         }
-
-        rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
-            + order.status + '</td><td>'
-            + order.date + '</td><td>' + dishes + '</td><td>'
-            + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td></tr>');
+        if(order.payment_mode=='cod'){
+            price_recieved_from_cod += order.delivery_price_recieved;
+            grand_total_cod += total;
+            cod_count++;
+            rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+                + order.status + '</td><td>'
+                + order.date + '</td><td>' + dishes + '</td><td>received:'+order.delivery_price_recieved+"<BR/>"
+                + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td></tr>');
+        }else{
+            grand_total_online += total;
+            online_count++;
+            rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+                + order.status + '</td><td>'
+                + order.date + '</td><td>' + dishes + '</td><td>'
+                + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td></tr>');
+        }
     });
+    balance=grand_total-price_recieved_from_cod;
     var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> </tr>' + rows.join('') + '</table>';
 
     $('.js-current-transaction-table').html(table);
-    $('.js-ct-total').html(grand_total);
-    $('.js-ct-count').html(restaurant.unpaid_orders.length);
+    $('#total_amount').html(grand_total);
+    $('#total_number').html(restaurant.unpaid_orders.length);
+    $('#online_number').html(online_count);
+    $('#online_amount').html(grand_total_online);
+    $('#cod_number').html(cod_count);
+    $('#cod_amount_payout').html(grand_total_cod);
+    $('#cod_amount').html(price_recieved_from_cod);
+    $('#balance').html(balance);
 }
 
 function unpaidOrderRefresh() {
