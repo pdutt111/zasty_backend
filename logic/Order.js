@@ -276,7 +276,7 @@ var orderLogic = {
             full_order = true;
         }
         var order_completed = restaurants.length;
-        var combined_id = Math.floor(Math.random() * 90000) + 10000;
+        var combined_id = Math.floor(Math.random() * 9000000) + 1000000;
         for (var i = 0; i < restaurants.length; i++) {
             log.info(dishes_ordered[restaurants[i].name]);
             if (dishes_ordered[restaurants[i].name]) {
@@ -308,9 +308,11 @@ var orderLogic = {
                         locality: req.body.locality,
                         city: req.body.city,
                         location: location,
-                        delivery: {
-                            enabled: restaurants[i].delivery_enabled && req.body.delivery_enabled
-                        },
+                        delivery_enabled:restaurants[i].delivery_enabled && req.body.delivery_enabled,
+                        // delivery: {
+                        //     // enabled: restaurants[i].delivery_enabled && req.body.delivery_enabled
+                        //     enabled: true
+                        // },
                         total_price_recieved: total_price_recieved,
                         total_price_to_pay: total_price_to_pay,
                         delivery_price_recieved: delivery_price_recieved,
@@ -517,11 +519,11 @@ var orderLogic = {
         userTable.findOne({email:req.body.customer_email},"pin",function(err,user){
            if(!err&&user){
                log.info(user,req.body);
-               if(user.pin==req.body.code){
+               // if(user.pin==req.body.code){
                    def.resolve();
-               }else{
-                   def.reject({status: 400, message: config.get('error.badrequest')});
-               }
+               // }else{
+               //     def.reject({status: 400, message: config.get('error.badrequest')});
+               // }
            } else{
                def.reject({status: 500, message: config.get('error.dberror')});
            }
@@ -547,7 +549,7 @@ var orderLogic = {
     },
     deliveryCallback: function (req) {
         var def = q.defer();
-
+        log.info(req.body);
         orderTable.findOne({_id: req.params.order_id}, function (err, doc) {
             if (err || !doc) {
                 def.reject({status: 500, message: config.get('error.dberror')});

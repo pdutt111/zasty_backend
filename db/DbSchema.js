@@ -113,12 +113,13 @@ var orderSchema = new Schema({
     customer_number: String,
     customer_name: String,
     customer_email: String,
+    delivery_enabled:{type:Boolean,default:true},
     delivery: {
-        enabled:{type:Boolean,default:true},
         details: Schema.Types.Mixed,
         retry_count: {type: Number, default: 0},
         log: [{status: String, _id: false, date: {type: Date, default: Date.now}}],
-        status: {type: String, default: 'not_ready'}
+        status: {type: String, default: 'not_ready'},
+        enabled:{type:Boolean,default:true}
     },
     delivery_person_alloted: String,
     delivery_person_contact: String,

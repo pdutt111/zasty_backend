@@ -13,7 +13,7 @@ var dishes = require('./routes/dishCalls');
 var restaurant = require('./routes/restaurantCalls');
 var order = require('./routes/orderingCalls');
 var views= require('./routes/viewCalls');
-
+require('./jobs/orderalerts');
 require('./event_recievers/smsSender');
 require('./event_recievers/mailSender');
 require('./event_recievers/fetch_nomnom');
@@ -70,7 +70,6 @@ app.use(
     function (req, res, next) {
         auth(req, res)
             .then(function (user) {
-                log.info(user);
                 req.user = user;
                 next();
             })

@@ -401,6 +401,52 @@ var listings = {
             });
         return def.promise;
     },
+    sendupdate:function(id){
+      orderTable.find({combined_id:id},function(err,orders){
+          log.info(orders);
+          if(!err&&orders!=[]){
+              var status=6;
+              for(var i=0;i<orders.length;i++){
+                      if(orders[i].status=="awaiting response"&&status>1){
+                          status=1;
+                      }else if(orders[i].status=="confirmed"&&status>2){
+                          status=2;
+                      }else if(orders[i].status=="prepared"&&status>3){
+                          status=3;
+                      }else if(orders[i].status=="dispatched"&&status>1){
+                          status=4;
+                      }else if(orders[i].status=="DELIVERED"&&status>1){
+                          status=5;
+                      }
+              }
+                      if(status==2){
+                          events.emitter.emit("sms", {
+                              number: orders[0].customer_number,
+                              message: "Dear "+orders[0].customer_name+", your order is was" +
+                              " confirmed by the kitchen. Thanks for using ZASTY!"
+                          })
+                      }else if(status==3){
+                          events.emitter.emit("sms", {
+                              number: orders[0].customer_number,
+                              message: "Dear "+orders[0].customer_name+" your order is under processing and will be " +
+                              "picked up shortly. Thanks for using ZASTY!"
+                          })
+                      }else if(status==4){
+                          events.emitter.emit("sms", {
+                              number: orders[0].customer_number,
+                              message: "Dear "+orders[0].customer_name+", Our logistics Runner " +
+                              orders[0].delivery_person_alloted+" "+orders[0].delivery_person_contact+" has " +
+                              "picked up your order "+orders[0].combined_id+" and is on the way. The order will be delivered Shortly."
+                          })
+                      }else if(status==5){
+                          events.emitter.emit("sms", {
+                              number: orders[0].customer_number,
+                              message: "Hi! Order number "+orders[0].combined_id+" is successfully delivered. We hope you loved it. Looking forward to serve you again."
+                          })
+                      }
+          }
+      });
+    },
     confirmOrder: function (req) {
         var def = q.defer();
         orderTable.update({_id: req.body.order_id}, {
@@ -422,20 +468,9 @@ var listings = {
                                     });
                             })
                         }
+                            events.emitter.emit("process_delivery_queue", order._id);
                         if (order.customer_number) {
-                            events.emitter.emit("sms", {
-                                number: order.customer_number,
-                                message: "Your order was confirmed"
-                            })
-                        }
-                        if (order.customer_email) {
-                            events.emitter.emit("mail", {
-                                subject: "Order Confirmation"
-                                ,
-                                message: "Your order was confirmed",
-                                plaintext: "Your order was confirmed",
-                                toEmail: order.customer_email
-                            })
+// asdadadasdadaad
                         }
                     }
                 });
@@ -472,21 +507,26 @@ var listings = {
                                         });
                                 })
                             }
-                            if (order.customer_number) {
-                                events.emitter.emit("sms", {
-                                    number: order.customer_number,
-                                    message: "Your order was rejected"
-                                })
-                            }
-                            if (order.customer_email) {
-                                events.emitter.emit("mail", {
-                                    subject: "Order rejected"
-                                    ,
-                                    message: "Your order was rejected",
-                                    plaintext: "Your order was confirmed",
-                                    toEmail: order.customer_email
-                                })
-                            }
+                            // if (order.customer_number) {
+                            userTable.findOne({is_admin:true},function(err,user){
+                                if(user.phonenumber){
+                                    events.emitter.emit("sms", {
+                                        number: user.phonenumber,
+                                        message: "Order number "+order._id+" has been rejected " +
+                                        "by kitchen partner "+order.restaurant_assigned+". how can this happen! look into it now!"
+                                    });
+                                }
+                            });
+                            // }
+                            // if (order.customer_email) {
+                            //     events.emitter.emit("mail", {
+                            //         subject: "Order rejected"
+                            //         ,
+                            //         message: "Your order was rejected",
+                            //         plaintext: "Your order was confirmed",
+                            //         toEmail: order.customer_email
+                            //     })
+                            // }
                         }
                     });
                 } else {
@@ -513,11 +553,11 @@ var listings = {
                 }, function (err, info) {
                     if (!err) {
                         def.resolve(config.get("ok"));
-                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status customer_email restaurant_assigned customer_number", function (err, order) {
+                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status customer_email restaurant_assigned combined_id customer_number", function (err, order) {
                             if (!err) {
-                                if (order.status == "prepared") {
-                                    events.emitter.emit("process_delivery_queue", order._id);
-                                }
+                                // if (order.status == "prepared") {
+                                //     events.emitter.emit("process_delivery_queue", order._id);
+                                // }
                                 if (order.source.name == "nomnom") {
                                     restaurantTable.findOne({name: order.restaurant_assigned}, "nomnom_username nomnom_password", function (err, restaurant) {
                                         events.emitter.emit("status_change_nomnom",
@@ -529,21 +569,23 @@ var listings = {
                                             });
                                     })
                                 }
-                                if (order.customer_number) {
-                                    events.emitter.emit("sms", {
-                                        number: order.customer_number,
-                                        message: "Your order was " + order.status
-                                    })
-                                }
-                                if (order.customer_email) {
-                                    events.emitter.emit("mail", {
-                                        subject: "Order Confirmation"
-                                        ,
-                                        message: "Your order was " + order.status,
-                                        plaintext: "Your order was " + order.status,
-                                        toEmail: order.customer_email
-                                    })
-                                }
+                                log.info("sending update",order.combined_id);
+                                listings.sendupdate(order.combined_id);
+                                // if (order.customer_number) {
+                                //     events.emitter.emit("sms", {
+                                //         number: order.customer_number,
+                                //         message: "Your order was " + order.status
+                                //     })
+                                // }
+                                // if (order.customer_email) {
+                                //     events.emitter.emit("mail", {
+                                //         subject: "Order Confirmation"
+                                //         ,
+                                //         message: "Your order was " + order.status,
+                                //         plaintext: "Your order was " + order.status,
+                                //         toEmail: order.customer_email
+                                //     })
+                                // }
                             }
                         });
                     } else {

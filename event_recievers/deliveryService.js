@@ -46,15 +46,15 @@ function deliveryOrderCallback(response, body, order, error, service) {
 events.emitter.on('process_delivery_queue', function (_id) {
     var query = {
         "status": book_at,
-        "delivery.enabled":true,
         "delivery.status": "not_ready",
+        "delivery_enabled":true,
         "delivery.retry_count": {
             $lt: max_retry
         }
     };
 
     if (_id) {
-        query._id = _id;
+        query.combined_id = _id;
     }
 
     orderTable.findOneAndUpdate(query, {
@@ -77,31 +77,34 @@ events.emitter.on('process_delivery_queue', function (_id) {
                     // Quickli
                     if (order.delivery.retry_count <= 3) {
                         log.info("placing delivery request quickli");
-                        // var options = {
-                        //     method: 'POST',
-                        //     url: config.quickli.url_new_order,
-                        //     headers: {
-                        //         'content-type': 'application/x-www-form-urlencoded',
-                        //         'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
-                        //         'cache-control': 'no-cache'
-                        //     },
-                        //     form: {
-                        //         partner_id: '2',
-                        //         cod: order.payment_mode == 'cod' ? order.delivery_price_recieved : '0',
-                        //         store_id: restaurant.quickli_store_id,
-                        //         app_id: config.quickli.app_id,
-                        //         access_key: config.quickli.access_key,
-                        //         pickup_from_store: 'Yes',
-                        //         address: 'Yes',
-                        //         destination_address: order.address,
-                        //         destination_location: [order.area, order.locality, order.city].join(' , '),
-                        //         destination_phone: order.customer_number
-                        //     }
-                        // };
-                        // log.info(options);
-                        // request(options, function (error, response, body) {
-                        //     deliveryOrderCallback(response, body, order, error, 'quickli');
-                        // });
+                        var options = {
+                            method: 'POST',
+                            url: config.quickli.url_new_order,
+                            headers: {
+                                'content-type': 'application/x-www-form-urlencoded',
+                                'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
+                                'cache-control': 'no-cache'
+                            },
+                            form: {
+                                partner_id: '2',
+                                cod: order.payment_mode == 'cod' ? order.delivery_price_recieved : '0',
+                                // store_id: restaurant.quickli_store_id,
+                                store_id: 8,
+                                app_id: config.quickli.app_id,
+                                access_key: config.quickli.access_key,
+                                pickup_from_store: 'Yes',
+                                address: 'Yes',
+                                destination_address: order.address,
+                                destination_location: [order.area, order.locality, order.city].join(' , '),
+                                destination_phone: order.customer_number,
+                                destination_ltd:28.4595,
+                                destination_lng:77.0266
+                            }
+                        };
+                        log.info(options);
+                        request(options, function (error, response, body) {
+                            deliveryOrderCallback(response, body, order, error, 'quickli');
+                        });
 
                     }else{
                         log.info("placing delivery request shadowfax");
@@ -161,12 +164,15 @@ function resetNSave(doc, err) {
     }
 
     if (doc.delivery.retry_count >= max_retry) {
-        // doc.delivery.status = 'error';
+        doc.delivery.status = 'error';
+        doc.status='processing_delivery_request';
         console.log("CRITICAL ERROR- DELIVERY SERVICE ORDER FAIL for order_id- ", doc._id);
         sendAdminAlert(doc);
     }
 
-    doc.save();
+    doc.save(function(err,info){
+        log.info(err,info);
+    });
 }
 
 function sendAdminAlert(doc) {
@@ -213,13 +219,13 @@ events.emitter.on('process_quickli', function () {
                             },
                             form: {
                                 partner_id: '2',
-                                store_id: restaurant.quickli_store_id,
+                                // store_id: restaurant.quickli_store_id,
+                                store_id: 8,
                                 app_id: config.quickli.app_id,
                                 access_key: config.quickli.access_key,
                                 order_id: order.delivery.details.order_id
                             }
                         };
-                        log.info(options);
                         request(options, function (error, response, body) {
                             if (response && response.statusCode == 200) {
                                 var data = JSON.parse(body);
@@ -237,6 +243,12 @@ events.emitter.on('process_quickli', function () {
                                     }
                                     order.delivery.status = data.status;
                                 }
+                                orderTable.update({combined_id:order.combined_id},
+                                    {$set:{delivery_person_alloted:data.deliveryboy_name,
+                                        delivery_person_contact:data.deliveryboy_phone}},{multi:true},
+                                    function(err,info){
+
+                                    })
                             }
                             order.delivery.details.pooling = false;
                             order.delivery.details.pooled_at = new Date();
