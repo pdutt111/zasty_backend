@@ -109,6 +109,9 @@ var users={
                                 if(!err&&user) {
                                     if(req.body.fb_user_id==user.fb_user_id){
                                         def.resolve(user);
+                                        user.name=req.body.name;
+                                        user.save(function(err,info){
+                                        });
                                     }else if(req.body.google_user_id==user.google_user_id){
                                         def.resolve(user);
                                     }else if(req.body.password){
