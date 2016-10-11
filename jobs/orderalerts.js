@@ -64,7 +64,7 @@ var job = new CronJob({
             })
         });
     },
-    cronTime: '5 * * * * *',
+    cronTime: '0 3 * * * *',
     start: false,
     timeZone: 'Asia/Kolkata'
 });
