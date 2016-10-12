@@ -6,14 +6,14 @@ body{
 .container {margin-right: auto; margin-left: auto; max-width: 1170px; width: 100%;}
 
 /*login/signup page*/
-.login-form-wrpr{ display: table; width: 100%; height: 100vh; padding: 1.071rem; background: url(../images/landingBanner.jpg) no-repeat scroll center top; background-size: cover; }
+.login-form-wrpr{ display: table; width: 100%; height: 100vh; padding: 1.071rem; background: url(../images/landingBanner.png) no-repeat scroll center top; background-size: cover; }
 .login-form-wrpr > div { display: table-cell; vertical-align: middle; width: 100%;}
 .login-form {margin: 2% auto 0; max-width: 500px; width: 100%; }
 .login-form > div {border: 1px solid #dcdcdc; padding: 30px; border-radius: 2px;}
 .login-form h1{ font-size: 32px;}
 
 /*banner section*/
-.banner-wrpr{background: url(../images/landingBanner.jpg) no-repeat scroll center top; height: 100vh; width: 100%;}
+.banner-wrpr{background: url(../images/landingBanner.png) no-repeat scroll center top; height: 100vh; width: 100%;}
 .navigation{ padding-top: 40px;}
 .navigation ul{display: table; position: relative;}
 .navigation ul li{ display: table-cell; vertical-align: middle; padding: 5px 10px; color: #fff; cursor: pointer;}
@@ -30,8 +30,8 @@ body{
 .loc select + span{display: inline-block; width: 400px !important; margin-top: 50px; border: 0; cursor: pointer;-webkit-appearance: none; -moz-appearance: none; appearance: none; background: url("../images/down-arrow.png") no-repeat 97% #fff; text-align: left;}
 /*download app section*/
 .dwnld-wrpr{background-repeat: no-repeat; background-attachment: scroll; width: 100%;}
-.dwnld-wrpr.banner1{ background-image:url(../images/feature1.jpg); background-position: center; height: 500px;}
-.dwnld-wrpr.banner2{ background-image:url(../images/feature2.jpg); background-position: center top; height: 700px;}
+.dwnld-wrpr.banner1{ background-image:url(../images/feature1.png); background-position: center; height: 500px;}
+.dwnld-wrpr.banner2{ background-image:url(../images/feature2.png); background-position: center top; height: 700px;}
 .dwnld-wrpr span{ width: 400px;}
 .dwnld-wrpr span img{ widh: 100%; height: auto; max-width: 400px;}
 
@@ -154,7 +154,7 @@ body{
 .cartlist-empty a.brws-btn{background: #111; color: #fff; padding: 15px 25px;}
 .fill .cartlist .item{ display: table; padding: 10px 0; width: 100%; border-top: 1px solid #dadada}
 .fill .cartlist .item:first-child{border: 0;}
-.fill .cartlist .item .lft-pane{ display: table-cell; width: 70px; height: 70px; background: url(../images/mains.jpg) no-repeat scroll center center; background-size: cover; background-position: 50% 50%;}
+.fill .cartlist .item .lft-pane{ display: table-cell; width: 70px; height: 70px; background: url(../images/mains.png) no-repeat scroll center center; background-size: cover; background-position: 50% 50%;}
 .fill .cartlist .item .rght-pane{display: table-cell; position: relative;}
 .fill .cartlist .item .rght-pane .item-info{ margin-left: 15px;}
 .fill .cartlist .item .rght-pane .item-info h4{ font-size: 14px; font-weight: normal; color: #56595a; margin: 0; padding-bottom: 12px;}
@@ -174,7 +174,7 @@ body{
 /*knowmore content*/
 .knowmore-wrpr .cntnt{ vertical-align: middle;}
 .knowmore-wrpr .cntnt > div{ width: 90%; padding: 15px; display: table; background: #f4f7f8;}
-.knowmore-wrpr .cntnt .lft-pane{ display: table-cell; width: 600px; height: 600px; background: url(../images/burgers.jpg) no-repeat scroll center center; background-size: cover; background-position: 50% 50%;}
+.knowmore-wrpr .cntnt .lft-pane{ display: table-cell; width: 600px; height: 600px; background: url(../images/burgers.png) no-repeat scroll center center; background-size: cover; background-position: 50% 50%;}
 .knowmore-wrpr .cntnt .rght-pane{ display: table-cell;}
 .knowmore-wrpr .cntnt .item-info{ margin-left: 20px; text-align: left;}
 .knowmore-wrpr .cntnt .item-info .action-btn{padding: 12px 30px;}

@@ -532,7 +532,7 @@ function renderMenu() {
             + categoryDishesHtml
             + '<div class="clear fN"></div> </div>';
 
-        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/' + e.toLowerCase().split(' ').join('') + '.jpg" alt="">' + "<span>" + e + "<\/span>" + '</a></li>';
+        categoryList += '<li><a href="#' + e.split(' ').join('') + '"><img src="images/' + e.toLowerCase().split(' ').join('') + '.png" alt="">' + "<span>" + e + "<\/span>" + '</a></li>';
     });
 
     var strVar = "";

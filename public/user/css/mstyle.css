@@ -26,13 +26,13 @@ body{
 .container {margin-right: auto; margin-left: auto; width: 100%;}
 
 /*login/signup page*/
-.login-form-wrpr{ display: table; width: 100%; height: 100vh; padding: 10px; background: url(../images/landingBanner.jpg) no-repeat scroll center top; background-size: cover; }
+.login-form-wrpr{ display: table; width: 100%; height: 100vh; padding: 10px; background: url(../images/landingBanner.png) no-repeat scroll center top; background-size: cover; }
 .login-form-wrpr > div { display: table-cell; vertical-align: middle; width: 100%;}
 .login-form {margin: 0 auto; width: 100%; }
 .login-form > div {border: 1px solid #dcdcdc; padding: 10px; border-radius: 2px;}
 
 /*banner section*/
-.banner-wrpr{background: url(../images/landingBanner.jpg) no-repeat scroll center top; height: 100vh; width: 100%;}
+.banner-wrpr{background: url(../images/landingBanner.png) no-repeat scroll center top; height: 100vh; width: 100%;}
 
 /*hemburger menu*/
 .hmbrg-menu{height: 20px; width: 30px; display: inline-block; border-bottom: 2px solid #fff; border-top: 2px solid #fff; position: relative;}
@@ -181,7 +181,7 @@ body{
 .cartlist-empty a.brws-btn{background: #46b992; color: #fff; padding: 15px 25px; border-radius: 4px;}
 .fill .cartlist .item{ display: table; padding: 10px 0; width: 100%; border-top: 1px solid #dadada}
 .fill .cartlist .item:first-child{border: 0;}
-.fill .cartlist .item .lft-pane{ display: table-cell; width: 70px; height: 70px; background: url(../images/mains.jpg) no-repeat scroll center center; background-size: cover; background-position: 50% 50%;}
+.fill .cartlist .item .lft-pane{ display: table-cell; width: 70px; height: 70px; background: url(../images/mains.png) no-repeat scroll center center; background-size: cover; background-position: 50% 50%;}
 .fill .cartlist .item .rght-pane{display: table-cell; position: relative;}
 .fill .cartlist .item .rght-pane .item-info{ margin-left: 15px;}
 .fill .cartlist .item .rght-pane .item-info h4{ font-size: 14px; font-weight: normal; color: #56595a; margin: 0; padding-bottom: 12px;}
@@ -202,7 +202,7 @@ body{
 .knowmore-wrpr .prdct-heading{ width: 100%; padding: 15px 10px; display: block; background: #f4f7f8; position: fixed; top: 0; left: 0; right: 0; box-shadow: 0 1px 4px 0 rgba(0,0,0,.3); line-height: 30px !important;}
 .knowmore-wrpr .prdct-heading font{ display: inline-block; vertical-align: middle; font-size: 20px;}
 .knowmore-close{font-size: 20px !important; display: inline-block; vertical-align: middle; text-align: right; width: 30px; height: 30px; line-height: 30px !important;}
-.knowmore-wrpr .cntnt .up-pane{ display: block; width: 100%; height: 300px; max-height: 300px; background: url(../images/burgers.jpg) no-repeat scroll center center; background-size: cover; background-position: 50% 50%; margin-top: 60px;}
+.knowmore-wrpr .cntnt .up-pane{ display: block; width: 100%; height: 300px; max-height: 300px; background: url(../images/burgers.png) no-repeat scroll center center; background-size: cover; background-position: 50% 50%; margin-top: 60px;}
 .knowmore-wrpr .cntnt .dwn-pane{ display: block;}
 .knowmore-wrpr .cntnt{text-align: left; width: 100%; background: #f4f7f8;}
 .knowmore-wrpr .cntnt .up-prop{padding: 10px;}
