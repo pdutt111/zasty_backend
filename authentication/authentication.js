@@ -20,7 +20,6 @@ var auth=function(req,res,next){
                     var now = (new Date()).toISOString();
                     if ((now < decoded.exp)) {
                         userTable.findOne({_id:new ObjectId(decoded.user._id)},"name email token_validity_code",function(err,user){
-                            log.info(err);
                             if(!err&&user){
                                 log.info(decoded,user);
                                 if(decoded.user.token_validity_code==user.token_validity_code){

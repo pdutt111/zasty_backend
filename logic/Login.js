@@ -99,6 +99,7 @@ var users={
                     if(!err){
                         var tokendata={
                             _id:user._id,
+                            token_validity_code:user.token_validity_code,
                             email:user.email,
                         };
                         def.resolve(tokendata);
