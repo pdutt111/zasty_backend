@@ -2,6 +2,7 @@ var config = require('config');
 var events = require('../events');
 var request = require('request');
 var db = require('../db/DbSchema');
+var urlencode=require('urlencode');
 var log = require('tracer').colorConsole(config.get('log'));
 var restaurantTable = db.getrestaurantdef;
 var orderTable = db.getorderdef;
@@ -76,40 +77,53 @@ events.emitter.on('process_delivery_queue', function (_id) {
 
                     // Quickli
                     if (order.delivery.retry_count <= 3) {
-                        log.info("placing delivery request quickli");
-                        var options = {
-                            method: 'POST',
-                            url: config.quickli.url_new_order,
-                            headers: {
-                                'content-type': 'application/x-www-form-urlencoded',
-                                'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
-                                'cache-control': 'no-cache'
-                            },
-                            form: {
-                                partner_id: '2',
-                                cod: order.payment_mode == 'cod' ? order.delivery_price_recieved : '0',
-                                // store_id: restaurant.quickli_store_id,
-                                store_id: 8,
-                                app_id: config.quickli.app_id,
-                                access_key: config.quickli.access_key,
-                                pickup_from_store: 'Yes',
-                                address: 'Yes',
-                                destination_address: order.address,
-                                destination_location: [order.area, order.locality, order.city].join(' , '),
-                                destination_phone: order.customer_number,
-                                destination_ltd:28.4595,
-                                destination_lng:77.0266
+                        request('https://maps.googleapis.com/maps/api/geocode/j' +
+                            'son?address='+urlencode(order.area)+','+order.city+'&key=' +
+                            'AIzaSyBsp-wl6rpRBFQmwBUVJrmXij_PHvzi0ck',function(err,response,body){
+                            log.info("placing delivery request quickli");
+                            try{
+                                body=JSON.parse(body);
+                            }catch(e){}
+                            if(body.status=="OK"&&body.results.length>0){
+                                var lat=body.results[0].geometry.location.lat
+                                var lon=body.results[0].geometry.location.lng
+                                var options = {
+                                    method: 'POST',
+                                    url: config.quickli.url_new_order,
+                                    headers: {
+                                        'content-type': 'application/x-www-form-urlencoded',
+                                        'postman-token': 'd8eae1aa-d1ec-2b15-829c-5e331400110e',
+                                        'cache-control': 'no-cache'
+                                    },
+                                    form: {
+                                        partner_id: '2',
+                                        cod: order.payment_mode == 'cod' ? order.delivery_price_recieved : '0',
+                                        store_id: restaurant.quickli_store_id,
+                                        // store_id: 8,
+                                        app_id: config.quickli.app_id,
+                                        access_key: config.quickli.access_key,
+                                        pickup_from_store: 'Yes',
+                                        address: 'Yes',
+                                        destination_address: order.address,
+                                        destination_location: [order.area, order.locality, order.city].join(' , '),
+                                        destination_phone: order.customer_number,
+                                        destination_ltd:lat,
+                                        destination_lng:lon
+                                    }
+                                };
+                                log.info(options);
+                                request(options, function (error, response, body) {
+                                    deliveryOrderCallback(response, body, order, error, 'quickli');
+                                });
+                            }else{
+                                resetNSave(order,"location not found");
                             }
-                        };
-                        log.info(options);
-                        request(options, function (error, response, body) {
-                            deliveryOrderCallback(response, body, order, error, 'quickli');
-                        });
+                        })
 
                     }else{
                         log.info("placing delivery request shadowfax");
                         var payload = JSON.stringify({
-                            // "store_code": restaurant.shadowfax_store_code,
+                            "store_code": restaurant.shadowfax_store_code,
                             "store_code": "zesty_test",
                             "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
                             "pickup_contact_number": restaurant.contact_number,
@@ -123,7 +137,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                                 "name": order.customer_name,
                                 "contact_number": order.customer_number,
                                 "address_line_1": order.address,
-                                "address_line_2": order.area + order.locality,
+                                "address_line_2": order.area +", "+ order.locality,
                                 "city": order.city
                             }
                         });

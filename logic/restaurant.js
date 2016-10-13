@@ -509,7 +509,7 @@ var listings = {
                             }
                             // if (order.customer_number) {
                             userTable.findOne({is_admin:true},function(err,user){
-                                if(user.phonenumber){
+                                if(user&&user.phonenumber){
                                     events.emitter.emit("sms", {
                                         number: user.phonenumber,
                                         message: "Order number "+order._id+" has been rejected " +

@@ -15,6 +15,7 @@ var orderTable=db.getorderdef;
 events.emitter.on("fetch_nomnom",function(data){
     nomnom_login(data).
         then(function(data){
+            console.log(data);
             return fetch_orders(data);
         })
         .then(function(data){
@@ -41,7 +42,7 @@ events.emitter.on('status_change_nomnom',function(data){
 });
 var queue = async.queue(function(task, callback) {
     request({
-        url:"http://restaurant-test.gonomnom.in/nomnom/order_restaurant/?order_id="+task.order_id,
+        url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/?order_id="+task.order_id,
         method:"GET",
         headers:{
             "Access-Token":task.token
@@ -58,7 +59,6 @@ var queue = async.queue(function(task, callback) {
                     qty:body[0].sub_order.items[i].dish_quantity,
                 }
             }
-            log.info(dishes_ordered);
             if(body[0].status=="order_prepared"){
                 body[0].status='prepared'
             }else  if(body[0].status=="order_dispatched"){
@@ -70,19 +70,20 @@ var queue = async.queue(function(task, callback) {
             }else  if(body[0].status=="created"){
                 body[0].status='awaiting response'
             }
-
+            console.log(body[0].address.locality.name);
             var req={}
             req.body={
-                "city":body[0].address.city.name,
+                "city":"gurgaon",
                 "area":body[0].address.locality.name,
-                "locality":body[0].address.sub_locality.name,
-                "address":body[0].address.sub_locality.name,
+                "locality":"gurgaon",
+                "address":body[0].address.name,
                 "dishes_ordered":dishes_ordered,
                 lat:body[0].address.sub_locality.latitude,
                 lon:body[0].address.sub_locality.longitude,
                 "customer_name":body[0].customer.name,
                 "customer_number":body[0].customer.primary_number,
                 "restaurant_name":task.restaurant_name,
+                payment_mode:'cod',
                 status:body[0].status,
                 source:{
                     name:"nomnom",
@@ -91,7 +92,10 @@ var queue = async.queue(function(task, callback) {
             };
             orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
                 if(!err&&rows.length==0){
-                    orderLogic.findActualRates(req)
+                    orderLogic.findRestaurantFromArea(req)
+                        .then(function (restaurants) {
+                            return orderLogic.findActualRates(req, restaurants)
+                        })
                         .then(function(restaurant){
                             return orderLogic.createDishesOrderedList(req,restaurant);
                         })
@@ -121,12 +125,15 @@ queue.drain = function() {
 
 function nomnom_login(data){
     var def= q.defer();
+    console.log(data);
     request({
-        url:"http://restaurant-test.gonomnom.in/nomnom/agent_login/",
+        url:"http://restaurant.gonomnom.in/nomnom/agent_login/",
         method:"POST",
+        headers:{"Content-Type":"application/json"},
         body:{email:data.username,password:data.password},
         json:true
     },function(err,response,body){
+        console.log(body);
         var response={};
         try{
             if(body.data.access_token){
@@ -145,7 +152,7 @@ function nomnom_login(data){
 function fetch_orders(data){
     var def= q.defer();
     request({
-        url:"http://restaurant-test.gonomnom.in/nomnom/order_restaurant/",
+        url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/",
         method:"GET",
         headers:{
           "Access-Token":data.token
@@ -184,9 +191,9 @@ function changeStatus(data){
     //delivery_boy_name:"HAM"
     //delivery_boy_number:1234567809
     log.info(data);
-    log.info("http://restaurant-test.gonomnom.in/nomnom/order_restaurant/"+data.source+"/");
+    log.info("http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/");
     request({
-        url:"http://restaurant-test.gonomnom.in/nomnom/order_restaurant/"+data.source+"/",
+        url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/",
         method:"PUT",
         body:{
             id:data.source,

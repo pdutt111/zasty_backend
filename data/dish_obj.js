@@ -64,6 +64,7 @@ fs.createReadStream("./data/menu.csv").pipe(converter);
 // db.restaurants.update({name:"Z0101Z7CPP"},{$set:{contact_number:9999949970,contact_name:"Gaurav Sethi",contact_email:"cafepepperpot@yahoo.com",ifsc:"ICIC0000830"}})
 // db.restaurants.update({name:"Z0101Z8ICFT"},{$set:{contact_number:9810920037,contact_name:"Nishant Marwah",contact_email:"nishant.marwah1990@gmail.com",ifsc:"ICIC0001144"}})
 // db.restaurants.update({},{$set:{is_verified:true,open_status:true}},{multi:true})
+// db.restaurants.update({name:"Z0101Z2IOFF"},{$set:{quickli_store_id:"2295"}})
 // not found ZCNVB02.png
 // not found ZCNVB03.png
 // not found ZCNVPS03.png

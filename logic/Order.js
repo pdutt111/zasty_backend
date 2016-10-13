@@ -62,7 +62,7 @@ var orderLogic = {
         var def = q.defer();
         areaTable.findOne({
             city: req.query.city,
-            area: req.query.area,
+            area: new RegExp(req.query.area,'i'),
         }, "serviced_by", function (err, area) {
             log.info(err, area);
             if (!err && area) {
@@ -80,9 +80,11 @@ var orderLogic = {
         var def = q.defer();
         restaurantTable.find({
             name: {$in: restaurants},
+            open_status:true,
             is_deleted: false,
             is_verified: true
-        }, "name dishes open_status contact_name contact_number", function (err, restaurants) {
+        }, "name dishes contact_name open_status contact_number", function (err, restaurants) {
+            console.log(restaurants);
             if (!err && restaurants.length > 0) {
                 var response = {};
                 response.contact_name = restaurants[0].contact_name;
@@ -98,7 +100,7 @@ var orderLogic = {
                 }
                 def.resolve(response);
             } else {
-                def.reject({status: 500, message: config.get('error.dberror')});
+                def.reject({status: 400, message: config.get('error.closed')});
             }
         });
         return def.promise;
@@ -124,7 +126,7 @@ var orderLogic = {
         var def = q.defer();
         areaTable.findOne({
             city: req.body.city,
-            area: req.body.area,
+            area: new RegExp(req.body.area,'i'),
         }, "serviced_by", function (err, area) {
             if (!err && area) {
                 def.resolve(area.serviced_by);
@@ -199,7 +201,7 @@ var orderLogic = {
                 }
             }
         }
-        log.info(dishes_ordered);
+        log.info(dishes_ordered,req.body.dishes_ordered);
 
         if (dishes_ordered.length == Object.keys(req.body.dishes_ordered).length) {
             var dishesByRestaurant = {};
@@ -221,7 +223,7 @@ var orderLogic = {
     },
     saveOrder: function (req, dishes_ordered, restaurants) {
         var def = q.defer();
-        // log.info(dishes_ordered);
+        log.info(dishes_ordered);
         var location = [0, 0];
         if (req.body.lat && req.body.lon) {
             try {
@@ -519,11 +521,11 @@ var orderLogic = {
         userTable.findOne({email:req.body.customer_email},"pin",function(err,user){
            if(!err&&user){
                log.info(user,req.body);
-               if(user.pin==req.body.code){
+               // if(user.pin==req.body.code){
                    def.resolve();
-               }else{
-                   def.reject({status: 400, message: config.get('error.badrequest')});
-               }
+               // }else{
+               //     def.reject({status: 400, message: config.get('error.badrequest')});
+               // }
            } else{
                def.reject({status: 500, message: config.get('error.dberror')});
            }

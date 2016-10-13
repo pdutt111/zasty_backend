@@ -388,7 +388,6 @@ function initMenu() {
         type: 'GET',
         dataType: "json",
         success: function (json) {
-
             console.log(json);
             restaurant = json;
             restaurant.dishes.forEach(function (e, i) {
@@ -440,6 +439,9 @@ function initMenu() {
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+            alertify.alert("The Restaurant is Closed. Sorry for the Inconvenience",function(err){
+                window.location='/';
+            });
         }
     });
 

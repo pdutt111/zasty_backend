@@ -159,7 +159,9 @@ function initSignupNLogin() {
 
 function doLogin() {
     console.log('doLogin');
-    event.preventDefault();
+    try{
+        event.preventDefault();
+    }catch(e){}
     var _user = {
         email: $('.js-login-email').val(),
         password: $('.js-login-password').val()
@@ -403,10 +405,17 @@ function renderOrderTable() {
         if (!order.full_order) {
             order_leftover = " Half order";
         }
-        rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
-            + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
-            + order.date + '</td><td>' + dishes + '</td><td><b style="color: red">price to recieve : '+order.delivery_price_recieved+"</b><br>"
-            + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
+        if(order.payment_mode=="cod"){
+            rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
+                + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
+                + order.date + '</td><td>' + dishes + '</td><td><b style="color: red">price to recieve : '+order.delivery_price_recieved+"</b><br>"
+                + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
+        }else{
+            rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
+                + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
+                + order.date + '</td><td>' + dishes + '</td><td>'+
+                + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
+        }
     });
     var table = '<table align="center" cellpadding="0" cellspacing="0" class="status-tbl col-md-12"> <tr class="heading-row"> <td>OrderID / Address</td> <td>Status</td> <td>Date</td> <td>Dishes</td> <td>Total</td> <td>Details</td> </tr>' + rows.join('') + '</table>';
 
