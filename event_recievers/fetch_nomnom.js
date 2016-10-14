@@ -11,11 +11,12 @@ var log = require('tracer').colorConsole(config.get('log'));
 var db=require('../db/DbSchema');
 
 var orderTable=db.getorderdef;
+var restaurantTable=db.getrestaurantdef;
 
 events.emitter.on("fetch_nomnom",function(data){
     nomnom_login(data).
         then(function(data){
-            console.log(data);
+            log.info(data);
             return fetch_orders(data);
         })
         .then(function(data){
@@ -70,7 +71,6 @@ var queue = async.queue(function(task, callback) {
             }else  if(body[0].status=="created"){
                 body[0].status='awaiting response'
             }
-            console.log(body[0].address.locality.name);
             var req={}
             req.body={
                 "city":"gurgaon",
@@ -125,7 +125,6 @@ queue.drain = function() {
 
 function nomnom_login(data){
     var def= q.defer();
-    console.log(data);
     request({
         url:"http://restaurant.gonomnom.in/nomnom/agent_login/",
         method:"POST",
@@ -133,12 +132,12 @@ function nomnom_login(data){
         body:{email:data.username,password:data.password},
         json:true
     },function(err,response,body){
-        console.log(body);
         var response={};
         try{
             if(body.data.access_token){
                 data.token=body.data.access_token;
                 data.restaurant_name=data.name;
+                data.restaurant_id=body.data.restaurant_agent.id;
                 def.resolve(data);
             }else{
                 def.reject();
@@ -219,3 +218,106 @@ function changeStatus(data){
     });
     return def.promise;
 }
+events.emitter.on('dish_change_status',function(data){
+    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
+        data.username=restaurant.nomnom_username;
+        data.password=restaurant.nomnom_password;
+        nomnom_login(data)
+            .then(function(data){
+                return fetchDishes(data)
+            })
+            .then(function(data){
+                return findCorrectDish(data);
+            })
+            .then(function(data){
+                return disableDish(data)
+            })
+            .then(function(){
+                log.debug("status changed");
+            })
+            .catch(function(err){
+                console.log(err)
+            })
+    });
+});
+function fetchDishes(data){
+    var def=q.defer();
+    request({
+        url:"http://restaurant.gonomnom.in/nomnom/restaurant_dish_list/",
+        method:"GET",
+        headers:{
+            "Access-Token":data.token,
+            "Content-Type":"application/json;charset=UTF-8"
+        },
+        json:true
+    },function(err,response,body){
+        try{
+            if(body){
+                data.dishes=body;
+                def.resolve(data);
+            }else{
+                def.reject();
+            }
+        }catch(e){
+            def.reject();
+        }
+    });
+    return def.promise;
+}
+function findCorrectDish(data){
+    var def=q.defer();
+    for(var i=0;i<data.dishes.length;i++){
+        if(data.dishes[i]._source.dish_name.toLowerCase()==data.dish_name.toLowerCase()){
+            data.dish_id=data.dishes[i]._id;
+            def.resolve(data);
+            break;
+        }
+    }
+    return def.promise;
+}
+function disableDish(data){
+    var def=q.defer();
+    request({
+        url:"http://restaurant.gonomnom.in/nomnom/restaurant_dish/"+data.dish_id+"/",
+        method:"PUT",
+        body:{
+            is_available:data.enable
+        },
+        headers:{
+            "Origin":"http://restaurant.gonomnom.in",
+            "Access-Token":data.token,
+            "Content-Type":"application/json;charset=UTF-8"
+        },
+        json:true
+    },function(err,response,body){
+        log.info(err,body);
+        try{
+            if(body.status=="Updated"){
+                def.resolve();
+            }else{
+                def.reject();
+            }
+        }catch(e){
+            def.reject();
+        }
+    });
+    return def.promise;
+}
+
+setInterval(function(){
+    // restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password",
+    //     function (err, restaurants) {
+    //         if (restaurants.length>0) {
+    //             restaurants.forEach(function(restaurant){
+    //                 if (restaurant.nomnom_username) {
+    //                     events.emitter.emit("fetch_nomnom",
+    //                         {
+    //                             username: restaurant.nomnom_username,
+    //                             password: restaurant.nomnom_password,
+    //                             name: restaurant.name
+    //                         });
+    //                 }
+    //             });
+    //         }
+    //     });
+},60000);

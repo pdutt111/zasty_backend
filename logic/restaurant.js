@@ -168,6 +168,7 @@ var listings = {
                 log.info(err, info);
                 if (!err) {
                     def.resolve(config.get('ok'));
+                    events.emitter.emit('dish_change_status',{dish_name:req.body.dish_name,restaurant_name:req.params.name,enable:0});
                 } else {
                     def.reject({status: 500, message: config.get('error.dberror')});
                 }
@@ -180,6 +181,7 @@ var listings = {
             {$set: {'dishes.$.availability': true}}, {multi: true}, function (err, info) {
                 if (!err) {
                     def.resolve(config.get('ok'));
+                    events.emitter.emit('dish_change_status',{dish_name:req.body.dish_name,restaurant_name:req.params.name,enable:1});
                 } else {
                     def.reject({status: 500, message: config.get('error.dberror')});
                 }
