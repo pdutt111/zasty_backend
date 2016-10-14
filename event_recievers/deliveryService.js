@@ -195,6 +195,7 @@ function sendAdminAlert(doc) {
         message: "order delivery service issue for order id-" + doc._id,
         plaintext: "order delivery service issue for order id-" + doc._id
     });
+
 }
 
 var validQuickliStates = ['Processing', 'Accepted', 'Picked', 'In Transit'];
