@@ -450,11 +450,11 @@ function initMenu() {
 function renderMenu() {
     var categories = [];
     var sorted_categories=[
-        'trending',
-        'signature',
-        'sides',
-        'meals',
-        'mains'
+        'Trending',
+        'Signature',
+        'Sides',
+        'Meals',
+        'Mains'
     ];
     restaurant.dishes_active.forEach(function (e) {
         var c = e.details.categories[0];
@@ -474,6 +474,7 @@ function renderMenu() {
            sorted_categories.splice(sorted_categories.indexOf(category),1);
        }
     });
+    console.log(categories);
     categories=sorted_categories;
     var categoryMenu = [];
     var categoryMenuHtml = '';
