@@ -8,32 +8,36 @@ var Converter = require("csvtojson").Converter;
 var converter = new Converter({});
 var db = require('../db/DbSchema');
 var fs=require("fs");
-var restaurantTable=db.getrestaurantdef;
+var dishTable=db.getdishdef;
 
 //end_parsed will be emitted once parsing finished
 converter.on("end_parsed", function (jsonArray) {
     var dishes_obj={};
     for(var i=0;i<jsonArray.length;i++){
-        // console.log(jsonArray[i]);
-        var dish={
-        identifier: jsonArray[i].name,
-            price: jsonArray[i].price,
-            price_to_consumer: jsonArray[i].price,
-        details: {
+        console.log(jsonArray[i].Ingredients);
+        var dishInfo=new dishTable({
             type: jsonArray[i].type,
-            categories: [jsonArray[i].category],
-            image: jsonArray[i].sku+".png",
+            categories: jsonArray[i].category.split(","),
+            image: jsonArray[i].sku.replace(/HF/g,"")+".png",
             sku: jsonArray[i].sku,
             cuisine:jsonArray[i].cuisine,
-            description: jsonArray[i].desc,
-            details: jsonArray[i].desc,
-            prep: jsonArray[i].desc,
+            description: jsonArray[i].description,
+            details: jsonArray[i].description,
+            prep: jsonArray[i].description,
             ingredients: jsonArray[i].Ingredients.replace(new RegExp('\n', 'g'),"</br>"),
-            nutrition: jsonArray[i].desc
+            nutrition: jsonArray[i].description
+        });
+        dishInfo.save();
+        var dish={
+            identifier: jsonArray[i].name,
+            price: jsonArray[i].price,
+            price_to_consumer: jsonArray[i].price,
+            details: dishInfo._id,
+            sku:jsonArray[i].sku,
         }
-        }
-        console.log(jsonArray[i].name);
-        dishes_obj[dish.details.sku]=dish;
+        // console.log(dish.details.categories);
+        dishes_obj[dish.sku]=dish;
+
         // fs.access("./data/"+jsonArray[i].sku.replace(/-/g,"").replace(/HF/g,"")+".png", fs.F_OK, function(err) {
         //     if (!err) {
         //         try{
@@ -47,13 +51,13 @@ converter.on("end_parsed", function (jsonArray) {
         //     }
         // }.bind({item:jsonArray[i]}));
     }
-    console.log(dishes_obj);
+    // console.log(dishes_obj);
     fs.writeFile('./data/menu.json',JSON.stringify(dishes_obj),function(err,info){console.log(err,info)});
 
 });
 
 //read from file
-fs.createReadStream("./data/menu.csv").pipe(converter);
+fs.createReadStream("./data/menu_updated.csv").pipe(converter);
 // db.restaurants.update({name:"Z0101Z2IOFF"},{$set:{contact_number:9999881044,contact_name:"Pawan Singh",contact_email:"lordvarunplacement@gmail.com",ifsc:"BARB0GURGA0"}})
 // db.restaurants.update({name:"Z0101Z3ICMA"},{$set:{contact_number:9958255155,contact_name:"Ranjeet Singh",contact_email:"singhranjeet627@gmail.com",ifsc:"ICIC0000830"}})
 // db.restaurants.update({name:"Z0101Z3OCG"},{$set:{contact_number:9015125683,contact_name:"Tara Datt Bhatt",contact_email:"chinagathering.14@gmail.com",ifsc:"CBIN0281154"}})

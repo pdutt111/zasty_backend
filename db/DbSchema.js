@@ -142,11 +142,6 @@ var orderSchema = new Schema({
 orderSchema.plugin(autoIncrement.plugin, 'Order');
 
 var dishSchema=new Schema({
-    identifier: String,
-    price: Number,
-    price_to_consumer: Number,
-    availability: {type: Boolean, default: true},
-    details:{
         type:String,
         categories:[String],
         image:String,
@@ -154,9 +149,8 @@ var dishSchema=new Schema({
         description:String,
         details:String,
         prep:String,
-        ingridients:String,
+        ingredients:String,
         nutrition:String
-    }
 });
 var restaurantSchema = new Schema({
     name: {type: String, unique: true, dropDups: true},
@@ -179,7 +173,8 @@ var restaurantSchema = new Schema({
         //     ingridients:String,
         //     nutrition:String
         // }
-        details:Schema.Types.Mixed
+        // details:Schema.Types.Mixed
+        details:{type:ObjectId,ref:'dishes'}
     }],
     delivery_enabled:{type:Boolean,default:true},
     open_status: {type: Boolean, default: false},
@@ -240,6 +235,7 @@ var orderdef = db.model('orders', orderSchema);
 var restaurantdef = db.model('restaurants', restaurantSchema);
 var areadef = db.model('areas', areaSchema);
 var coupondef = db.model('coupons', couponSchema);
+var dishdef = db.model('dishes', dishSchema);
 var alertdef = db.model('alerts', alertSchema);
 
 exports.getpindef = pindef;
@@ -247,6 +243,7 @@ exports.getpaymentdef = paymentdef;
 exports.getuserdef = userdef;
 exports.getorderdef = orderdef;
 exports.getcoupondef= coupondef;
+exports.getdishdef= dishdef;
 exports.getrestaurantdef = restaurantdef;
 exports.getareadef = areadef;
 exports.getalertdef = alertdef;

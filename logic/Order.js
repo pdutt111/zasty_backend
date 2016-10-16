@@ -83,7 +83,7 @@ var orderLogic = {
             open_status:true,
             is_deleted: false,
             is_verified: true
-        }, "name dishes contact_name open_status contact_number", function (err, restaurants) {
+        }, "name dishes contact_name open_status contact_number").populate('dishes.details').exec( function (err, restaurants) {
             console.log(restaurants);
             if (!err && restaurants.length > 0) {
                 var response = {};

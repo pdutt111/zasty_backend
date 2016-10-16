@@ -11,6 +11,7 @@ var log = require('tracer').colorConsole(config.get('log'));
 var db=require('../db/DbSchema');
 
 var orderTable=db.getorderdef;
+var userTable=db.getuserdef;
 var restaurantTable=db.getrestaurantdef;
 
 events.emitter.on("fetch_nomnom",function(data){
@@ -185,6 +186,15 @@ var queue = async.queue(function(task, callback) {
                         })
                         .catch(function(err){
                             log.info(err);
+                            userTable.findOne({is_admin: true}, function (err, user) {
+                                if (!err && user && user.phonenumber) {
+                                    events.emitter.emit("sms", {
+                                        number: user.phonenumber,
+                                        message: "Error in fetching order from nomnom please look at nomnom panel for restaurant"+task.restaurant_name,
+                                    })
+                                }
+
+                            });
                             callback();
                         });
                 }

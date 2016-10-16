@@ -41,7 +41,7 @@ converter.on("end_parsed", function (jsonArray) {
                         restaurant_dishes[item]=[];
                     }
                     if(jsonArray[i][item]!=""&&jsonArray[i][item]!="-"){
-                        console.log(item,dish.identifier,jsonArray[i][item]);
+                        console.log(item,dish,jsonArray[i][item]);
                         dish.price=jsonArray[i][item];
                         restaurant_dishes[item].push(JSON.parse(JSON.stringify(dish)));
                     }
@@ -61,4 +61,4 @@ converter.on("end_parsed", function (jsonArray) {
 });
 
 //read from file
-require("fs").createReadStream("./data/kitchen_data.csv").pipe(converter);
+require("fs").createReadStream("./data/kitchen_data_prices.csv").pipe(converter);
