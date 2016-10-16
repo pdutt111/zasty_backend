@@ -41,6 +41,83 @@ events.emitter.on('status_change_nomnom',function(data){
             log.info(err);
         })
 });
+events.emitter.on('close_restaurant_nomnom',function(data){
+    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
+        data.username=restaurant.nomnom_username;
+        data.password=restaurant.nomnom_password;
+        nomnom_login(data)
+            .then(function(data){
+                return fetchDishes(data)
+            })
+            .then(function(data){
+                for(var i=0;i<data.dishes.length;i++){
+                    queue2.push({dish_id:data.dishes[i]._id,token:data.token,enable:0}, function(err) {
+                    });
+                }
+            })
+            .catch(function(err){
+
+            })
+    });
+});
+events.emitter.on('open_restaurant_nomnom',function(data){
+    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
+        if(!err&&restaurant){
+            data.username=restaurant.nomnom_username;
+            data.password=restaurant.nomnom_password;
+            nomnom_login(data)
+                .then(function(data){
+                    return fetchDishes(data)
+                })
+                .then(function(data){
+                    for(var i=0;i<data.dishes.length;i++){
+                        queue2.push({dish_id:data.dishes[i]._id,token:data.token,enable:1}, function(err) {
+                        });
+                    }
+                })
+                .catch(function(err){
+
+                })
+        }else{
+            log.info("error in turning off restaurant nomnom");
+        }
+    });
+});
+
+events.emitter.on('dish_change_status',function(data){
+    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
+        data.username=restaurant.nomnom_username;
+        data.password=restaurant.nomnom_password;
+        nomnom_login(data)
+            .then(function(data){
+                return fetchDishes(data)
+            })
+            .then(function(data){
+                return findCorrectDish(data);
+            })
+            .then(function(data){
+                return disableDish(data)
+            })
+            .then(function(){
+                log.debug("status changed");
+            })
+            .catch(function(err){
+                console.log(err)
+            })
+    });
+});
+var queue2 = async.queue(function(task, callback) {
+    disableDish(task)
+        .then(function(){
+            callback();
+        })
+        .catch(function (err) {
+            callback();
+        })
+},3);
+queue2.drain = function() {
+    console.log('restaurant has been turned off');
+};
 var queue = async.queue(function(task, callback) {
     request({
         url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/?order_id="+task.order_id,
@@ -218,28 +295,6 @@ function changeStatus(data){
     });
     return def.promise;
 }
-events.emitter.on('dish_change_status',function(data){
-    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
-        data.username=restaurant.nomnom_username;
-        data.password=restaurant.nomnom_password;
-        nomnom_login(data)
-            .then(function(data){
-                return fetchDishes(data)
-            })
-            .then(function(data){
-                return findCorrectDish(data);
-            })
-            .then(function(data){
-                return disableDish(data)
-            })
-            .then(function(){
-                log.debug("status changed");
-            })
-            .catch(function(err){
-                console.log(err)
-            })
-    });
-});
 function fetchDishes(data){
     var def=q.defer();
     request({
@@ -305,19 +360,19 @@ function disableDish(data){
 }
 
 setInterval(function(){
-    // restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password",
-    //     function (err, restaurants) {
-    //         if (restaurants.length>0) {
-    //             restaurants.forEach(function(restaurant){
-    //                 if (restaurant.nomnom_username) {
-    //                     events.emitter.emit("fetch_nomnom",
-    //                         {
-    //                             username: restaurant.nomnom_username,
-    //                             password: restaurant.nomnom_password,
-    //                             name: restaurant.name
-    //                         });
-    //                 }
-    //             });
-    //         }
-    //     });
+    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name",
+        function (err, restaurants) {
+            if (restaurants.length>0) {
+                restaurants.forEach(function(restaurant){
+                    if (restaurant.nomnom_username) {
+                        events.emitter.emit("fetch_nomnom",
+                            {
+                                username: restaurant.nomnom_username,
+                                password: restaurant.nomnom_password,
+                                name: restaurant.name
+                            });
+                    }
+                });
+            }
+        });
 },60000);

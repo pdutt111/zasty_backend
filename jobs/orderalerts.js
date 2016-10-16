@@ -36,7 +36,7 @@ var job = new CronJob({
                     if(user.phonenumber){
                         events.emitter.emit("sms", {
                             number: user.phonenumber,
-                            message: "Order number "+order._id+" has been delayed by kitchen parter "+order.restaurant_assigned+". Time to speak to them!"
+                            message: "Order number "+order._id+" has not been accepted by now by kitchen partner "+order.restaurant_assigned+". Time to speak to them!"
                         });
                     }
                 });
@@ -57,7 +57,7 @@ var job = new CronJob({
                     if(user.phonenumber){
                         events.emitter.emit("sms", {
                             number: user.phonenumber,
-                            message: "Order number "+order._id+" has been delayed by kitchen parter "+order.restaurant_assigned+". Time to speak to them!"
+                            message: "Order number "+order._id+" has been delayed in preparation by kitchen partner "+order.restaurant_assigned+". Time to speak to them!"
                         });
                     }
                 });

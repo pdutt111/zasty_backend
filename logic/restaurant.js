@@ -221,6 +221,7 @@ var listings = {
         }, {$set: {open_status: false}}, function (err, info) {
             if (!err) {
                 def.resolve(config.get('ok'));
+                events.emitter.emit('close_restaurant_nomnom',{restaurant_name:req.params.name})
             } else {
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
@@ -235,6 +236,7 @@ var listings = {
         }, {$set: {open_status: true}}, function (err, info) {
             if (!err) {
                 def.resolve(config.get('ok'));
+                events.emitter.emit('open_restaurant_nomnom',{restaurant_name:req.params.name})
             } else {
                 def.reject({status: 500, message: config.get('error.dberror')});
             }

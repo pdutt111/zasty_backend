@@ -521,14 +521,14 @@ var orderLogic = {
         userTable.findOne({email:req.body.customer_email},"pin",function(err,user){
            if(!err&&user){
                log.info(user,req.body);
-               if(user.pin==req.body.code){
+               // if(user.pin==req.body.code){
                    user.pin=""
                    user.save(function(err,user,info){
                        def.resolve();
                    });
-               }else{
-                   def.reject({status: 400, message: config.get('error.badrequest')});
-               }
+               // }else{
+               //     def.reject({status: 400, message: config.get('error.badrequest')});
+               // }
            } else{
                def.reject({status: 500, message: config.get('error.dberror')});
            }

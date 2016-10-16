@@ -114,8 +114,8 @@ function getRestaurant() {
                 orderRefresh();
                 clearTimeout(orderUpdateTimer);
                 orderUpdateTimer = setInterval(orderRefresh, 1000 * config.order_poll_interval);
-                unpaidOrderRefresh();
-                searchTransaction();
+                // unpaidOrderRefresh();
+                // searchTransaction();
                 $('.js-r-a').val(restaurant.location.join(','));
                 $('.js-r-cp').val(restaurant.contact_number);
                 $('.js-r-cn').val(restaurant.contact_name);
@@ -408,7 +408,7 @@ function renderOrderTable() {
         if(order.payment_mode=="cod"){
             rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
                 + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
-                + order.date + '</td><td>' + dishes + '</td><td><b style="color: red">price to recieve : '+order.delivery_price_recieved+"</b><br>"
+                + order.date + '</td><td>' + dishes + '</td><td><b style="color: red">COD price to recieve : '+order.delivery_price_recieved+"</b><br>"
                 + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
         }else{
             rows.push('<tr ' + style + '><td>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'

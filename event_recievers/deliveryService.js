@@ -6,6 +6,7 @@ var urlencode=require('urlencode');
 var log = require('tracer').colorConsole(config.get('log'));
 var restaurantTable = db.getrestaurantdef;
 var orderTable = db.getorderdef;
+var userTable = db.getuserdef;
 var max_retry = 6;
 var book_at = 'confirmed';
 
@@ -123,8 +124,8 @@ events.emitter.on('process_delivery_queue', function (_id) {
                     }else{
                         log.info("placing delivery request shadowfax");
                         var payload = JSON.stringify({
-                            "store_code": restaurant.shadowfax_store_code,
-                            // "store_code": "zesty_test",
+                            // "store_code": restaurant.shadowfax_store_code,
+                            "store_code": "zesty_test",
                             "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
                             "pickup_contact_number": restaurant.contact_number,
                             "order_details": {
@@ -195,7 +196,15 @@ function sendAdminAlert(doc) {
         message: "order delivery service issue for order id-" + doc._id,
         plaintext: "order delivery service issue for order id-" + doc._id
     });
+    userTable.findOne({is_admin: true}, function (err, user) {
+        if (!err && user && user.phonenumber) {
+                events.emitter.emit("sms", {
+                    number: user.phonenumber,
+                    message: "order delivery service issue for order id-" + doc._id,
+                })
+        }
 
+    });
 }
 
 var validQuickliStates = ['Processing', 'Accepted', 'Picked', 'In Transit'];
