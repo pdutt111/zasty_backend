@@ -521,14 +521,14 @@ var orderLogic = {
         userTable.findOne({email:req.body.customer_email},"pin",function(err,user){
            if(!err&&user){
                log.info(user,req.body);
-               // if(user.pin==req.body.code){
+               if(user.pin==req.body.code){
                    user.pin=""
                    user.save(function(err,user,info){
                        def.resolve();
                    });
-               // }else{
-               //     def.reject({status: 400, message: config.get('error.badrequest')});
-               // }
+               }else{
+                   def.reject({status: 400, message: config.get('error.badrequest')});
+               }
            } else{
                def.reject({status: 500, message: config.get('error.dberror')});
            }
@@ -559,7 +559,12 @@ var orderLogic = {
             if (err || !doc) {
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
-
+            if(req.body.rider_name){
+                doc.delivery_person_alloted=req.body.rider_name;
+            }
+            if(req.body.rider_contact){
+                doc.delivery_person_contact=req.body.rider_contact;
+            }
             doc.delivery.log.push({status: JSON.stringify(req.body)});
 
             if (req.body.order_status == 'DELIVERED') {
@@ -575,6 +580,15 @@ var orderLogic = {
                     subject: "Order Delivery Issue",
                     message: text,
                     plaintext: text
+                });
+                userTable.findOne({is_admin: true}, function (err, user) {
+                    if (!err && user && user.phonenumber) {
+                        events.emitter.emit("sms", {
+                            number: user.phonenumber,
+                            message: "order delivery service issue for order id-" + doc._id,
+                        })
+                    }
+
                 });
             }
             doc.save();

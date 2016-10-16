@@ -355,7 +355,11 @@ var listings = {
                         restaurant_assigned: req.params.name,
                         status: {$in: ["awaiting response", "confirmed", "prepared","processing_delivery_request"]}
                     },
-                    "address dishes_ordered full_order payment_mode delivery delivery_price_recieved customer_name customer_number log created_time customer_email nomnom_username issue_raised issue_reason nomnom_password city locality area rejection_reason status  payment_mode payment_status")
+                    "address dishes_ordered full_order payment_mode delivery" +
+                    " delivery_price_recieved customer_name customer_number log " +
+                    "created_time customer_email nomnom_username issue_raised" +
+                    " issue_reason nomnom_password city locality area rejection_reason" +
+                    " status  payment_mode payment_status delivery_person_alloted delivery_person_contact")
                     .skip(Number(req.query.offset)).sort({_id: -1})
                     .exec(function (err, rows) {
                         log.info(err);

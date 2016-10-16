@@ -395,8 +395,8 @@ function renderOrderTable() {
         var displayStatus = order.status;
         if (order.delivery && order.delivery.status !== 'not_ready') {
             displayStatus += '<BR/><BR/>Delivery Status: ' + order.delivery.status;
-            if (order.delivery.details.service === "shadowfax" && order.delivery.details.data.pickup_contact_number) {
-                displayStatus += '<BR/><BR/>Pickup Contact: ' + order.delivery.details.data.pickup_contact_number;
+            if (order.delivery_person_alloted) {
+                displayStatus += '<BR/><BR/>Pickup name:'+order.delivery_person_alloted+'<BR/>Pickup Contact: ' + order.delivery_person_contact;
             }
         }
 
