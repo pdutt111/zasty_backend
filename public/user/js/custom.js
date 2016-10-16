@@ -642,7 +642,7 @@ function knowMore(id) {
     html += "            <div class=\"rght-pane\">";
     html += "                <div class=\"item-info\">";
     html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.identifier + "<\/h5>";
-    html += "                    <p class=\"tgreylight t12\">" + d.description + "<\/p>";
+    // html += "                    <p class=\"tgreylight t12\">" + d.description + "<\/p>";
     html += "                    <div class=\"clear10\"><\/div>";
     html += "                    <span class=\"dpBlk t16 \">₹ " + d.price_to_consumer + "<\/span>";
     html += "                    <div class=\"clear10\"><\/div>";
