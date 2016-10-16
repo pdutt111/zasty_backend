@@ -462,13 +462,13 @@ function renderMenu() {
             categories.push(c);
         }
     });
-    // restaurant.dishes_active.forEach(function (e) {
-    //     e.details.categories.forEach(function (c) {
-    //         if (categories.indexOf(c) == -1) {
-    //             categories.push(c);
-    //         }
-    //     })
-    // });
+    restaurant.dishes_active.forEach(function (e) {
+        e.details.categories.forEach(function (c) {
+            if (categories.indexOf(c) == -1) {
+                categories.push(c);
+            }
+        })
+    });
     sorted_categories.forEach(function(category){
        if(categories.indexOf(category)==-1){
            sorted_categories.splice(sorted_categories.indexOf(category),1);
