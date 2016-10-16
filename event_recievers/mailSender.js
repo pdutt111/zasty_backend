@@ -33,23 +33,23 @@ events.emitter.on('mail', function (data) {
     // }, function (err, data, res) {
     //     console.log('M', err, data, res);
     // });
-    // var from_email = new helper.Email(config.get('amazonses.fromEmail'));
-    // var to_email = new helper.Email(data.toEmail);
-    // // var to_email = new helper.Email("pdutt111@gmail.com");
-    // var subject = data.subject;
-    // var content = new helper.Content('text/html', data.message);
-    // var mail = new helper.Mail(from_email, subject, to_email, content);
-    //
-    // var sg = require('sendgrid')(config.get('sendgrid_key'));
-    // var request = sg.emptyRequest({
-    //     method: 'POST',
-    //     path: '/v3/mail/send',
-    //     body: mail.toJSON()
-    // });
-    //
-    // sg.API(request, function (error, response) {
-    //     console.log("sent mail", error, response);
-    // });
+    var from_email = new helper.Email(config.get('amazonses.fromEmail'));
+    var to_email = new helper.Email(data.toEmail);
+    // var to_email = new helper.Email("pdutt111@gmail.com");
+    var subject = data.subject;
+    var content = new helper.Content('text/html', data.message);
+    var mail = new helper.Mail(from_email, subject, to_email, content);
+
+    var sg = require('sendgrid')(config.get('sendgrid_key'));
+    var request = sg.emptyRequest({
+        method: 'POST',
+        path: '/v3/mail/send',
+        body: mail.toJSON()
+    });
+
+    sg.API(request, function (error, response) {
+        console.log("sent mail", error, response);
+    });
 });
 
 // test
