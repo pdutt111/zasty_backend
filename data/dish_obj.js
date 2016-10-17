@@ -15,9 +15,9 @@ converter.on("end_parsed", function (jsonArray) {
     var dishes_obj={};
     for(var i=0;i<jsonArray.length;i++){
         console.log(jsonArray[i].Ingredients);
-        var dishInfo=new dishTable({
+        adddish({
             type: jsonArray[i].type,
-            categories: jsonArray[i].category.split(","),
+            categories: jsonArray[i].Categories.split(","),
             image: jsonArray[i].sku.replace(/HF/g,"")+".png",
             sku: jsonArray[i].sku,
             cuisine:jsonArray[i].cuisine,
@@ -26,17 +26,17 @@ converter.on("end_parsed", function (jsonArray) {
             prep: jsonArray[i].description,
             ingredients: jsonArray[i].Ingredients.replace(new RegExp('\n', 'g'),"</br>"),
             nutrition: jsonArray[i].description
-        });
-        dishInfo.save();
-        var dish={
-            identifier: jsonArray[i].name,
-            price: jsonArray[i].price,
-            price_to_consumer: jsonArray[i].price,
-            details: dishInfo._id,
-            sku:jsonArray[i].sku,
-        }
-        // console.log(dish.details.categories);
-        dishes_obj[dish.sku]=dish;
+        })
+
+        // var dish={
+        //     identifier: jsonArray[i].name,
+        //     price: jsonArray[i].price,
+        //     price_to_consumer: jsonArray[i].price,
+        //     details: dishInfo._id,
+        //     sku:jsonArray[i].sku,
+        // }
+        // // console.log(dish.details.categories);
+        // dishes_obj[dish.sku]=dish;
 
         // fs.access("./data/"+jsonArray[i].sku.replace(/-/g,"").replace(/HF/g,"")+".png", fs.F_OK, function(err) {
         //     if (!err) {
@@ -52,9 +52,13 @@ converter.on("end_parsed", function (jsonArray) {
         // }.bind({item:jsonArray[i]}));
     }
     // console.log(dishes_obj);
-    fs.writeFile('./data/menu.json',JSON.stringify(dishes_obj),function(err,info){console.log(err,info)});
+    // fs.writeFile('./data/menu.json',JSON.stringify(dishes_obj),function(err,info){console.log(err,info)});
 
 });
+function adddish(obj){
+    var dishInfo=new dishTable(obj);
+    dishInfo.save();
+}
 
 //read from file
 fs.createReadStream("./data/menu_updated.csv").pipe(converter);
