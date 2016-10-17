@@ -86,7 +86,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         request('https://maps.googleapis.com/maps/api/geocode/j' +
                             'son?address='+urlencode(order.area)+','+order.city+'&key=' +
                             'AIzaSyBsp-wl6rpRBFQmwBUVJrmXij_PHvzi0ck',function(err,response,body){
-                            log.info("placing delivery request quickli");
+                            log.info("placing delivery request quickli",restaurant.quickli_store_id);
                             try{
                                 body=JSON.parse(body);
                             }catch(e){}
@@ -130,7 +130,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                         log.info("placing delivery request shadowfax");
                         var payload = JSON.stringify({
                             "store_code": restaurant.shadowfax_store_code,
-                            // "store_code": "zesty_test",
+                            "store_code": "zesty_test",
                             "callback_url": config.base_url + '/api/v1/order/deliverystatus/' + order._id,
                             "pickup_contact_number": restaurant.contact_number,
                             "order_details": {

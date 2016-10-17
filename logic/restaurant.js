@@ -612,6 +612,15 @@ var listings = {
             message: "order issue for order id-" + req.body.order_id + 'reason-' + req.body.reason,
             plaintext: "order issue for order id-" + req.body.order_id + 'reason-' + req.body.reason
         });
+        userTable.findOne({is_admin:true},function(err,user){
+            if(user&&user.phonenumber){
+                events.emitter.emit("sms", {
+                    number: user.phonenumber,
+                    message: "issue has been raised on order number "+req.body.order_id+"  " +req.body.reason+
+                    "by kitchen partner . how can this happen! look into it now!"
+                });
+            }
+        });
         orderTable.update({_id: req.body.order_id}, {
             $set: {
                 issue_raised: true,
