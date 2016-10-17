@@ -247,9 +247,9 @@ events.emitter.on('process_quickli', function () {
                                 'cache-control': 'no-cache'
                             },
                             form: {
-                                partner_id: '2',
-                                // store_id: restaurant.quickli_store_id,
-                                store_id: 8,
+                                partner_id: '9',
+                                store_id: restaurant.quickli_store_id,
+                                // store_id: 8,
                                 app_id: config.quickli.app_id,
                                 access_key: config.quickli.access_key,
                                 order_id: order.delivery.details.order_id
