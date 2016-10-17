@@ -50,7 +50,7 @@ function resend(){
         dataType: "json",
         success: function (json) {
             $(".otp-lyr").css('display','table');
-            placeOrderType=type;
+            // placeOrderType=type;
         },
         error: function (xhr, _status, errorThrown) {
             alertify.alert("Error Occurred");
