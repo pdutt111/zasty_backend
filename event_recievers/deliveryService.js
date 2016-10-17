@@ -11,7 +11,12 @@ var max_retry = 6;
 var book_at = 'confirmed';
 
 function deliveryOrderCallback(response, body, order, error, service) {
-    var data = JSON.parse(body || {});
+    var data={};
+    try{
+        data = JSON.parse(body || {});
+    }catch(e){
+    }
+
     data.service = service;
     log.info(data);
 
