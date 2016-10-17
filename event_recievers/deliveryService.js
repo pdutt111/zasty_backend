@@ -97,7 +97,7 @@ events.emitter.on('process_delivery_queue', function (_id) {
                                         'cache-control': 'no-cache'
                                     },
                                     form: {
-                                        partner_id: '2',
+                                        partner_id: config.get('quickli.partner_id'),
                                         cod: order.payment_mode == 'cod' ? order.delivery_price_recieved : '0',
                                         store_id: restaurant.quickli_store_id,
                                         // store_id: 8,
