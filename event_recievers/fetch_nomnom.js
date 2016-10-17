@@ -103,7 +103,7 @@ events.emitter.on('dish_change_status',function(data){
                 log.debug("status changed");
             })
             .catch(function(err){
-                console.log(err)
+                log.info(err)
             })
     });
 });
