@@ -21,11 +21,11 @@ converter.on("end_parsed", function (jsonArray) {
     for(var i=0;i<jsonArray.length;i++){
         console.log(jsonArray[i]);
         var area=new areaTable({
-            area: jsonArray[i].supermart1,
+            area: jsonArray[i].sec56,
             locality: "gurgaon",
             city: "gurgaon",
             country: "india",
-            serviced_by: restoarea.supermart1,
+            serviced_by: restoarea.sec56,
         });
         area.save(function(err,area,info){
             console.log(area);
@@ -36,5 +36,5 @@ converter.on("end_parsed", function (jsonArray) {
 
 //read from file
 // for(var item in restoarea){
-    require("fs").createReadStream("./data/supermart1.csv").pipe(converter);
+    require("fs").createReadStream("./data/sec56.csv").pipe(converter);
 // }
