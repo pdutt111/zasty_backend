@@ -376,11 +376,13 @@ var orderLogic = {
                                         for(var name in req.body.dishes_ordered){
                                             dishes.push({identifier:name,qty:req.body.dishes_ordered[name].qty,price_recieved:req.body.dishes_ordered[name].price});
                                         }
-                                        order.dishes_ordered=dishes
-                                        orderLogic.createMail(order);
-                                        orderLogic.createAdminMail(order);
+                                        var new_order=JSON.parse(JSON.stringify(order));
+                                        new_order.dishes_ordered=dishes
+                                        orderLogic.createMail(new_order);
                                         ordersList.forEach(function(order){
                                             orderLogic.createRestaurantMail(order);
+                                            orderLogic.createAdminMail(order);
+
                                         })
                                     }
                                 }
