@@ -361,12 +361,19 @@ function initCheckout() {
 }
 
 function goToCheckout(hard) {
+    var queryDict = {}
+        window.location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
     cart = Cookies.getJSON('cart') || {};
     if (!Object.keys(cart).length) {
         if (hard)
             alertify.alert('Please add items to Cart');
-        else
-            window.location = '/menu.html';
+        else{
+            if(queryDict.src&&queryDict.src=="index"){
+                window.location = '/index.html';
+            }else{
+                window.location = '/menu.html';
+            }
+        }
     } else {
         window.location = '/checkout.html';
     }
@@ -793,6 +800,7 @@ function doLogin() {
         email: $('.js-login-email').val(),
         password: $('.js-login-password').val()
     };
+    $('.popup-genric').toggle(true);
     $.ajax({
         url: config.server_url + '/api/v1/users/signin',
         data: _user,
@@ -803,6 +811,7 @@ function doLogin() {
             if (json.token && json.expires) {
                 var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
                 Cookies.set('user', json, {expires: expire_in_days - 1});
+                $('.popup-genric').toggle(false);
                 goToCheckout();
             } else {
                 $('.error').toggle(true);
@@ -810,6 +819,7 @@ function doLogin() {
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
+            $('.popup-genric').toggle(false);
             $('.error').toggle(true);
         }
     });

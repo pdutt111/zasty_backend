@@ -216,7 +216,7 @@ var orderLogic = {
             // log.info(dishesByRestaurant);
             def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants});
         } else {
-            log.info("here");
+            log.info("dishes did not match",req.body.dishes_ordered,req.body);
             def.reject({status: 400, message: config.get('error.badrequest')});
         }
         return def.promise;

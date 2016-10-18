@@ -48,13 +48,16 @@
                             var expire_in_days = parseInt(((new Date(json.expires) - Date.now()) / (1000 * 60 * 60 * 24)), 10);
                             Cookies.set('user', json, {expires: expire_in_days});
                             goToCheckout();
+                            $('.popup-genric').css('display','none');
                         } else {
                             $('.error').toggle(true);
+                            $('.popup-genric').css('display','none');
                         }
                     },
                     error: function (xhr, _status, errorThrown) {
                         console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});
                         $('.error').toggle(true);
+                        $('.popup-genric').css('display','none');
                     }
                 });
             });
@@ -69,6 +72,7 @@
     // Button.  See the onlogin handler attached to it in the sample
     // code below.
     function checkLoginState() {
+        $('.popup-genric').css('display','table');
         FB.getLoginStatus(function (response) {
             statusChangeCallback(response);
         });
@@ -171,46 +175,51 @@
 </div>
 
 <!-- forget password layer starts -->
-<div class="popup-genric forgt-pwd">
-    <div class="cntnt">        
-        <div class="login-form bg-white pad20">                                                
-            <h3 class="t16 tgreyteel">Recover Password</h3>  
-            <span class="clear10"></span>     
-            <form onsubmit="sendResetCode()" id="forgotpassword">
-                <div class="frm-field">
-                    <p><input type="text" class="js-login-email" placeholder="Enter Registered Email Id" name="email"/></p>
-                    <span class="error">Please enter valid email id.</span>
-                </div>
-                <div class="clear40"></div>
-                <div class="frm-field">
-                    <p><input type="submit" class="btn twhite textbig blugrey" value="Send Email"/></p>
-                </div>
-            </form>                                                                    
-            <span class="dpInblk close fa fa-close" onclick="hide();"></span>
-        </div>        
-    </div>
-</div>
+<!--<div class="popup-genric forgt-pwd">-->
+    <!--<div class="cntnt">        -->
+        <!--<div class="login-form bg-white pad20">                                                -->
+            <!--<h3 class="t16 tgreyteel">Recover Password</h3>  -->
+            <!--<span class="clear10"></span>     -->
+            <!--<form onsubmit="sendResetCode()" id="forgotpassword">-->
+                <!--<div class="frm-field">-->
+                    <!--<p><input type="text" class="js-login-email" placeholder="Enter Registered Email Id" name="email"/></p>-->
+                    <!--<span class="error">Please enter valid email id.</span>-->
+                <!--</div>-->
+                <!--<div class="clear40"></div>-->
+                <!--<div class="frm-field">-->
+                    <!--<p><input type="submit" class="btn twhite textbig blugrey" value="Send Email"/></p>-->
+                <!--</div>-->
+            <!--</form>                                                                    -->
+            <!--<span class="dpInblk close fa fa-close" onclick="hide();"></span>-->
+        <!--</div>        -->
+    <!--</div>-->
+<!--</div>-->
 <!-- forget password layer ends -->
 
 <!--otp layer starts-->
-<div class="popup-genric otp-lyr">
-    <div class="cntnt">
-        <div class="login-form bg-white pad20">
-            <em class="clear20"></em>
-            <form onsubmit="doLogin()">
-                <div class="frm-field split">
-                    <p><input type="text" class="js-login-email" placeholder="Enter OTP"/><span class="error">Please enter valid email id.</span></p>
-                    <p><input type="submit" class="btn twhite blugrey" value="Submit"/></p>
-                </div>
-            </form>
-            <span class="dpInblk close fa fa-close"></span>
-            <em class="clear20"></em>
-        </div>
-    </div>
-</div>
+<!--<div class="popup-genric otp-lyr">-->
+    <!--<div class="cntnt">-->
+        <!--<div class="login-form bg-white pad20">-->
+            <!--<em class="clear20"></em>-->
+            <!--<form onsubmit="doLogin()">-->
+                <!--<div class="frm-field split">-->
+                    <!--<p><input type="text" class="js-login-email" placeholder="Enter OTP"/><span class="error">Please enter valid email id.</span></p>-->
+                    <!--<p><input type="submit" class="btn twhite blugrey" value="Submit"/></p>-->
+                <!--</div>-->
+            <!--</form>-->
+            <!--<span class="dpInblk close fa fa-close"></span>-->
+            <!--<em class="clear20"></em>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 <!-- otp layer ends -->
 
 <!-- loader -->
+<!--<div class="popup-genric loader-wrap">-->
+    <!--<div class="cntnt">-->
+        <!--<div class="loader">Loading...</div>-->
+    <!--</div>-->
+<!--</div>-->
 <div class="popup-genric loader-wrap">
     <div class="cntnt">
         <div class="loader">Loading...</div>
