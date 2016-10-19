@@ -56,8 +56,6 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-app.use(express.static(path.join(__dirname, 'public/user')));
-app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
 app.use(function (req, res, next) {
     //log.info(req.headers,req.method);
     if (req.method == "OPTIONS") {
@@ -74,6 +72,8 @@ app.use(function (req, res, next) {
         next();
     }
 })
+app.use(express.static(path.join(__dirname, 'public/user')));
+app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
 app.use(
     function (req, res, next) {
         auth(req, res)
