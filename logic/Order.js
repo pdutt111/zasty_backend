@@ -127,11 +127,12 @@ var orderLogic = {
         areaTable.findOne({
             city: req.body.city,
             area: new RegExp(req.body.area,'i'),
+            // area: new RegExp("Block B - Sector 56",'i'),
         }, "serviced_by", function (err, area) {
             if (!err && area) {
                 def.resolve(area.serviced_by);
             } else {
-                log.info(err);
+                log.info(err,req.body.area);
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
         });
@@ -159,7 +160,7 @@ var orderLogic = {
     },
     createDishesOrderedList: function (req, restaurants) {
         var def = q.defer();
-        log.info(restaurants);
+        // log.info(restaurants);
         var dishes_ordered = [];
         if (Object.keys(req.body.dishes_ordered).length == 0) {
             log.info("here bhi")
@@ -371,7 +372,7 @@ var orderLogic = {
                                         price: parseFloat(parseFloat(delivery_price_recieved).toFixed(2))
                                     });
 
-                                    if (req.body.payment_mode == 'cod'){
+                                    // if (req.body.payment_mode == 'cod'){
                                         var dishes=[];
                                         for(var name in req.body.dishes_ordered){
                                             dishes.push({identifier:name,qty:req.body.dishes_ordered[name].qty,price_recieved:req.body.dishes_ordered[name].price});
@@ -384,7 +385,7 @@ var orderLogic = {
                                             orderLogic.createAdminMail(order);
 
                                         })
-                                    }
+                                    // }
                                 }
                             }
                         } else {
@@ -475,7 +476,7 @@ var orderLogic = {
                             dish_names += d.qty + "-" + d.identifier+" ";
                         });
                         var message = "you have received a new order from "+order.customer_name+" "+order.address+", "+order.area+", "+order.city+" " +
-                            "with order number "+order.combined_id+". Items "+dish_names+". Total order value "+order.delivery_price_recieved+" .";
+                            "with combined order number "+order.combined_id+" and split number"+order._id+" assigned to"+order.restaurant_assigned+". Items "+dish_names+". Total order value "+order.delivery_price_recieved+" .";
                         if(order.payment_mode=="cod"){
                             message +=". collect cash "+order.delivery_price_recieved;
                         }

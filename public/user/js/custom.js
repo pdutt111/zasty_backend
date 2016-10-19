@@ -517,7 +517,7 @@ function renderMenu() {
             dishVar += "                        <\/div>";
             dishVar += "                    <\/div>";
             dishVar += "                    <div class=\"item-info\">";
-            dishVar += "                        <h5 class=\"tgreydark\">" + dish.identifier + "<\/h5>";
+            dishVar += "                        <h5 class=\"tgreydark\">" + dish.details.identifier + "<\/h5>";
             dishVar += "                        <div>";
             dishVar += "                            <div class=\"veg-type fL dpInblk\">";
             dishVar += "                                <span class=\""
@@ -661,7 +661,7 @@ function knowMore(id) {
     html += "            <div class=\"lft-pane\" style='background-image: url(\"" + '/images/' + d.details.image + "\")'><\/div>";
     html += "            <div class=\"rght-pane\">";
     html += "                <div class=\"item-info\">";
-    html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.identifier + "<\/h5>";
+    html += "                    <h5 class=\"tgreyteel t20 nomargin uppercase\">" + d.details.identifier + "<\/h5>";
     // html += "                    <p class=\"tgreylight t12\">" + d.description + "<\/p>";
     html += "                    <div class=\"clear10\"><\/div>";
     html += "                    <span class=\"dpBlk t16 \">₹ " + d.price_to_consumer + "<\/span>";
@@ -762,7 +762,7 @@ function renderCart() {
             cartItem += "<div class=\"lft-pane\" style='background-image: url(\"" + '/images/' + d.details.image + "\")'> <\/div > ";
             cartItem += "<div class=\"rght-pane\">";
             cartItem += "    <div class=\"item-info\">";
-            cartItem += "        <h4>" + d.identifier + "<\/h4>";
+            cartItem += "        <h4>" + d.details.identifier + "<\/h4>";
             cartItem += "        <font class=\"dpBlk\">";
             cartItem += "            <select onchange=\"changeQuantity(" + d.id + ",this.value);\" class=\"fL dpInblk vab\">";
             cartItem += selectOpt;

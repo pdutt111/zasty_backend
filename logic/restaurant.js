@@ -463,8 +463,8 @@ var listings = {
         }, function (err, info) {
             if (!err) {
                 def.resolve(config.get('ok'));
-                orderTable.findOne({_id: req.body.order_id}, "customer_name restaurant_assigned customer_number", function (err, order) {
-                    if (!err) {
+                orderTable.findOne({_id: req.body.order_id}, "customer_name source restaurant_assigned customer_number", function (err, order) {
+                    if (!err&&order) {
                         if (order.source.name == "nomnom") {
                             restaurantTable.findOne({name: order.restaurant_assigned}, "nomnom_username nomnom_password", function (err, restaurant) {
                                 events.emitter.emit("status_change_nomnom",
@@ -476,7 +476,7 @@ var listings = {
                                     });
                             })
                         }
-                            events.emitter.emit("process_delivery_queue", order._id);
+                            // events.emitter.emit("process_delivery_queue", order._id);
                         if (order.customer_number) {
 // asdadadasdadaad
                         }
@@ -561,7 +561,9 @@ var listings = {
                 }, function (err, info) {
                     if (!err) {
                         def.resolve(config.get("ok"));
-                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status customer_email restaurant_assigned combined_id customer_number", function (err, order) {
+                        orderTable.findOne({_id: req.body.order_id}, "customer_name source status " +
+                            "customer_email delivery_person_alloted delivery_person_contact" +
+                            " restaurant_assigned combined_id customer_number", function (err, order) {
                             if (!err) {
                                 // if (order.status == "prepared") {
                                 //     events.emitter.emit("process_delivery_queue", order._id);
@@ -573,6 +575,7 @@ var listings = {
                                                 username: restaurant.nomnom_username,
                                                 password: restaurant.nomnom_password,
                                                 status: req.body.status,
+                                                order:order,
                                                 source: order.source.id
                                             });
                                     })

@@ -15,6 +15,7 @@ converter.on("end_parsed", function (jsonArray) {
     var dishes_obj={};
     for(var i=0;i<jsonArray.length;i++){
         console.log(jsonArray[i].Ingredients);
+        // dishTable.update({sku:jsonArray[i].sku},{$set:{identifier:jsonArray[i].name,nomnom_name:jsonArray[i].name}},function(err,info){});
         var dishInfo=new dishTable({
             type: jsonArray[i].type,
             categories: jsonArray[i].Categories.split(","),

@@ -144,6 +144,8 @@ orderSchema.plugin(autoIncrement.plugin, 'Order');
 var dishSchema=new Schema({
         type:String,
         categories:[String],
+        nomnom_name:String,
+        identifier:String,
         image:String,
         sku:String,
         description:String,
