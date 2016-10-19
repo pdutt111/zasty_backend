@@ -43,7 +43,7 @@ app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
 app.use(function (req, res, next) {
     log.info(req.subdomains);
     if (req.subdomains.indexOf('vendor')>-1) {
-        res.redirect(301,'/p');
+        res.redirect(301,'http://zasty.co/p');
     } else {
         next();
     }
