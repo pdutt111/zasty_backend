@@ -41,6 +41,14 @@ app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
  * middleware to authenticate the jwt and routes
  */
 app.use(function (req, res, next) {
+    //log.info(req.headers,req.method);
+    if (req.subdomains.indexOf('vendor')) {
+        res.redirect(301,'/p');
+    } else {
+        next();
+    }
+})
+app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
