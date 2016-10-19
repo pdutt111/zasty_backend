@@ -34,8 +34,6 @@ app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.raw({limit: '10mb'}));
 app.use(bodyParser.urlencoded({extended: false, limit: '10mb'}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public/user')));
-app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
 
 /**
  * middleware to authenticate the jwt and routes
@@ -58,6 +56,8 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+app.use(express.static(path.join(__dirname, 'public/user')));
+app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
 app.use(function (req, res, next) {
     //log.info(req.headers,req.method);
     if (req.method == "OPTIONS") {
