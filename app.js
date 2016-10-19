@@ -41,14 +41,6 @@ app.use('/p', express.static(path.join(__dirname, 'public/merchant')));
  * middleware to authenticate the jwt and routes
  */
 app.use(function (req, res, next) {
-    log.info(req.subdomains);
-    if (req.subdomains.indexOf('vendor')>-1) {
-        res.redirect(301,'http://zasty.co/p');
-    } else {
-        next();
-    }
-})
-app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -70,6 +62,14 @@ app.use(function (req, res, next) {
     //log.info(req.headers,req.method);
     if (req.method == "OPTIONS") {
         res.end();
+    } else {
+        next();
+    }
+})
+app.use(function (req, res, next) {
+    log.info(req.subdomains);
+    if (req.subdomains.indexOf('vendor')>-1) {
+        res.redirect(301,'http://zasty.co/p');
     } else {
         next();
     }
