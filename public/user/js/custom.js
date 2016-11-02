@@ -463,12 +463,12 @@ function renderMenu() {
         'Meals',
         'Mains'
     ];
-    restaurant.dishes_active.forEach(function (e) {
-        var c = e.details.categories[0];
-        if (categories.indexOf(c) == -1) {
-            categories.push(c);
-        }
-    });
+    // restaurant.dishes_active.forEach(function (e) {
+    //     var c = e.details.categories[0];
+    //     if (categories.indexOf(c) == -1) {
+    //         categories.push(c);
+    //     }
+    // });
     restaurant.dishes_active.forEach(function (e) {
         e.details.categories.forEach(function (c) {
             if (categories.indexOf(c) == -1) {
@@ -476,21 +476,26 @@ function renderMenu() {
             }
         })
     });
+    var final_categories=[];
     sorted_categories.forEach(function(category){
-       if(categories.indexOf(category)==-1){
-           sorted_categories.splice(sorted_categories.indexOf(category),1);
+        console.log(categories.indexOf(category));
+       if(categories.indexOf(category)!=-1){
+           // console.log("removing",category)
+           final_categories.push(category);
+           // sorted_categories.splice(sorted_categories.indexOf(category),1);
        }
     });
-    console.log(categories);
-    categories=sorted_categories;
+    // console.log(categories,sorted_categories);
+    categories=final_categories;
     var categoryMenu = [];
     var categoryMenuHtml = '';
     var categoryList = '';
     categories.forEach(function (e, i) {
         restaurant.dishes_active.forEach(function (d) {
             if (d.details.categories.indexOf(e) !== -1) {
-                if (!Array.isArray(categoryMenu[i]))
+                if (!Array.isArray(categoryMenu[i])){
                     categoryMenu[i] = [];
+                }
                 categoryMenu[i].push(d);
             }
         });
