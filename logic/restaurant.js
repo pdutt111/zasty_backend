@@ -340,7 +340,7 @@ var listings = {
             }
         }
         log.info("sending info");
-        restaurantTable.findOne({name: req.params.name}, "nomnom_username nomnom_password",
+        restaurantTable.findOne({name: req.params.name}, "nomnom_username nomnom_password servicing_restaurant",
             function (err, restaurant) {
             if(restaurant){
                 if(restaurant.nomnom_username){
@@ -348,7 +348,8 @@ var listings = {
                         {
                             username: restaurant.nomnom_username,
                             password: restaurant.nomnom_password,
-                            name: req.params.name
+                            name: req.params.name,
+                            serviced_by:restaurant.servicing_restaurant
                         });
                 }
                 orderTable.find({

@@ -184,16 +184,18 @@ var queue = async.queue(function(task, callback) {
                         payment_mode:'cod',
                         status:body[0].status,
                         source:{
-                            name:"nomnom",
+                            name:body[0].restaurant.pos_type,
                             id:body[0].id
                         }
                     };
+                    if(body[0].restaurant.pos_type.toLowerCase()=="foodpanda" ||
+                        body[0].restaurant.pos_type.toLowerCase()=="swiggy"){
+                        req.body.payment_mode="online"
+                        req.body.delivery_enabled=false;
+                    }
                     orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
                         if(!err&&rows.length==0){
-                            orderLogic.findRestaurantFromArea(req)
-                                .then(function (restaurants) {
-                                    return orderLogic.findActualRates(req, restaurants)
-                                })
+                            orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
@@ -442,7 +444,7 @@ function disableDish(data){
 }
 
 setInterval(function(){
-    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name",
+    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurants",
         function (err, restaurants) {
             if (restaurants.length>0) {
                 restaurants.forEach(function(restaurant){
@@ -451,7 +453,8 @@ setInterval(function(){
                             {
                                 username: restaurant.nomnom_username,
                                 password: restaurant.nomnom_password,
-                                name: restaurant.name
+                                name: restaurant.name,
+                                serviced_by:restaurant.servicing_restaurants
                             });
                     }
                 });

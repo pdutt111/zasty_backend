@@ -183,6 +183,7 @@ var restaurantSchema = new Schema({
     contact_number: Number,
     contact_name: String,
     contact_email:String,
+    servicing_restaurants:[String],
     address:String,
     zasty_zone:String,
     bank_name:String,
