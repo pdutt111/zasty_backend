@@ -81,7 +81,11 @@ events.emitter.on('open_restaurant_nomnom',function(data){
                 })
                 .then(function(data){
                     for(var i=0;i<data.dishes.length;i++){
-                        queue2.push({dish_id:data.dishes[i]._id,token:data.token,enable:1}, function(err) {
+                        var enable=1;
+                        if(!data.dishes.availability){
+                            enable=0;
+                        }
+                        queue2.push({dish_id:data.dishes[i]._id,token:data.token,enable:enable}, function(err) {
                         });
                     }
                 })
@@ -98,6 +102,7 @@ events.emitter.on('dish_change_status',function(data){
     restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
         data.username=restaurant.nomnom_username;
         data.password=restaurant.nomnom_password;
+        log.debug(data);
         nomnom_login(data)
             .then(function(data){
                 return fetchDishes(data)
@@ -349,7 +354,8 @@ function changeStatus(data){
         data.status='canceled';
         body= {
             id: data.source,
-            osl_status: data.status,
+            message:"rejected",
+            status: data.status,
             update_status: true
         }
     }
@@ -464,3 +470,24 @@ setInterval(function(){
             }
         });
 },60000);
+
+setInterval(function(){
+    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
+        function (err, restaurants) {
+            if (restaurants.length>0) {
+                restaurants.forEach(function(restaurant){
+                    if (restaurant.nomnom_username) {
+                        log.info(restaurant);
+                        if(restaurant.open_status){
+                            events.emitter.emit("open_restaurant_nomnom",
+                                {
+                                    username: restaurant.nomnom_username,
+                                    password: restaurant.nomnom_password,
+                                    name: restaurant.name,
+                                });
+                        }
+                    }
+                });
+            }
+        });
+},60*60*000);
