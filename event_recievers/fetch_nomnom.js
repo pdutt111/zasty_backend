@@ -45,60 +45,39 @@ events.emitter.on('status_change_nomnom',function(data){
         })
 });
 events.emitter.on('close_restaurant_nomnom',function(data){
-    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password dishes",function(err,restaurant){
-        data.username=restaurant.nomnom_username;
-        data.password=restaurant.nomnom_password;
-        data.dishes_zasty=restaurant.dishes;
-        nomnom_login(data)
-            .then(function(data){
-                return fetchDishes(data)
-            })
-            .then(function(data){
-                var dish_map={};
-                for(var i=0;i<data.dishes_zasty.length;i++){
-                    dish_map[data.dishes_zasty[i].identifier.replace('(Boneless)','').replace('Half','').toLowerCase()]=true;
-                }
-                for(var i=0;i<data.dishes.length;i++){
-                    if(dish_map[data.dishes[i]._source.dish_name.toLowerCase()]){
-                        queue2.push({dish_id:data.dishes[i]._id,token:data.token,enable:0}, function(err) {
-                        });
-                    }
-                }
-            })
-            .catch(function(err){
-
-            })
-    });
-});
-events.emitter.on('open_restaurant_nomnom',function(data){
-    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
+    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password dishes name").populate("dishes.details").exec(function(err,restaurant){
         if(!err&&restaurant){
             data.username=restaurant.nomnom_username;
             data.password=restaurant.nomnom_password;
-            nomnom_login(data)
-                .then(function(data){
-                    return fetchDishes(data)
-                })
-                .then(function(data){
-                    for(var i=0;i<data.dishes.length;i++){
-                        var enable=1;
-                        if(!data.dishes.availability){
-                            enable=0;
-                        }
-                        queue2.push({dish_id:data.dishes[i]._id,token:data.token,enable:enable}, function(err) {
-                        });
-                    }
-                })
-                .catch(function(err){
-
-                })
+            for(var i=0;i<restaurant.dishes.length;i++){
+                    events.emitter.emit('dish_change_status',
+                        {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:0});
+            }
         }else{
+            log.info("error in turning off restaurant nomnom");
+        }
+    });
+});
+events.emitter.on('open_restaurant_nomnom',function(data){
+    log.debug(data);
+    restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password dishes name").populate("dishes.details").exec(function(err,restaurant){
+        if(!err&&restaurant){
+            data.username=restaurant.nomnom_username;
+            data.password=restaurant.nomnom_password;
+            for(var i=0;i<restaurant.dishes.length;i++){
+                if(restaurant.dishes[i].availability){
+                    events.emitter.emit('dish_change_status',
+                        {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:1});
+                }
+            }
+            }else{
             log.info("error in turning off restaurant nomnom");
         }
     });
 });
 
 events.emitter.on('dish_change_status',function(data){
+    log.debug(data);
     restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password",function(err,restaurant){
         data.username=restaurant.nomnom_username;
         data.password=restaurant.nomnom_password;
@@ -413,19 +392,34 @@ function fetchDishes(data){
 }
 function findCorrectDish(data){
     var def=q.defer();
-    for(var i=0;i<data.dishes.length;i++){
-        if(data.dishes[i]._source.dish_name.toLowerCase()==data.dish_name.toLowerCase()){
-            data.dish_id=data.dishes[i]._id;
-            def.resolve(data);
-            break;
+    log.debug(data);
+    dishTable.findOne({identifier:data.dish_name},"nomnom_name",function(err,dish){
+        log.debug(dish.nomnom_name)
+        for(var i=0;i<data.dishes.length;i++){
+            for(var j=0;j<data.dishes[i]._source.variations.length;j++){
+                for(var k=0;k<data.dishes[i]._source.variations[j].quantities.length;k++){
+                    log.debug(data.dishes[i]._source.variations[j].quantities[k]
+                            .nomnom_name.toLowerCase().replace("portion","")
+                            .replace(/-/g,"").replace("regular","").replace(/  /g," ").trim().replace(/  /g," "),dish.nomnom_name.replace(/-/g,"").toLowerCase())
+                    if(data.dishes[i]._source.variations[j].quantities[k]
+                            .nomnom_name.toLowerCase().replace("portion","")
+                            .replace(/-/g,"").replace("regular","").replace(/  /g," ").trim().replace(/  /g," ")==dish.nomnom_name.replace(/-/g,"").toLowerCase()){
+                        data.dish_id=data.dishes[i]._source.variations[j].quantities[k].variation;
+                        log.debug("found");
+                        def.resolve(data);
+                        break;
+                    }
+                }
+            }
         }
-    }
+    });
     return def.promise;
 }
 function disableDish(data){
     var def=q.defer();
+    log.debug(data.dish_id);
     request({
-        url:"http://restaurant.gonomnom.in/nomnom/restaurant_dish/"+data.dish_id+"/",
+        url:"http://restaurant.gonomnom.in/nomnom/variation/"+data.dish_id+"/",
         method:"PUT",
         body:{
             is_available:data.enable
@@ -490,4 +484,4 @@ setInterval(function(){
                 });
             }
         });
-},60*60*000);
+},60*60*1000);
