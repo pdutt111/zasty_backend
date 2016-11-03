@@ -343,6 +343,7 @@ var listings = {
         restaurantTable.findOne({name: req.params.name}, "nomnom_username nomnom_password servicing_restaurant",
             function (err, restaurant) {
             if(restaurant){
+                log.info(restaurant);
                 if(restaurant.nomnom_username){
                     events.emitter.emit("fetch_nomnom",
                         {

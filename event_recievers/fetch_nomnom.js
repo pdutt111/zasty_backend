@@ -23,7 +23,7 @@ events.emitter.on("fetch_nomnom",function(data){
         })
         .then(function(data){
             for(var i=0;i<data.order_ids.length;i++){
-                queue.push({restaurant_name:data.restaurant_name,order_id:data.order_ids[i],token:data.token}, function(err) {
+                queue.push({restaurant_name:data.restaurant_name,order_id:data.order_ids[i],token:data.token,serviced_by:data.serviced_by}, function(err) {
                 });
             }
         })
@@ -168,7 +168,6 @@ var queue = async.queue(function(task, callback) {
                     }else  if(body[0].status=="created"){
                         body[0].status='awaiting response'
                     }
-                    log.info(dishes_ordered);
                     var req={}
                     req.body={
                         "city":"gurgaon",
@@ -184,27 +183,30 @@ var queue = async.queue(function(task, callback) {
                         payment_mode:'cod',
                         status:body[0].status,
                         source:{
-                            name:body[0].restaurant.pos_type,
+                            name:body[0].source,
                             id:body[0].id
                         }
                     };
-                    if(body[0].restaurant.pos_type.toLowerCase()=="foodpanda" ||
-                        body[0].restaurant.pos_type.toLowerCase()=="swiggy"){
+                    if(body[0].source.toLowerCase()=="foodpanda" ||
+                        body[0].source.toLowerCase()=="swiggy"){
                         req.body.payment_mode="online"
                         req.body.delivery_enabled=false;
                     }
                     orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
                         if(!err&&rows.length==0){
+                            log.debug(task);
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
+                                    log.debug(restaurant)
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
+                                    log.info(data);
                                     return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                 })
                                 .then(function(order){
                                     log.info(order);
-                                    callback();
+                                     callback();
                                 })
                                 .catch(function(err){
                                     log.info(err);
@@ -222,7 +224,7 @@ var queue = async.queue(function(task, callback) {
                         }
                     })
                 })
-                .catch(function(){
+                .catch(function(err){
                     log.info(err);
                     // userTable.findOne({is_admin: true}, function (err, user) {
                     //     if (!err && user && user.phonenumber) {
@@ -257,7 +259,7 @@ function convertDishNames(dishes){
                 dishes_ordered[row.identifier]=dishes[row.nomnom_name];
             }else{
                 def.reject();
-                break;
+                return;
             }
         }
         def.resolve(dishes_ordered);
@@ -444,17 +446,18 @@ function disableDish(data){
 }
 
 setInterval(function(){
-    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurants",
+    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
         function (err, restaurants) {
             if (restaurants.length>0) {
                 restaurants.forEach(function(restaurant){
                     if (restaurant.nomnom_username) {
+                        log.info(restaurant);
                         events.emitter.emit("fetch_nomnom",
                             {
                                 username: restaurant.nomnom_username,
                                 password: restaurant.nomnom_password,
                                 name: restaurant.name,
-                                serviced_by:restaurant.servicing_restaurants
+                                serviced_by:restaurant.servicing_restaurant
                             });
                     }
                 });

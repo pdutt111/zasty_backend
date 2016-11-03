@@ -176,7 +176,7 @@ var orderLogic = {
                 completeDishList.push(dish)
             }
         }
-        // log.info(completeDishList);
+         log.info(completeDishList.length);
         for (var i = 0; i < completeDishList.length; i++) {
             // log.info(req.body.dishes_ordered[completeDishList[i].identifier]);
             if (req.body.dishes_ordered[completeDishList[i].identifier]) {
@@ -202,7 +202,7 @@ var orderLogic = {
                 }
             }
         }
-        log.info(dishes_ordered,req.body.dishes_ordered);
+        log.debug(dishes_ordered.length,Object.keys(req.body.dishes_ordered).length);
 
         if (dishes_ordered.length == Object.keys(req.body.dishes_ordered).length) {
             var dishesByRestaurant = {};
@@ -649,7 +649,18 @@ var orderLogic = {
                         }
                     });
             } else {
+                orderTable.update(
+                    {combined_id: req.params.order_id},
+                    {
+                        payment_status: req.body.status,
+                        status: "payment fail",
+                        payment_mihpayid: req.body.mihpayid,
+                        payment_id: req.body.txnid
+                    },
+                    {multi: true},
+                    function (err, info) {
 
+                    });
                 var text = "Order Payment Fail -" + "\n" + JSON.stringify(req.body, null, '\t')
                     + "\n" + JSON.stringify(req.params, null, '\t');
 
