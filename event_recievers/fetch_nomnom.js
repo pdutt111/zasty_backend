@@ -22,6 +22,7 @@ events.emitter.on("fetch_nomnom",function(data){
             return fetch_orders(data);
         })
         .then(function(data){
+            log.debug(data);
             for(var i=0;i<data.order_ids.length;i++){
                 queue.push({restaurant_name:data.restaurant_name,order_id:data.order_ids[i],token:data.token,serviced_by:data.serviced_by}, function(err) {
                 });
@@ -113,6 +114,7 @@ queue2.drain = function() {
     console.log('restaurant has been turned off');
 };
 var queue = async.queue(function(task, callback) {
+    log.debug(task.order_id);
     request({
         url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/?order_id="+task.order_id,
         method:"GET",
@@ -125,7 +127,6 @@ var queue = async.queue(function(task, callback) {
         var response={};
         try{
             var dishes_ordered={}
-            log.info(body[0].sub_order.items);
             for(var i=0;i<body[0].sub_order.items.length;i++){
                 var name=body[0].sub_order.items[i].dish_name;
                 if(body[0].sub_order.items[i].dish_variation_name!='-'){
@@ -176,12 +177,11 @@ var queue = async.queue(function(task, callback) {
                         req.body.payment_mode="online"
                         req.body.delivery_enabled=false;
                     }
+                    log.debug(req.body);
                     orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
                         if(!err&&rows.length==0){
-                            log.debug(task);
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
-                                    log.debug(restaurant)
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
@@ -193,7 +193,7 @@ var queue = async.queue(function(task, callback) {
                                      callback();
                                 })
                                 .catch(function(err){
-                                    log.info(err);
+                                    log.debug(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
                                     //         events.emitter.emit("sms", {
@@ -205,6 +205,9 @@ var queue = async.queue(function(task, callback) {
                                     // });
                                     callback();
                                 });
+                        }else{
+                            log.debug("already created",body[0].id)
+                            callback();
                         }
                     })
                 })
@@ -222,7 +225,7 @@ var queue = async.queue(function(task, callback) {
                     callback();
                 })
         }catch(e){
-            log.info(e)
+            log.debug(e)
         }
     });
 }, 3);

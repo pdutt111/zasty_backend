@@ -325,7 +325,7 @@ var orderLogic = {
                         customer_email: req.body.customer_email,
                         dishes_ordered: dishes_ordered[restaurants[i].name],
                         restaurant_assigned: restaurants[i].name,
-                        status: req.body.payment_mode == 'cod' ? status : 'pending payment',
+                        status: (req.body.payment_mode == 'cod'||req.body.payment_mode == 'online') ? status : 'pending payment',
                         source: source
                     });
                     order.save(function (err, order, info) {
