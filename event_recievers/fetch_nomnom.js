@@ -129,10 +129,11 @@ var queue = async.queue(function(task, callback) {
             var dishes_ordered={}
             for(var i=0;i<body[0].sub_order.items.length;i++){
                 var name=body[0].sub_order.items[i].dish_name;
+                log.debug(name);
                 if(body[0].sub_order.items[i].dish_variation_name!='-'){
                     name=name+" "+body[0].sub_order.items[i].dish_variation_name;
                 }
-                if(body[0].sub_order.items[i].dish_quantity_name!="Portion"){
+                if(body[0].sub_order.items[i].dish_quantity_name!="Portion"&&body[0].sub_order.items[i].dish_quantity_name!="Regular"){
                     name=name+" "+body[0].sub_order.items[i].dish_quantity_name;
                 }
                 dishes_ordered[name]={
