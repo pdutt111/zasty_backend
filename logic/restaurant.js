@@ -465,9 +465,9 @@ var listings = {
         }, function (err, info) {
             if (!err) {
                 def.resolve(config.get('ok'));
-                orderTable.findOne({_id: req.body.order_id}, "customer_name source restaurant_assigned customer_number", function (err, order) {
+                orderTable.findOne({_id: req.body.order_id}, "customer_name source restaurant_assigned customer_number source", function (err, order) {
                     if (!err&&order) {
-                        if (order.source.name == "nomnom") {
+                        if (order.source.name != "website") {
                             restaurantTable.findOne({name: order.restaurant_assigned}, "nomnom_username nomnom_password", function (err, restaurant) {
                                 events.emitter.emit("status_change_nomnom",
                                     {
@@ -504,9 +504,9 @@ var listings = {
             }, function (err, info) {
                 if (!err) {
                     def.resolve(config.get("ok"));
-                    orderTable.findOne({_id: req.body.order_id}, "customer_name restaurant_assigned customer_number", function (err, order) {
+                    orderTable.findOne({_id: req.body.order_id}, "customer_name restaurant_assigned customer_number source", function (err, order) {
                         if (!err) {
-                            if (order.source.name == "nomnom") {
+                            if (order.source.name != "website") {
                                 restaurantTable.findOne({name: order.restaurant_assigned}, "nomnom_username nomnom_password", function (err, restaurant) {
                                     events.emitter.emit("status_change_nomnom",
                                         {

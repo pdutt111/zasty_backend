@@ -18,11 +18,9 @@ var restaurantTable=db.getrestaurantdef;
 events.emitter.on("fetch_nomnom",function(data){
     nomnom_login(data).
         then(function(data){
-            log.info(data);
             return fetch_orders(data);
         })
         .then(function(data){
-            log.debug(data);
             for(var i=0;i<data.order_ids.length;i++){
                 queue.push({restaurant_name:data.restaurant_name,order_id:data.order_ids[i],token:data.token,serviced_by:data.serviced_by}, function(err) {
                 });
@@ -50,28 +48,101 @@ events.emitter.on('close_restaurant_nomnom',function(data){
         if(!err&&restaurant){
             data.username=restaurant.nomnom_username;
             data.password=restaurant.nomnom_password;
-            for(var i=0;i<restaurant.dishes.length;i++){
-                    events.emitter.emit('dish_change_status',
-                        {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:0});
-            }
+            nomnom_login(data)
+                .then(function(data){
+                    return fetchDishes(data);
+                })
+                .then(function (data) {
+                    for(var l=0;l<restaurant.dishes.length;l++){
+                        for(var i=0;i<data.dishes.length;i++){
+                            for(var j=0;j<data.dishes[i]._source.variations.length;j++){
+                                for(var k=0;k<data.dishes[i]._source.variations[j].quantities.length;k++){
+                                    if(data.dishes[i]._source.variations[j].quantities[k]
+                                            .nomnom_name.toLowerCase().replace("portion","")
+                                            .replace(/-/g,"").replace("regular","")
+                                            .replace(/  /g," ").trim().replace(/  /g," ")==
+                                        restaurant.dishes[l].details.nomnom_name.replace(/-/g,"").toLowerCase()){
+                                        data.dish_id=data.dishes[i]._source.variations[j].quantities[k].variation;
+                                        log.debug("changing name for",restaurant.dishes[l].details.nomnom_name.replace(/-/g,"").toLowerCase())
+                                        data.main_dish_id=data.dishes[i]._source.id;
+                                        data.main_enable=0;
+                                        changemaindishstatus(data)
+                                            .then(function(){
+                                                log.info("dish status changed");
+                                            })
+                                            .catch(function(err){
+                                                log.error("error in disabling dish",err);
+                                            })
+                                    }
+                                }
+                            }
+                        }
+                        // if(restaurant.dishes[i].availability){
+                        //     events.emitter.emit('dish_change_status',
+                        //         {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:1});
+                        // }else{
+                        //     events.emitter.emit('dish_change_status',
+                        //         {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:0});
+                        // }
+
+                    }
+                })
+
         }else{
             log.info("error in turning off restaurant nomnom");
         }
     });
 });
 events.emitter.on('open_restaurant_nomnom',function(data){
-    log.debug(data);
     restaurantTable.findOne({name:data.restaurant_name},"nomnom_username nomnom_password dishes name").populate("dishes.details").exec(function(err,restaurant){
         if(!err&&restaurant){
             data.username=restaurant.nomnom_username;
             data.password=restaurant.nomnom_password;
-            for(var i=0;i<restaurant.dishes.length;i++){
-                if(restaurant.dishes[i].availability){
-                    events.emitter.emit('dish_change_status',
-                        {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:1});
-                }
-            }
-            }else{
+            nomnom_login(data)
+                .then(function(data){
+                    return fetchDishes(data);
+                })
+                .then(function (data) {
+                    for(var l=0;l<restaurant.dishes.length;l++){
+                        for(var i=0;i<data.dishes.length;i++){
+                            for(var j=0;j<data.dishes[i]._source.variations.length;j++){
+                                for(var k=0;k<data.dishes[i]._source.variations[j].quantities.length;k++){
+                                    if(data.dishes[i]._source.variations[j].quantities[k]
+                                            .nomnom_name.toLowerCase().replace("portion","")
+                                            .replace(/-/g,"").replace("regular","")
+                                            .replace(/  /g," ").trim().replace(/  /g," ")==
+                                        restaurant.dishes[l].details.nomnom_name.replace(/-/g,"").toLowerCase()){
+                                        data.dish_id=data.dishes[i]._source.variations[j].quantities[k].variation;
+                                        log.debug("changing name for",restaurant.dishes[l].details.nomnom_name.replace(/-/g,"").toLowerCase())
+                                        data.main_dish_id=data.dishes[i]._source.id;
+                                        data.main_enable=1;
+                                        data.enable=0;
+                                        if(restaurant.dishes[l].availability){
+                                            data.enable=1;
+                                        }
+                                        changemaindishstatus(data)
+                                            // .then(function(data){
+                                            //     return disableDish(data)
+                                            // })
+                                            .then(function(){
+                                            })
+                                            .catch(function(err){
+                                            })                                    }
+                                }
+                            }
+                        }
+                        // if(restaurant.dishes[i].availability){
+                        //     events.emitter.emit('dish_change_status',
+                        //         {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:1});
+                        // }else{
+                        //     events.emitter.emit('dish_change_status',
+                        //         {dish_name:restaurant.dishes[i].details.identifier,restaurant_name:restaurant.name,enable:0});
+                        // }
+
+                    }
+                })
+
+        }else{
             log.info("error in turning off restaurant nomnom");
         }
     });
@@ -109,12 +180,11 @@ var queue2 = async.queue(function(task, callback) {
         .catch(function (err) {
             callback();
         })
-},3);
+},1);
 queue2.drain = function() {
     console.log('restaurant has been turned off');
 };
 var queue = async.queue(function(task, callback) {
-    log.debug(task.order_id);
     request({
         url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/?order_id="+task.order_id,
         method:"GET",
@@ -129,7 +199,6 @@ var queue = async.queue(function(task, callback) {
             var dishes_ordered={}
             for(var i=0;i<body[0].sub_order.items.length;i++){
                 var name=body[0].sub_order.items[i].dish_name;
-                log.debug(name);
                 if(body[0].sub_order.items[i].dish_variation_name!='-'){
                     name=name+" "+body[0].sub_order.items[i].dish_variation_name;
                 }
@@ -178,7 +247,6 @@ var queue = async.queue(function(task, callback) {
                         req.body.payment_mode="online"
                         req.body.delivery_enabled=false;
                     }
-                    log.debug(req.body);
                     orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
                         if(!err&&rows.length==0){
                             orderLogic.findActualRates(req, task.serviced_by)
@@ -186,15 +254,13 @@ var queue = async.queue(function(task, callback) {
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
-                                    log.info(data);
                                     return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                 })
                                 .then(function(order){
-                                    log.info(order);
                                      callback();
                                 })
                                 .catch(function(err){
-                                    log.debug(err);
+                                    throw err;
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
                                     //         events.emitter.emit("sms", {
@@ -207,7 +273,6 @@ var queue = async.queue(function(task, callback) {
                                     callback();
                                 });
                         }else{
-                            log.debug("already created",body[0].id)
                             callback();
                         }
                     })
@@ -238,9 +303,7 @@ queue.drain = function() {
 function convertDishNames(dishes){
     var def=q.defer();
     var dishes_ordered={}
-    log.info(Object.keys(dishes));
     dishTable.find({nomnom_name:{$in:Object.keys(dishes)}},"nomnom_name identifier",function(err,rows){
-        log.info(rows);
         for(var i=0;i<rows.length;i++){
             var row=rows[i];
             if(dishes[row.nomnom_name]){
@@ -313,6 +376,7 @@ function changeStatus(data){
         body= {
             id: data.source,
             osl_status: data.status,
+            status: data.status,
             update_status: true
         }
     }
@@ -330,7 +394,7 @@ function changeStatus(data){
         data.status="restaurant_confirmed";
         body= {
             id: data.source,
-            osl_status: data.status,
+            status: "restaurant_confirmed",
             update_status: true
         }
     }else if(data.status=='rejected'){
@@ -345,7 +409,6 @@ function changeStatus(data){
     //delivery_boy_details:"restaurant"
     //delivery_boy_name:"HAM"
     //delivery_boy_number:1234567809
-    log.info(data);
     log.info("http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/");
     request({
         url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/",
@@ -357,7 +420,6 @@ function changeStatus(data){
         },
         json:true
     },function(err,response,body){
-        log.info(err,body);
         try{
            if(body.status==data.status){
                def.resolve();
@@ -402,9 +464,6 @@ function findCorrectDish(data){
         for(var i=0;i<data.dishes.length;i++){
             for(var j=0;j<data.dishes[i]._source.variations.length;j++){
                 for(var k=0;k<data.dishes[i]._source.variations[j].quantities.length;k++){
-                    log.debug(data.dishes[i]._source.variations[j].quantities[k]
-                            .nomnom_name.toLowerCase().replace("portion","")
-                            .replace(/-/g,"").replace("regular","").replace(/  /g," ").trim().replace(/  /g," "),dish.nomnom_name.replace(/-/g,"").toLowerCase())
                     if(data.dishes[i]._source.variations[j].quantities[k]
                             .nomnom_name.toLowerCase().replace("portion","")
                             .replace(/-/g,"").replace("regular","").replace(/  /g," ").trim().replace(/  /g," ")==dish.nomnom_name.replace(/-/g,"").toLowerCase()){
@@ -421,7 +480,7 @@ function findCorrectDish(data){
 }
 function disableDish(data){
     var def=q.defer();
-    log.debug(data.dish_id);
+    log.debug(data.dish_id,data.enable);
     request({
         url:"http://restaurant.gonomnom.in/nomnom/variation/"+data.dish_id+"/",
         method:"PUT",
@@ -435,10 +494,10 @@ function disableDish(data){
         },
         json:true
     },function(err,response,body){
-        log.info(err,body);
+        log.debug(err,body);
         try{
-            if(body.status=="Updated"){
-                def.resolve();
+            if(body.success=="Updated"){
+                def.resolve(data);
             }else{
                 def.reject();
             }
@@ -448,14 +507,40 @@ function disableDish(data){
     });
     return def.promise;
 }
-
+function changemaindishstatus(data){
+    var def=q.defer();
+    request({
+        url:"http://restaurant.gonomnom.in/nomnom/restaurant_dish/"+data.main_dish_id+"/",
+        method:"PUT",
+        body:{
+            is_available:data.main_enable
+        },
+        headers:{
+            "Origin":"http://restaurant.gonomnom.in",
+            "Access-Token":data.token,
+            "Content-Type":"application/json;charset=UTF-8"
+        },
+        json:true
+    },function(err,response,body){
+        log.info(err,body);
+        try{
+            if(body.success=="Updated"){
+                def.resolve(data);
+            }else{
+                def.reject();
+            }
+        }catch(e){
+            def.reject();
+        }
+    });
+    return def.promise;
+}
 setInterval(function(){
     restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
         function (err, restaurants) {
             if (restaurants.length>0) {
                 restaurants.forEach(function(restaurant){
                     if (restaurant.nomnom_username) {
-                        log.info(restaurant);
                         events.emitter.emit("fetch_nomnom",
                             {
                                 username: restaurant.nomnom_username,
@@ -475,7 +560,6 @@ setInterval(function(){
             if (restaurants.length>0) {
                 restaurants.forEach(function(restaurant){
                     if (restaurant.nomnom_username) {
-                        log.info(restaurant);
                         if(restaurant.open_status){
                             events.emitter.emit("open_restaurant_nomnom",
                                 {

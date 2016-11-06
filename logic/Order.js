@@ -176,13 +176,12 @@ var orderLogic = {
                 completeDishList.push(dish)
             }
         }
-         log.info(completeDishList.length);
         for (var i = 0; i < completeDishList.length; i++) {
             // log.info(req.body.dishes_ordered[completeDishList[i].identifier]);
             if (req.body.dishes_ordered[completeDishList[i].identifier]) {
 
                 if (
-                    completeDishList[i].availability &&
+                    // (req.source.name!="website"||completeDishList[i].availability) &&
                     req.body.dishes_ordered[completeDishList[i].identifier].qty > 0 &&
                     req.body.dishes_ordered[completeDishList[i].identifier].qty < 10 &&
                     req.body.dishes_ordered[completeDishList[i].identifier].price > 0
