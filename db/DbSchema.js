@@ -196,6 +196,7 @@ var restaurantSchema = new Schema({
     dish_editable: {type: Boolean, default: false},
     dish_add_allowed: {type: Boolean, default: false},
     is_deleted: {type: Boolean, default: false},
+    autooff:{type:Boolean,default:true},
     is_verified: {type: Boolean, default: false},
     created_time: {type: Date, default: Date.now},
     modified_time: {type: Date, default: Date.now}
