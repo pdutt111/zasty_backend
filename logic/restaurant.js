@@ -70,11 +70,11 @@ var listings = {
     modifyRestaurant: function (req) {
         var def = q.defer();
         var res_name = req.params.name;
-        for (var key in req.body) {
-            if (key != "location" && key != "contact_number" && key != "contact_name") {
-                delete req.body[key];
-            }
-        }
+        // for (var key in req.body) {
+        //     if (key != "location" && key != "contact_number" && key != "contact_name") {
+        //         delete req.body[key];
+        //     }
+        // }
         restaurantTable.update({name: res_name, is_deleted: false}, {$set: req.body}, function (err, info) {
             if (!err) {
                 def.resolve(config.get('ok'));
@@ -230,14 +230,22 @@ var listings = {
     },
     openRestaurant: function (req) {
         var def = q.defer();
-        restaurantTable.update({
+        restaurantTable.findOne({
             name: req.params.name,
             is_deleted: false
-        }, {$set: {open_status: true}}, function (err, info) {
+        }, function (err, restaurant) {
             if (!err) {
-                def.resolve(config.get('ok'));
-                events.emitter.emit('open_restaurant_nomnom',{restaurant_name:req.params.name})
+                restaurant.open_status=true;
+                for(var i=0;i<restaurant.dishes.length;i++){
+                    restaurant.dishes[i].availability=true;
+                }
+                restaurant.save(function(err,row,info){
+                    def.resolve(config.get('ok'));
+                    events.emitter.emit('open_restaurant_nomnom',{restaurant_name:req.params.name})
+                });
+
             } else {
+                log.error(err);
                 def.reject({status: 500, message: config.get('error.dberror')});
             }
         });

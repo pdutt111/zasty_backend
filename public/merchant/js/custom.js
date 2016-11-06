@@ -602,6 +602,7 @@ function updateRestaurantDetails() {
         dataType: "json",
         success: function (json) {
             console.log(json);
+            alert("updated");
             getRestaurant();
         },
         error: function (xhr, _status, errorThrown) {
