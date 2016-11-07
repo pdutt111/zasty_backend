@@ -29,6 +29,7 @@ function toggleRestaurant(val) {
             console.log(json);
             if (json.result === 'ok') {
                 $('#abc').prop('checked', val);
+                window.location.href="/p/";
             } else {
                 $('#abc').prop('checked', !val);
             }
