@@ -554,22 +554,22 @@ setInterval(function(){
         });
 },60000);
 
-setInterval(function(){
-    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
-        function (err, restaurants) {
-            if (restaurants.length>0) {
-                restaurants.forEach(function(restaurant){
-                    if (restaurant.nomnom_username) {
-                        if(restaurant.open_status){
-                            events.emitter.emit("open_restaurant_nomnom",
-                                {
-                                    username: restaurant.nomnom_username,
-                                    password: restaurant.nomnom_password,
-                                    name: restaurant.name,
-                                });
-                        }
-                    }
-                });
-            }
-        });
-},60*60*1000);
+// setInterval(function(){
+//     restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
+//         function (err, restaurants) {
+//             if (restaurants.length>0) {
+//                 restaurants.forEach(function(restaurant){
+//                     if (restaurant.nomnom_username) {
+//                         if(restaurant.open_status){
+//                             events.emitter.emit("open_restaurant_nomnom",
+//                                 {
+//                                     username: restaurant.nomnom_username,
+//                                     password: restaurant.nomnom_password,
+//                                     name: restaurant.name,
+//                                 });
+//                         }
+//                     }
+//                 });
+//             }
+//         });
+// },60*60*1000);
