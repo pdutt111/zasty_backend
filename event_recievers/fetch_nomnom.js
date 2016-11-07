@@ -376,18 +376,18 @@ function changeStatus(data){
         body= {
             id: data.source,
             osl_status: data.status,
-            status: data.status,
+            // status: data.status,
             update_status: true
         }
     }
     else if(data.status=='dispatched'){
-        data.status="order_dispatched";
+        data.status="restaurant_dispatched";
         body= {
             id: data.source,
             status: data.status,
             delivery_boy_details: "restaurant",
-            delivery_boy_name: data.order.delivery_person_alloted,
-            delivery_boy_number: data.order.delivery_person_contact,
+            delivery_boy_name: data.order.delivery_person_alloted ? data.order.delivery_person_alloted : "none",
+            delivery_boy_number: data.order.delivery_person_contact ? data.order.delivery_person_contact:"0000000000",
             update_status: true
         }
     }else if(data.status=='confirmed'){
@@ -409,7 +409,7 @@ function changeStatus(data){
     //delivery_boy_details:"restaurant"
     //delivery_boy_name:"HAM"
     //delivery_boy_number:1234567809
-    log.info("http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/");
+    log.info("http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/",body);
     request({
         url:"http://restaurant.gonomnom.in/nomnom/order_restaurant/"+data.source+"/",
         method:"PUT",
@@ -420,6 +420,7 @@ function changeStatus(data){
         },
         json:true
     },function(err,response,body){
+        log.info(err,body);
         try{
            if(body.status==data.status){
                def.resolve();
