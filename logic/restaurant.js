@@ -322,7 +322,7 @@ var listings = {
                     }
                 ]
             },
-                "address dishes_ordered delivery customer_name created_time log " +
+                "address combined_id dishes_ordered delivery customer_name created_time log " +
                 "customer_number customer_email city issue_raised issue_reason" +
                 " locality area rejection_reason status payment_mode payment_status")
             .skip(Number(req.query.offset)).limit(20).sort({_id: -1})
@@ -391,7 +391,7 @@ var listings = {
                 paid_status_to_restaurant: false,
                 status: {$in: ["dispatched", "DELIVERED"]}
             },
-            "address dishes_ordered full_order payment_mode delivery_price_recieved" +
+            "address dishes_ordered combined_id full_order payment_mode delivery_price_recieved" +
             " delivery customer_name customer_number log created_time customer_email" +
             " issue_raised issue_reason nomnom_username nomnom_password city locality area rejection_reason status" +
             "  payment_mode payment_status")
@@ -409,7 +409,7 @@ var listings = {
     getOrder: function (req) {
         var def = q.defer();
         orderTable.findOne({_id: req.query.order_id},
-            "address delivery full_order dishes_ordered city locality area rejection_reason status  payment_mode payment_status"
+            "address delivery full_order dishes_ordered combined_id city locality area rejection_reason status  payment_mode payment_status"
             , function (err, order) {
                 if (!err) {
                     def.resolve(order);

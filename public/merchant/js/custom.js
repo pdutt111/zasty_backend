@@ -652,14 +652,14 @@ function renderUnpaidOrderTable() {
             price_recieved_from_cod += order.delivery_price_recieved;
             grand_total_cod += total;
             cod_count++;
-            rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+            rows.push('<tr><td>' + order.combined_id+"<BR/>"+order._id + '<BR/>' + order.address_full + '</td><td>'
                 + order.status + '</td><td>'
                 + order.date + '</td><td>' + dishes + '</td><td>received:'+order.delivery_price_recieved+"<BR/>"
                 + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td></tr>');
         }else{
             grand_total_online += total;
             online_count++;
-            rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+            rows.push('<tr><td>combined id:' +order.combined_id+"<BR/> restaurant id:"+ order._id + '<BR/>' + order.address_full + '</td><td>'
                 + order.status + '</td><td>'
                 + order.date + '</td><td>' + dishes + '</td><td>'
                 + total + '<BR/><BR/>' + order.payment_mode + '<BR/><BR/>' + order.payment_status + '</td></tr>');
@@ -771,7 +771,7 @@ function renderSearchTable() {
         order.dishes = dishes;
         order.status = order.status + (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '');
 
-        rows.push('<tr><td>' + order._id + '<BR/>' + order.address_full + '</td><td>'
+        rows.push('<tr><td>combined id:' +order.combined_id+"<BR/> restaurant id:" + order._id + '<BR/>' + order.address_full + '</td><td>'
             + order.status + '</td><td>'
             + order.date + '</td><td>' + dishes + '</td><td>'
             + total + '</td></tr>');
