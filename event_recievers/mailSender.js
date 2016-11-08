@@ -23,7 +23,6 @@ var j = schedule.scheduleJob('0 3 * * *', function () {
 
 // Give SES the details and let it construct the message for you.
 events.emitter.on('mail', function (data) {
-    console.log("send mail", data);
     // client.sendEmail({
     //     to: "pdutt111@gmail.com",
     //     from: "ashit@zasty.co",
