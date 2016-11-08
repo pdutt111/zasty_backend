@@ -261,7 +261,7 @@ var queue = async.queue(function(task, callback) {
                                      callback();
                                 })
                                 .catch(function(err){
-                                    throw err;
+                                    console.log(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
                                     //         events.emitter.emit("sms", {
@@ -293,6 +293,7 @@ var queue = async.queue(function(task, callback) {
                 })
         }catch(e){
             log.debug(e)
+            callback();
         }
     });
 }, 3);
