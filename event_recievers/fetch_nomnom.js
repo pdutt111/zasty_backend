@@ -16,6 +16,7 @@ var dishTable=db.getdishdef;
 var restaurantTable=db.getrestaurantdef;
 
 events.emitter.on("fetch_nomnom",function(data){
+    log.info("fetching nomnom")
     nomnom_login(data).
         then(function(data){
             return fetch_orders(data);
@@ -354,6 +355,7 @@ function fetch_orders(data){
         json:true
     },function(err,response,body){
         try{
+            log.info(body);
             data.order_ids=[];
             for(var i=0;i<body.length;i++){
                 data.order_ids.push(body[i].order_id);
@@ -553,7 +555,7 @@ setInterval(function(){
                 });
             }
         });
-},60000);
+},10000);
 
 // setInterval(function(){
 //     restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",

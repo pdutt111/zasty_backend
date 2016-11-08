@@ -48,7 +48,7 @@ events.emitter.on('mail', function (data) {
     });
 
     sg.API(request, function (error, response) {
-        console.log("sent mail", error, response);
+        console.log("sent mail");
     });
 });
 
