@@ -27,7 +27,7 @@ setInterval(function () {
     log.info("running job");
     var date=new Date();
     log.info(date.getHours());
-    if (date.getHours() < 10 || date.getHours() > 22) {
+    if (date.getUTCHours() < 5 || date.getUTCHours() > 17) {
         log.info("turning all restaurants off")
         restaurantTable.find({open_status: true, autooff: true}, function (err, rows) {
             log.info("turning off restaurants",rows.length);
