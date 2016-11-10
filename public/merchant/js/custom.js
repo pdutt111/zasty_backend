@@ -547,7 +547,7 @@ var a;
 a = new Audio(config.server_url + '/p/audio/alertS.mp3');
 a.loop = true;
 function playSound() {
-    // $('a[rel="tab1"]').trigger("click");
+    $('a[rel="tab1"]').trigger("click");
     a.play();
 }
 
