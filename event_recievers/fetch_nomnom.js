@@ -211,6 +211,7 @@ var queue = async.queue(function(task, callback) {
                     qty:body[0].sub_order.items[i].dish_quantity,
                 }
             }
+            log.info(dishes_ordered);
             convertDishNames(dishes_ordered)
                 .then(function(dishes_ordered){
                     if(body[0].status=="order_prepared"){
@@ -225,24 +226,47 @@ var queue = async.queue(function(task, callback) {
                         body[0].status='awaiting response'
                     }
                     var req={}
-                    req.body={
-                        "city":"gurgaon",
-                        "area":body[0].address.locality.name,
-                        "locality":"gurgaon",
-                        "address":body[0].address.name,
-                        "dishes_ordered":dishes_ordered,
-                        lat:body[0].address.sub_locality.latitude,
-                        lon:body[0].address.sub_locality.longitude,
-                        "customer_name":body[0].customer.name,
-                        "customer_number":body[0].customer.primary_number,
-                        "restaurant_name":task.restaurant_name,
-                        payment_mode:'cod',
-                        status:body[0].status,
-                        source:{
-                            name:body[0].source,
-                            id:body[0].id
-                        }
-                    };
+                    log.info(body[0].address,dishes_ordered);
+                    req.body={};
+                    if(body[0].source.toLowerCase()=="swiggy"){
+                        req.body = {
+                            "city": "gurgaon",
+                            "area": '',
+                            "locality": "gurgaon",
+                            "address": '',
+                            "dishes_ordered": dishes_ordered,
+                            lat: '28',
+                            lon: '77',
+                            "customer_name": '',
+                            "customer_number": '',
+                            "restaurant_name": task.restaurant_name,
+                            payment_mode: 'cod',
+                            status: body[0].status,
+                            source: {
+                                name: body[0].source,
+                                id: body[0].id
+                            }
+                        };
+                    }else {
+                        req.body = {
+                            "city": "gurgaon",
+                            "area": body[0].address.locality.name,
+                            "locality": "gurgaon",
+                            "address": body[0].address.name,
+                            "dishes_ordered": dishes_ordered,
+                            lat: body[0].address.sub_locality.latitude,
+                            lon: body[0].address.sub_locality.longitude,
+                            "customer_name": body[0].customer.name,
+                            "customer_number": body[0].customer.primary_number,
+                            "restaurant_name": task.restaurant_name,
+                            payment_mode: 'cod',
+                            status: body[0].status,
+                            source: {
+                                name: body[0].source,
+                                id: body[0].id
+                            }
+                        };
+                    }
                     if(body[0].source.toLowerCase()=="foodpanda" ||
                         body[0].source.toLowerCase()=="swiggy"){
                         req.body.payment_mode="online"
@@ -261,7 +285,7 @@ var queue = async.queue(function(task, callback) {
                                      callback();
                                 })
                                 .catch(function(err){
-                                    console.log(err);
+                                    log.info(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
                                     //         events.emitter.emit("sms", {

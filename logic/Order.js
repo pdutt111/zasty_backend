@@ -84,7 +84,7 @@ var orderLogic = {
             is_deleted: false,
             is_verified: true
         }, "name dishes contact_name open_status contact_number").populate('dishes.details').exec( function (err, restaurants) {
-            console.log(restaurants);
+            log.info(restaurants);
             if (!err && restaurants.length > 0) {
                 var response = {};
                 response.contact_name = restaurants[0].contact_name;
@@ -163,7 +163,7 @@ var orderLogic = {
         // log.info(restaurants);
         var dishes_ordered = [];
         if (Object.keys(req.body.dishes_ordered).length == 0) {
-            log.info("here bhi")
+            log.info("dishes not found")
             def.reject({status: 400, message: config.get('error.badrequest')});
         }
         var completeDishList = []
@@ -342,7 +342,7 @@ var orderLogic = {
                                 } else {
 
                                     //payu
-                                    console.log('/getShaKey');
+                                    log.info('/getShaKey');
                                     var shasum = crypto2.createHash('sha512');
                                     var txnid = '#txnid' + combined_id;
                                     var dataSequence = config.payu.key
@@ -354,8 +354,8 @@ var orderLogic = {
                                         + '|||||||||||'
                                         + config.payu.salt;
                                     var resultKey = shasum.update(dataSequence).digest('hex');
-                                    console.log(dataSequence);
-                                    console.log(resultKey);
+                                    log.info(dataSequence);
+                                    log.info(resultKey);
 
                                     def.resolve({
                                         id: combined_id,
@@ -609,9 +609,9 @@ var orderLogic = {
             body: req.body
         });
         pay.save(function (err, doc) {
-            console.log(pay);
+            log.info(pay);
             if (err) {
-                console.log(err, pay);
+                log.info(err, pay);
                 return def.reject();
             }
             if (req.params.status === 'success') {
