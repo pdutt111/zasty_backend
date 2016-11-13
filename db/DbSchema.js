@@ -127,7 +127,7 @@ var orderSchema = new Schema({
     delivery_cost: Number,
     source: {
         name: String,
-        id: String
+        id: {type:String,unique:true,sparse:true}
     },
     combined_id:String,
     delivery_price_recieved: Number,

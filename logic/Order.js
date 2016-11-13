@@ -429,8 +429,13 @@ var orderLogic = {
 
             email.toEmail = order.customer_email;
             events.emitter.emit("mail", email);
-            events.emitter.emit("sms", {number: order.customer_number, message: "Dear "+order.customer_name+" , we have successfully recieved your order. " +
-            "Your Order "+order.combined_id+" will be delivered shortly. Thanks for using ZASTY!"})
+            if(order.payment_mode=='cod'){
+                events.emitter.emit("sms", {number: order.customer_number, message: "Dear "+order.customer_name+" , we have successfully recieved your order. " +
+                "Your Order "+order.combined_id+" will be delivered shortly.Please pay Rs."+order.delivery_price_recieved+" to the delivery executive Thanks for using ZASTY!"})
+            }else{
+                events.emitter.emit("sms", {number: order.customer_number, message: "Dear "+order.customer_name+" , we have successfully recieved your order. " +
+                "Your Order "+order.combined_id+" will be delivered shortly. Total bill amount Rs."+order.delivery_price_recieved+" Thanks for using ZASTY!"})
+            }
         });
     },
     createRestaurantMail:function(order){
