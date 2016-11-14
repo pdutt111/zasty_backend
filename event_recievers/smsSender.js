@@ -23,14 +23,13 @@ events.emitter.on('sms',function(data) {
                     var code = Number(body);
                     if (100 < code && code < 312) {
                         log.warn("error in sending the sms", code);
+                        setTimeout(function(){
+                            events.emitter.emit('sms',data);
+                        },2000*((Math.random())*10));
                     }
                 } catch (e) {
                     log.info("sent the sms", body);
                 }
-            }else{
-                setTimeout(function(){
-                    events.emitter.emit('sms',data);
-                },1000)
             }
         });
 }

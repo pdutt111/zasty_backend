@@ -450,12 +450,20 @@ var listings = {
                               "picked up shortly. Thanks for using ZASTY!"
                           })
                       }else if(status==4){
-                          events.emitter.emit("sms", {
-                              number: orders[0].customer_number,
-                              message: "Dear "+orders[0].customer_name+", Our logistics Runner " +
-                              orders[0].delivery_person_alloted+" "+orders[0].delivery_person_contact+" has " +
-                              "picked up your order "+orders[0].combined_id+" and is on the way. The order will be delivered Shortly."
-                          })
+                          if(orders[0].delivery_person_alloted&&orders[0].delivery_person_contact){
+                              events.emitter.emit("sms", {
+                                  number: orders[0].customer_number,
+                                  message: "Dear "+orders[0].customer_name+", Our logistics Runner " +
+                                  orders[0].delivery_person_alloted+" "+orders[0].delivery_person_contact+" has " +
+                                  "picked up your order "+orders[0].combined_id+" and is on the way. The order will be delivered Shortly."
+                              })
+                          }else{
+                              events.emitter.emit("sms", {
+                                  number: orders[0].customer_number,
+                                  message: "Dear "+orders[0].customer_name+", Our logistics Runner has " +
+                                  "picked up your order "+orders[0].combined_id+" and is on the way. The order will be delivered Shortly."
+                              })
+                          }
                       }else if(status==5){
                           events.emitter.emit("sms", {
                               number: orders[0].customer_number,
