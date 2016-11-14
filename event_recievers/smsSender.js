@@ -27,6 +27,10 @@ events.emitter.on('sms',function(data) {
                 } catch (e) {
                     log.info("sent the sms", body);
                 }
+            }else{
+                setTimeout(function(){
+                    events.emitter.emit('sms',data);
+                },1000)
             }
         });
 }

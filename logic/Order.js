@@ -378,7 +378,7 @@ var orderLogic = {
                                         }
                                         var new_order=JSON.parse(JSON.stringify(order));
                                         new_order.dishes_ordered=dishes
-                                    if(new_order.payment_mode=="cod"){
+                                    if(new_order.payment_mode!="payu"){
                                         orderLogic.createMail(new_order);
                                         ordersList.forEach(function(order){
                                             orderLogic.createRestaurantMail(order);
