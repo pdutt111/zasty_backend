@@ -793,8 +793,8 @@ function renderCart() {
     if (context.off) {
         context.final -= (context.final * context.off / 100)
     }
-    $(".js-total-tax").html(Math.round(context.final * 15 / 100));
-        context.final += Math.round(context.final * 15 / 100)
+    $(".js-total-tax").html(Math.round(context.final * 13.13 / 100));
+        context.final += Math.round(context.final * 13.13 / 100)
     $(".js-total").html(context.final);
 }
 

@@ -262,7 +262,7 @@ var orderLogic = {
         if (req.body.coupon_code && req.body.coupon_code.off) {
             delivery_price_recieved = (delivery_price_recieved * (100 - Number(req.body.coupon_code.off)) / 100);
         }
-        delivery_price_recieved = Math.round(delivery_price_recieved * (115) / 100);
+        delivery_price_recieved = Math.round(delivery_price_recieved * (113.13) / 100);
         var ordersList = [];
         // log.info(order_completed);
         var full_order = false;
@@ -429,12 +429,16 @@ var orderLogic = {
 
             email.toEmail = order.customer_email;
             events.emitter.emit("mail", email);
+            var id=order.combined_id;
+            if(order.source.name!="website"&&order.source.id){
+                id=order.source.id
+            }
             if(order.payment_mode=='cod'){
                 events.emitter.emit("sms", {number: order.customer_number, message: "Dear "+order.customer_name+" , we have successfully recieved your order. " +
-                "Your Order "+order.combined_id+" will be delivered shortly.Please pay Rs."+order.delivery_price_recieved+" to the delivery executive Thanks for using ZASTY!"})
+                "Your Order "+id+" will be delivered shortly.Please pay Rs."+order.delivery_price_recieved+" to the delivery executive Thanks for using ZASTY! track your order here http://zasty.co/track.html?orderid="+order.combined_id})
             }else{
                 events.emitter.emit("sms", {number: order.customer_number, message: "Dear "+order.customer_name+" , we have successfully recieved your order. " +
-                "Your Order "+order.combined_id+" will be delivered shortly. Total bill amount Rs."+order.delivery_price_recieved+" Thanks for using ZASTY!"})
+                "Your Order "+id+" will be delivered shortly. Total bill amount Rs."+order.delivery_price_recieved+" Thanks for using ZASTY! track your order here http://zasty.co/track.html?orderid="+order.combined_id})
             }
         });
     },

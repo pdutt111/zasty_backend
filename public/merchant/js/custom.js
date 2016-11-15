@@ -407,12 +407,12 @@ function renderOrderTable() {
             order_leftover = "<b style='color:red'> Half order</b>";
         }
         if(order.payment_mode=="cod"){
-            rows.push('<tr ' + style + '><td>'+ order.source.name+'-'+order.source.id +'<BR/><BR/>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
+            rows.push('<tr ' + style + '<b style="color: green">'+ order.source.name+'-'+order.source.id +'</b><BR/><BR/>' + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
                 + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
                 + order.date + '</td><td>' + dishes + '</td><td><b style="color: red">COD price to recieve : '+order.delivery_price_recieved+"</b><br>"
                 + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
         }else{
-            rows.push('<tr ' + style + '><td>'+ order.source.name+'-'+order.source.id +'<BR/><BR/>'  + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
+            rows.push('<tr ' + style + '><td><b style="color: green">'+ order.source.name+'-'+order.source.id +'</b><BR/><BR/>'  + order._id + '<BR/><BR/><b>' + order_leftover + '</b><BR/>' + order.address_full + '</td><td>'
                 + displayStatus+ (order.issue_raised ? '</BR><b style="color: red">Issue:' + order.issue_reason+"</b>" : '') + '<BR/><BR/>' + order.buttons + '</td><td>'
                 + order.date + '</td><td>' + dishes + '</td><td>'+
                 + total + '<BR/>' + order.payment_mode + '<BR/>' + order.payment_status + '</td><td><a onclick="orderDetails(' + index + ')">view</a></td></tr>');
