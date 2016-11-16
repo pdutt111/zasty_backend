@@ -234,7 +234,6 @@ var orderLogic = {
         }
         var source = {
             name: "website",
-            id: false
         }
         if (req.body.source) {
             source.name = req.body.source.name;
