@@ -249,7 +249,8 @@ var queue = async.queue(function(task, callback) {
                         };
                     }else {
                         log.info(JSON.stringify(body[0]));
-                        if(!body[0].address.locality.name){
+                        if(!body[0].address.locality){
+                            body[0].address.locality={}
                             body[0].address.locality.name=body[0].address.name;
                         }
                         req.body = {
