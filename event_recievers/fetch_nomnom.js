@@ -244,14 +244,21 @@ var queue = async.queue(function(task, callback) {
                             status: body[0].status,
                             source: {
                                 name: body[0].source,
-                                id: body[0].id
+                                id: body[0].external_source_id
                             }
                         };
                     }else {
-                        log.info(JSON.stringify(body[0]));
+                        if(body[0].source.toLowerCase()!="nomnom"){
+                            body[0].id=body[0].external_source_id;
+                        }
                         if(!body[0].address.locality){
                             body[0].address.locality={}
                             body[0].address.locality.name=body[0].address.name;
+                        }
+                        if(body[0].address.sub_locality){
+                            body[0].address.sub_locality={}
+                            body[0].address.sub_locality.latitude='28'
+                            body[0].address.sub_locality.longitude='77'
                         }
                         req.body = {
                             "city": "gurgaon",
