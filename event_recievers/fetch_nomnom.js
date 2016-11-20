@@ -226,7 +226,6 @@ var queue = async.queue(function(task, callback) {
                         body[0].status='awaiting response'
                     }
                     var req={}
-                    log.info(body[0].address,dishes_ordered);
                     req.body={};
                     if(body[0].source.toLowerCase()=="swiggy"){
                         req.body = {
@@ -287,6 +286,7 @@ var queue = async.queue(function(task, callback) {
                     if(body[0].source.toLowerCase()=="foodpanda" &&task.serviced_by==["Z0101Z5IOUK", "Z0101Z5CCP"]){
                         req.body.delivery_enabled=true;
                     }
+                    log.info(req.body);
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
                                     return orderLogic.createDishesOrderedList(req,restaurant);
