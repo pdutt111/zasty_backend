@@ -14,7 +14,7 @@ var orderTable=db.getorderdef;
 var userTable=db.getuserdef;
 var dishTable=db.getdishdef;
 var restaurantTable=db.getrestaurantdef;
-
+var saving={};
 events.emitter.on("fetch_nomnom",function(data){
     log.info("fetching nomnom")
     nomnom_login(data).
@@ -284,16 +284,23 @@ var queue = async.queue(function(task, callback) {
                         req.body.payment_mode="online"
                         req.body.delivery_enabled=false;
                     }
-                    orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
-                        if(!err&&rows.length==0){
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
-                                    return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
+                                    orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
+                                        if(!err&&rows.length==0&&!saving[body[0].id]){
+                                            saving[body[0].id]=true;
+                                            return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
+                                        }else{
+                                            callback();
+                                            return;
+                                        }
+                                    })
                                 })
                                 .then(function(order){
+                                    delete saving[body[0].id];
                                      callback();
                                 })
                                 .catch(function(err){
@@ -309,10 +316,8 @@ var queue = async.queue(function(task, callback) {
                                     //
                                     // });
                                 });
-                        }else{
-                            callback();
-                        }
-                    })
+
+
                 })
                 .catch(function(err){
                     callback();
