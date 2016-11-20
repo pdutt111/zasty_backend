@@ -298,7 +298,6 @@ var queue = async.queue(function(task, callback) {
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
                                             log.warn(!err,rows.length,!saving[body[0].id])
-                                            throw "problem";
                                             return;
                                         }
                                     })
