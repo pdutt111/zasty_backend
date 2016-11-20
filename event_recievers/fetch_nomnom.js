@@ -248,6 +248,10 @@ var queue = async.queue(function(task, callback) {
                             }
                         };
                     }else {
+                        log.info(JSON.stringify(body[0]));
+                        if(!body[0].address.locality.name){
+                            body[0].address.locality.name=body[0].address.name;
+                        }
                         req.body = {
                             "city": "gurgaon",
                             "area": body[0].address.locality.name,
@@ -285,7 +289,8 @@ var queue = async.queue(function(task, callback) {
                                      callback();
                                 })
                                 .catch(function(err){
-                                    log.info(err);
+                                    callback();
+                                    log.err(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
                                     //         events.emitter.emit("sms", {
@@ -295,7 +300,6 @@ var queue = async.queue(function(task, callback) {
                                     //     }
                                     //
                                     // });
-                                    callback();
                                 });
                         }else{
                             callback();
