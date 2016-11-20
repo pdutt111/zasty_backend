@@ -284,6 +284,9 @@ var queue = async.queue(function(task, callback) {
                         req.body.payment_mode="online"
                         req.body.delivery_enabled=false;
                     }
+                    if(body[0].source.toLowerCase()=="foodpanda" &&task.serviced_by==["Z0101Z5IOUK", "Z0101Z5CCP"]){
+                        req.body.delivery_enabled=true;
+                    }
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
                                     return orderLogic.createDishesOrderedList(req,restaurant);
@@ -295,6 +298,7 @@ var queue = async.queue(function(task, callback) {
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
                                             log.warn(!err,rows.length,!saving[body[0].id])
+                                            throw "problem";
                                             return;
                                         }
                                     })
@@ -304,6 +308,7 @@ var queue = async.queue(function(task, callback) {
                                      callback();
                                 })
                                 .catch(function(err){
+                                    delete saving[body[0].id];
                                     callback();
                                     log.err(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
