@@ -254,7 +254,7 @@ var queue = async.queue(function(task, callback) {
                             body[0].address.locality={}
                             body[0].address.locality.name=body[0].address.name;
                         }
-                        if(body[0].address.sub_locality){
+                        if(!body[0].address.sub_locality){
                             body[0].address.sub_locality={}
                             body[0].address.sub_locality.latitude='28'
                             body[0].address.sub_locality.longitude='77'
