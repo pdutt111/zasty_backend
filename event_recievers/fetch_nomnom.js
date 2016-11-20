@@ -294,7 +294,6 @@ var queue = async.queue(function(task, callback) {
                                             saving[body[0].id]=true;
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
-                                            callback();
                                             return;
                                         }
                                     })
