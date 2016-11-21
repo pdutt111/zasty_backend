@@ -247,8 +247,9 @@ var queue = async.queue(function(task, callback) {
                             }
                         };
                     }else {
+                        var id=body[0].id;
                         if(body[0].source.toLowerCase()!="nomnom"){
-                            body[0].id=body[0].external_source_id;
+                            id=body[0].external_source_id;
                         }
                         if(!body[0].address.locality){
                             body[0].address.locality={}
@@ -274,7 +275,7 @@ var queue = async.queue(function(task, callback) {
                             status: body[0].status,
                             source: {
                                 name: body[0].source,
-                                id: body[0].id
+                                id: id
                             }
                         };
                     }
@@ -292,10 +293,10 @@ var queue = async.queue(function(task, callback) {
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
-                                    orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
-                                        if(!err&&rows.length==0&&!saving[body[0].id]){
-                                            log.debug(err,rows.length,saving[body[0].id],body[0].id);
-                                            saving[body[0].id]=true;
+                                    orderTable.find({'source.id':id},"_id",function(err,rows){
+                                        if(!err&&rows.length==0&&!saving[id]){
+                                            log.debug(err,rows.length,saving[id],id);
+                                            saving[id]=true;
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
                                             log.warn(!err,rows.length,!saving[body[0].id])
@@ -303,11 +304,11 @@ var queue = async.queue(function(task, callback) {
                                     })
                                 })
                                 .then(function(order){
-                                    delete saving[body[0].id];
+                                    delete saving[id];
                                      callback();
                                 })
                                 .catch(function(err){
-                                    delete saving[body[0].id];
+                                    delete saving[id];
                                     callback();
                                     log.err(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
