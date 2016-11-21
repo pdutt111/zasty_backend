@@ -419,7 +419,6 @@ var orderLogic = {
         order.track_link=config.get('server_url')+"/track.html?orderid="+order.combined_id;
         ejs.renderFile('./public/user/email_templates/order_placed_user.html', {order:order}, function(err, str){
             // str => Rendered HTML string
-            log.info(err,str);
             var email = {
                 subject: "Zasty Order - ID - " + order.combined_id,
                 message: str,
