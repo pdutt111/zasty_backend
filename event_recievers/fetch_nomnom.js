@@ -294,7 +294,7 @@ var queue = async.queue(function(task, callback) {
                                 .then(function(data){
                                     orderTable.find({'source.id':body[0].id},"_id",function(err,rows){
                                         if(!err&&rows.length==0&&!saving[body[0].id]){
-                                            Log.debug(err,rows.length,saving[body[0].id]);
+                                            log.debug(err,rows.length,saving[body[0].id]);
                                             saving[body[0].id]=true;
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
