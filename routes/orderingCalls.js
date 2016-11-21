@@ -101,6 +101,13 @@ router.post('/order',
                 res.status(err.status).json(err.message);
             })
     });
+router.post('/lt/order',
+    params({body: ['order']},
+	{message: config.get('error.badrequest')}),
+	function (req, res, next) {
+		return res.json({ 'status': 1, 'message': 'New order creation successful' });
+	});
+
 router.post('/protected/phonenumber/code',params({body: ['phonenumber']},
     {message: config.get('error.badrequest')}),function(req,res){
         orderLogic.confirmCode(req)
