@@ -293,6 +293,7 @@ var queue = async.queue(function(task, callback) {
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
+                                    log.info(id);
                                     orderTable.find({'source.id':id},"_id",function(err,rows){
                                         if(!err&&rows.length==0&&!saving[id]){
                                             log.debug(err,rows.length,saving[id],id);
