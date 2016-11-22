@@ -310,8 +310,8 @@ var queue = async.queue(function(task, callback) {
                                 })
                                 .catch(function(err){
                                     // delete saving[id];
+                                    throw err;
                                     callback();
-                                    log.warn(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
                                     //         events.emitter.emit("sms", {
