@@ -214,7 +214,7 @@ var orderLogic = {
                 }
             }
             // log.info(dishesByRestaurant);
-            def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants});
+            def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants,id:req.source.id});
         } else {
             log.info("dishes did not match",req.body.dishes_ordered,req.body);
             def.reject({status: 400, message: config.get('error.badrequest')});
