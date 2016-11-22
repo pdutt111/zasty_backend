@@ -310,7 +310,7 @@ var queue = async.queue(function(task, callback) {
                                 })
                                 .catch(function(err){
                                     // delete saving[id];
-                                    throw err;
+                                    log.error(err);
                                     callback();
                                     // userTable.findOne({is_admin: true}, function (err, user) {
                                     //     if (!err && user && user.phonenumber) {
