@@ -295,21 +295,21 @@ var queue = async.queue(function(task, callback) {
                                 .then(function(data){
                                     log.info(data.id);
                                     orderTable.find({'source.id':data.id},"_id",function(err,rows){
-                                        if(!err&&rows.length==0&&!saving[id]){
-                                            log.debug(err,rows.length,saving[id],id);
-                                            saving[id]=true;
+                                        if(!err&&rows.length==0&&!saving[data.id]){
+                                            log.debug(err,rows.length,saving[data.id],data.id);
+                                            saving[data.id]=true;
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
-                                            log.warn(!err,rows.length,!saving[body[0].id])
+                                            log.warn(!err,rows.length,!saving[data.id])
                                         }
                                     })
                                 })
                                 .then(function(order){
-                                    delete saving[id];
+                                    // delete saving[id];
                                      callback();
                                 })
                                 .catch(function(err){
-                                    delete saving[id];
+                                    // delete saving[id];
                                     callback();
                                     log.warn(err);
                                     // userTable.findOne({is_admin: true}, function (err, user) {
