@@ -249,7 +249,7 @@ var queue = async.queue(function(task, callback) {
                     }else {
                         var id=body[0].id;
                         if(body[0].source.toLowerCase()!="nomnom"){
-                            id=body[0].external_source_id;
+                            id=body[0].external_source_id.toLowerCase().replace('order','').trim();
                         }
                         if(!body[0].address.locality){
                             body[0].address.locality={}
