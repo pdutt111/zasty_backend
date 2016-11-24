@@ -106,6 +106,48 @@ router.post('/lt/order',
 	{message: config.get('error.badrequest')}),
 	function (req, res, next) {
 		return res.json({ 'status': 1, 'message': 'New order creation successful' });
+		var order = req.body.order;
+
+		// Order mapping
+		req.body.city = order.customer_details.address.city;
+		req.body.area = order.customer_details.address.location_name;
+		req.body.locality = order.customer_details.address.locality_name;
+		req.body.address = order.customer_details.address.address;
+		req.body.dishes_ordered = order.items;
+		req.body.customer_name = order.customer_details.name;
+		req.body.customer_number = order.customer_details.mobile;
+		req.body.payment_mode = order.payment_mode;
+
+        orderLogic.checkCode(req)
+            .then(function(){
+                return orderLogic.getcoupon(req, req.body.coupon)
+            })
+            .then(function (code) {
+                req.body.coupon_code = code;
+                return orderLogic.findRestaurantFromArea(req);
+            })
+            .then(function (restaurants) {
+                return orderLogic.findActualRates(req, restaurants)
+            })
+            .then(function (restaurant) {
+                return orderLogic.createDishesOrderedList(req, restaurant);
+            })
+            .then(function (data) {
+                return orderLogic.saveOrder(req, data.dishes_ordered, data.restaurant);
+            })
+            .then(function (order) {
+                res.json(order);
+                orderLogic.saveAddress(req)
+                    .then(function (info) {
+                        log.info(info);
+                    })
+                    .catch(function (err) {
+                        log.warn(err);
+                    });
+            })
+            .catch(function (err) {
+                res.status(err.status).json(err.message);
+            })
 	});
 
 router.post('/protected/phonenumber/code',params({body: ['phonenumber']},
