@@ -284,9 +284,9 @@ var queue = async.queue(function(task, callback) {
                         req.body.payment_mode="online"
                         req.body.delivery_enabled=false;
                     }
-                    if(body[0].source.toLowerCase()=="foodpanda" &&task.serviced_by==["Z0101Z5IOUK", "Z0101Z5CCP"]){
-                        req.body.delivery_enabled=true;
-                    }
+                    // if(body[0].source.toLowerCase()=="foodpanda" &&task.serviced_by==["Z0101Z5IOUK", "Z0101Z5CCP"]){
+                    //     req.body.delivery_enabled=true;
+                    // }
                     log.info(req.body);
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
