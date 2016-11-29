@@ -227,7 +227,6 @@ var queue = async.queue(function(task, callback) {
                     }
                     var req={}
                     req.body={};
-                    log.info(body[0]);
                     if(body[0].source.toLowerCase()=="swiggy"){
                         req.body = {
                             "city": "gurgaon",

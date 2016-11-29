@@ -196,7 +196,7 @@ var orderLogic = {
                     });
                     log.info(dishes_ordered);
                 } else {
-                    log.info("here");
+                    log.info("quantity problem");
                     def.reject({status: 400, message: config.get('error.badrequest')});
                 }
             }
