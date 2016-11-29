@@ -227,6 +227,7 @@ var queue = async.queue(function(task, callback) {
                     }
                     var req={}
                     req.body={};
+                    log.info(body[0]);
                     if(body[0].source.toLowerCase()=="swiggy"){
                         req.body = {
                             "city": "gurgaon",
@@ -295,6 +296,7 @@ var queue = async.queue(function(task, callback) {
                                 .then(function(data){
                                     log.info(data);
                                     orderTable.find({'source.id':data.id},"_id",function(err,rows){
+                                        log.info()
                                         if(!err&&rows.length==0&&!saving[data.id]){
                                             log.debug(err,rows.length,saving[data.id],data.id);
                                             saving[data.id]=true;
