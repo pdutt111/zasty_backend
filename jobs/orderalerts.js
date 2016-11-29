@@ -43,55 +43,56 @@ setInterval(function () {
             }
 
         })
+    }else {
+        orderTable.find({
+            status: "awaiting response",
+            created_time: {$lte: moment().subtract(5, 'minutes')}
+        }, function (err, orders) {
+            log.info(orders);
+            orders.forEach(function (order) {
+                userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, user) {
+                    if (user.phonenumber) {
+                        events.emitter.emit("sms", {
+                            number: user.phonenumber,
+                            message: "Dear Kitchen partner, please accept order " + order._id + " , is on hold and may cause penalty."
+                        });
+                    }
+                });
+                userTable.findOne({is_admin: true}, function (err, user) {
+                    if (user.phonenumber) {
+                        events.emitter.emit("sms", {
+                            number: user.phonenumber,
+                            message: "Order number " + order._id + " has not been accepted by now by kitchen partner " + order.restaurant_assigned + ". Time to speak to them!"
+                        });
+                    }
+                });
+            })
+        });
+        orderTable.find({
+            $or: [{status: "prepared"}, {status: "confirmed"}],
+            created_time: {$lte: moment().subtract(20, 'minutes')}
+        }, function (err, orders) {
+            log.info(orders);
+            orders.forEach(function (order) {
+                userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, user) {
+                    if (user.phonenumber) {
+                        events.emitter.emit("sms", {
+                            number: user.phonenumber,
+                            message: "Dear Kitchen Partner, order number " + order._id + " is not yet marked ready to dispatch. Please do to avoid penalties."
+                        });
+                    }
+                });
+                userTable.findOne({is_admin: true}, function (err, user) {
+                    if (user.phonenumber) {
+                        events.emitter.emit("sms", {
+                            number: user.phonenumber,
+                            message: "Order number " + order._id + " has been delayed in preparation by kitchen partner " + order.restaurant_assigned + ". Time to speak to them!"
+                        });
+                    }
+                });
+            })
+        });
     }
-    orderTable.find({
-        status: "awaiting response",
-        created_time: {$lte: moment().subtract(5, 'minutes')}
-    }, function (err, orders) {
-        log.info(orders);
-        orders.forEach(function (order) {
-            userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, user) {
-                if (user.phonenumber) {
-                    events.emitter.emit("sms", {
-                        number: user.phonenumber,
-                        message: "Dear Kitchen partner, please accept order " + order._id + " , is on hold and may cause penalty."
-                    });
-                }
-            });
-            userTable.findOne({is_admin: true}, function (err, user) {
-                if (user.phonenumber) {
-                    events.emitter.emit("sms", {
-                        number: user.phonenumber,
-                        message: "Order number " + order._id + " has not been accepted by now by kitchen partner " + order.restaurant_assigned + ". Time to speak to them!"
-                    });
-                }
-            });
-        })
-    });
-    orderTable.find({
-        $or: [{status: "prepared"}, {status: "confirmed"}],
-        created_time: {$lte: moment().subtract(20, 'minutes')}
-    }, function (err, orders) {
-        log.info(orders);
-        orders.forEach(function (order) {
-            userTable.findOne({restaurant_name: order.restaurant_assigned}, function (err, user) {
-                if (user.phonenumber) {
-                    events.emitter.emit("sms", {
-                        number: user.phonenumber,
-                        message: "Dear Kitchen Partner, order number " + order._id + " is not yet marked ready to dispatch. Please do to avoid penalties."
-                    });
-                }
-            });
-            userTable.findOne({is_admin: true}, function (err, user) {
-                if (user.phonenumber) {
-                    events.emitter.emit("sms", {
-                        number: user.phonenumber,
-                        message: "Order number " + order._id + " has been delayed in preparation by kitchen partner " + order.restaurant_assigned + ". Time to speak to them!"
-                    });
-                }
-            });
-        })
-    });
 },3*60*1000);
 
 //     },

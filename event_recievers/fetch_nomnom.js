@@ -227,6 +227,7 @@ var queue = async.queue(function(task, callback) {
                     }
                     var req={}
                     req.body={};
+                    log.info(body[0]);
                     if(body[0].source.toLowerCase()=="swiggy"){
                         req.body = {
                             "city": "gurgaon",
@@ -293,13 +294,14 @@ var queue = async.queue(function(task, callback) {
                                     return orderLogic.createDishesOrderedList(req,restaurant);
                                 })
                                 .then(function(data){
-                                    log.info(data.id);
+                                    log.info(data);
                                     orderTable.find({'source.id':data.id},"_id",function(err,rows){
                                         if(!err&&rows.length==0&&!saving[data.id]){
                                             log.debug(err,rows.length,saving[data.id],data.id);
                                             saving[data.id]=true;
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
+                                            log.info(err);
                                             log.warn(!err,rows.length,!saving[data.id])
                                         }
                                     })
@@ -310,6 +312,7 @@ var queue = async.queue(function(task, callback) {
                                 })
                                 .catch(function(err){
                                     // delete saving[id];
+                                    // throw err;
                                     log.error(err);
                                     callback();
                                     // userTable.findOne({is_admin: true}, function (err, user) {
