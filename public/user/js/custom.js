@@ -72,7 +72,7 @@ function setCode(){
     }
 }
 function placeOrder(type) {
-
+    console.log(type);
     var dishes = {};
     Object.keys(cart).forEach(function (key) {
         dishes[restaurant.dishes[key].identifier] = {
@@ -141,7 +141,6 @@ function placeOrder(type) {
         return;
     }
     payload.code=confirm_code;
-    placeOrderType=null;
     confirm_code=null;
     console.log('placeOrder', type);
     console.log(payload);
@@ -180,6 +179,7 @@ function placeOrder(type) {
 
                 payU(json);
             }
+            placeOrderType=null;
         },
         error: function (xhr, _status, errorThrown) {
             console.log("err: ", {status: _status, err: errorThrown, xhr: xhr});

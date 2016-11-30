@@ -85,6 +85,7 @@ router.post('/order',
                 return orderLogic.createDishesOrderedList(req, restaurant);
             })
             .then(function (data) {
+                log.info(data);
                 return orderLogic.saveOrder(req, data.dishes_ordered, data.restaurant);
             })
             .then(function (order) {
@@ -98,6 +99,7 @@ router.post('/order',
                     });
             })
             .catch(function (err) {
+                log.warn(err);
                 res.status(err.status).json(err.message);
             })
     });

@@ -213,8 +213,12 @@ var orderLogic = {
                     dishesByRestaurant[dishes_ordered[i].res_name].push(dishes_ordered[i]);
                 }
             }
-            // log.info(dishesByRestaurant);
-            def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants,id:req.body.source.id});
+            log.info(dishesByRestaurant);
+            if(req.body.source){
+                def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants,id:req.body.source.id});
+            }else{
+                def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants,id:null});
+            }
         } else {
             log.info("dishes did not match",req.body.dishes_ordered,req.body);
             def.reject({status: 400, message: config.get('error.badrequest')});
