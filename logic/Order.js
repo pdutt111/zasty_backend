@@ -183,7 +183,7 @@ var orderLogic = {
                 if (
                     // (req.source.name!="website"||completeDishList[i].availability) &&
                     req.body.dishes_ordered[completeDishList[i].identifier].qty > 0 &&
-                    req.body.dishes_ordered[completeDishList[i].identifier].qty < 10 &&
+                    req.body.dishes_ordered[completeDishList[i].identifier].qty < 30 &&
                     req.body.dishes_ordered[completeDishList[i].identifier].price > 0
                 ) {
                     log.info("here");
@@ -220,7 +220,7 @@ var orderLogic = {
                 def.resolve({dishes_ordered: dishesByRestaurant, restaurant: restaurants,id:null});
             }
         } else {
-            log.info("dishes did not match",req.body.dishes_ordered,req.body);
+            log.info("dishes did not match",req.body.dishes_ordered,dishes_ordered);
             def.reject({status: 400, message: config.get('error.badrequest')});
         }
         return def.promise;
