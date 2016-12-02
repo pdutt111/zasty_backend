@@ -183,7 +183,7 @@ var orderLogic = {
                 if (
                     // (req.source.name!="website"||completeDishList[i].availability) &&
                     req.body.dishes_ordered[completeDishList[i].identifier].qty > 0 &&
-                    req.body.dishes_ordered[completeDishList[i].identifier].qty < 30 &&
+                    req.body.dishes_ordered[completeDishList[i].identifier].qty < 100 &&
                     req.body.dishes_ordered[completeDishList[i].identifier].price > 0
                 ) {
                     log.info("here");
