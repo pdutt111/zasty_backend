@@ -352,15 +352,15 @@ var listings = {
             function (err, restaurant) {
             if(restaurant){
                 log.info(restaurant);
-                if(restaurant.nomnom_username){
-                    events.emitter.emit("fetch_nomnom",
-                        {
-                            username: restaurant.nomnom_username,
-                            password: restaurant.nomnom_password,
-                            name: req.params.name,
-                            serviced_by:restaurant.servicing_restaurant
-                        });
-                }
+                // if(restaurant.nomnom_username){
+                //     events.emitter.emit("fetch_nomnom",
+                //         {
+                //             username: restaurant.nomnom_username,
+                //             password: restaurant.nomnom_password,
+                //             name: req.params.name,
+                //             serviced_by:restaurant.servicing_restaurant
+                //         });
+                // }
                 orderTable.find({
                         restaurant_assigned: req.params.name,
                         status: {$in: ["awaiting response", "confirmed", "prepared","processing_delivery_request"]}

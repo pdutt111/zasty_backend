@@ -347,7 +347,7 @@ var queue = async.queue(function(task, callback) {
             callback();
         }
     });
-}, 3);
+}, 10);
 
 // assign a callback
 queue.drain = function() {
@@ -607,7 +607,7 @@ setInterval(function(){
                 });
             }
         });
-},10000);
+},30000);
 
 // setInterval(function(){
 //     restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
