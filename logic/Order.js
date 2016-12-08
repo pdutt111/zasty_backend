@@ -287,11 +287,12 @@ var orderLogic = {
             if (dishes_ordered[restaurants[i].name]) {
                 if (restaurants[i].open_status) {
                     if (Object.keys(dishes_ordered).length > 1) {
-                        if (i != 0) {
-                            req.body.delivery_enabled = false;
-
-                        } else {
-                            req.body.delivery_enabled = true;
+                        if(req.body.delivery_enabled||typeof  req.body.delivery_enabled=='undefined'){
+                            if (i != 0) {
+                                req.body.delivery_enabled = false;
+                            } else {
+                                req.body.delivery_enabled = true;
+                            }
                         }
                     }
                     var total_price_recieved = 0;
