@@ -288,7 +288,7 @@ var queue = async.queue(function(task, callback) {
                     // if(body[0].source.toLowerCase()=="foodpanda" &&task.serviced_by==["Z0101Z5IOUK", "Z0101Z5CCP"]){
                     //     req.body.delivery_enabled=true;
                     // }
-                    log.info(req.body);
+                    // log.info(req.body);
                             orderLogic.findActualRates(req, task.serviced_by)
                                 .then(function(restaurant){
                                     return orderLogic.createDishesOrderedList(req,restaurant);
