@@ -591,7 +591,7 @@ function changemaindishstatus(data){
     return def.promise;
 }
 setInterval(function(){
-    restaurantTable.find({is_verified:true,open_status:true}, "nomnom_username nomnom_password name servicing_restaurant",
+    restaurantTable.find({}, "nomnom_username nomnom_password name servicing_restaurant",
         function (err, restaurants) {
             if (restaurants.length>0) {
                 restaurants.forEach(function(restaurant){
