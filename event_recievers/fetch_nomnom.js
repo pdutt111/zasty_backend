@@ -347,7 +347,7 @@ var queue = async.queue(function(task, callback) {
             callback();
         }
     });
-}, 10);
+}, 3);
 
 // assign a callback
 queue.drain = function() {
