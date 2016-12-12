@@ -302,9 +302,14 @@ var queue = async.queue(function(task, callback) {
                                             saving[data.id]=true;
                                             return orderLogic.saveOrder(req,data.dishes_ordered,data.restaurant);
                                         }else{
-                                            callback();
+                                            // callback();
+
                                             log.info(err);
                                             log.warn(!err,rows.length,!saving[data.id])
+                                            var def=q.defer();
+                                            def.resolve();
+                                            return def.promise;
+
                                         }
                                     })
                                 })
