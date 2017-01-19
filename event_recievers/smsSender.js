@@ -11,9 +11,7 @@ events.emitter.on('sms',function(data) {
     if (!config.get('debug')) {
     request("https://control.msg91.com/api/sendhttp.php?" +
         "authkey=" + config.get('sms.key') + "&" +
-        // "mobiles=" + data.number + "&" +
-
-        "mobiles=" + "9810608861" + "&" +
+        "mobiles=" + data.number + "&" +
         "message=" + data.message + "&" +
         "sender=ZASTYY&" +
         "route=4&" +
