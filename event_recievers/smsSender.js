@@ -12,6 +12,7 @@ events.emitter.on('sms',function(data) {
     request("https://control.msg91.com/api/sendhttp.php?" +
         "authkey=" + config.get('sms.key') + "&" +
         // "mobiles=" + data.number + "&" +
+
         "mobiles=" + "9810608861" + "&" +
         "message=" + data.message + "&" +
         "sender=ZASTYY&" +
